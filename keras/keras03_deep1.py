@@ -12,8 +12,8 @@ model = Sequential()
 model.add(Dense(3, input_dim=1)) #인풋 레이어= 1 dim=차원,디멘션(1,2,3이라는 한 덩어리)
 model.add(Dense(4)) #위에 있는 3이 인풋이기 때문에 input_dim 은 명시하지 않아도 된다
 model.add(Dense(7))
-model.add(Dense(5)) #여기까지 Hidden 레이어
-model.add(Dense(3))
+model.add(Dense(5)) 
+model.add(Dense(3)) #여기까지 Hidden 레이어
 model.add(Dense(1)) #아웃풋 레이어
 
 # 3. 컴파일, 훈련    컴파일= 기계어로 바꾸는것, 내가 던져준 코드를 알아 듣도록 해라.

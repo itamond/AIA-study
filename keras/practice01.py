@@ -26,5 +26,5 @@ model.fit(x, y, epochs=50, batch_size=1)
 loss = model.evaluate(x, y)
 print("loss :", loss)
 
-result = model.predict([[4,5],[6,7]])
-print("[[4,5],[6,7]]의 예측값 :", result)
+result = model.predict([[6,7]])
+print("[[6,7]]의 예측값 :", result)

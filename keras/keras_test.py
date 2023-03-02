@@ -9,7 +9,7 @@ y= np.array([4,5])
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-
+#케라스 = 텐서플로가 어려워서 나온 api
 model=Sequential()
 model.add(Dense(3,input_dim=2))
 model.add(Dense(5))

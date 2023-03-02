@@ -58,7 +58,7 @@ model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x, y, epochs=125, batch_size=1)
+model.fit(x, y, epochs=125, batch_size=3)
 
 #4. 평가, 예측
 
@@ -72,3 +72,6 @@ print('[[10, 1.4]]의 예측값 :', result)
 #[[10, 1.4]]의 예측값 : [[19.780586]]
 #[[10, 1.4]]의 예측값 : [[20.001572]]
 #[[10, 1.4]]의 예측값 : [[20.002638]]
+
+
+

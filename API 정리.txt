@@ -1,0 +1,14 @@
+API
+
+import numpy as np   넘파이 api 불러오기
+
+import tensorflow as tf 
+from tensorflow.keras.models import Sequential   시퀀셜 모델 불러오기
+from tensorflow.keras.layers import Dense   덴스 레이어 불러오기
+
+import sklearn 사이킷런 불러오기
+from sklearn.model_selection import train_test_split 사이킷런의 트레인 테스트 스플릿 함수 불러오기
+
+import matplotlib.pyplot as plt    #가장 많이 사용하는 시각화 api
+
+

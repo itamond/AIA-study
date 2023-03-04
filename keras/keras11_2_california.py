@@ -39,7 +39,7 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=100, batch_size= 80)
+model.fit(x_train, y_train, epochs=100, batch_size= 20)
 
 #4. 평가, 예측
 
@@ -60,4 +60,10 @@ print("r2 스코어 :", r2)
 #r2 스코어 : 0.6629057025831651  activation=relu 적용
 
 
-#**r2 스코어 : 0.5419886186838374**
+#**r2 스코어 : 0.5419886186838374** #배치 80
+
+#r2 스코어 : 0.5264381552539438 레이어 1층 추가
+
+#r2 스코어 : 0.5430092727962501 #배치 40
+
+#******r2 스코어 : 0.5594496337318692 배치 20******

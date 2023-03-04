@@ -41,7 +41,7 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train,y_train, epochs=500, batch_size=10)
+model.fit(x_train,y_train, epochs=500, batch_size=1)
 
 #4. 평가, 예측
 
@@ -61,3 +61,7 @@ print("r2 :", r2)
 
 #r2 : 0.6234516569138124 mae
 #r2 : 0.6348515447089442 mse
+#r2 : 0.6199090497243523
+#r2 : 0.6374555702303933 배치 5
+#r2 : 0.6337452721877734 배치 1
+#

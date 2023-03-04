@@ -23,17 +23,19 @@ y = datasets.target
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y,
-    random_state=72,
-    train_size=0.7)
+    random_state=335,
+    train_size=0.9)
 
 
 
 
 #2. 모델 구성
 
-model = Sequential()
+
+model=Sequential()
 model.add(Dense(10, input_dim=10))
 model.add(Dense(100))
+model.add(Dense(200))
 model.add(Dense(100))
 model.add(Dense(10))
 model.add(Dense(1))
@@ -41,7 +43,7 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train,y_train, epochs=500, batch_size=1)
+model.fit(x_train,y_train, epochs=100, batch_size=1)
 
 #4. 평가, 예측
 
@@ -64,4 +66,7 @@ print("r2 :", r2)
 #r2 : 0.6199090497243523
 #r2 : 0.6374555702303933 배치 5
 #r2 : 0.6337452721877734 배치 1
-#
+#r2 : 0.6504051151022696 에포 200 배치 1
+#r2 : 0.6593711091584518
+#r2 : 0.6479099619612483 에포 100 배치 1
+#r2 : 0.706456362708288

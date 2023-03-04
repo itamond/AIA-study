@@ -54,17 +54,15 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 
 model=Sequential()
-model.add(Dense(5, input_dim=13))
-model.add(Dense(4))
-model.add(Dense(4))
-model.add(Dense(3))
-model.add(Dense(2))
+model.add(Dense(128, input_dim=13))
+model.add(Dense(64))
+model.add(Dense(32))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 
 model.compile(loss='mse',optimizer='adam')
-model.fit(x_train, y_train, epochs=300, batch_size=1)
+model.fit(x_train, y_train, epochs=10000, batch_size=16)
 
 #4. 평가, 예측
 
@@ -93,7 +91,15 @@ print('r2스코어 : ',r2)
 
 #*****************r2스코어 :  0.8514976704615949*************** 에포 10000 배치 16 히든 레이어 128 64 32 1
 #r2스코어 :  0.834079973976749
-#
-# 
+#r2스코어 :  0.7993677692568495
+#r2스코어 :  0.7991566028953964
+# r2스코어 :  0.7878729224562268
 # loss: 17.38869285583496
 #r2스코어: 0.7895267103967221
+#r2스코어 :  0.7905855034072531
+#r2스코어 :  0.7983256217071039
+#r2스코어 :  0.7998648262557375
+
+#r2스코어 :  0.8026022572598184
+
+#r2스코어 : 0.799694294736808

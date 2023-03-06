@@ -23,7 +23,7 @@ print(tf.__version__) 텐서플로 버전 출력
 
 import numpy as np - >numpy  라는 글자 형식을 불러옴
 
-x = np.array([1,2,3])  -> x는 1과 2와 3이다 (np 형식으로 불러온.
+x = np.array([1,2,3])  -> x는 1과 2와 3이다 np 형식으로 불러온.
 
 numpy = 인간이 하는 계산과 매우 비슷. 그래서 많이 쓴다.
 

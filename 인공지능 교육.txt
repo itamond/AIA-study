@@ -231,6 +231,7 @@ y=train_csv['count']                        #train_csv에서 count 라는 열을
 결측치 처리의 첫번째
 
 0으로 채운다 (부정확하다)
+
 ********************결측치 처리하는 방법******************
 #통 데이터일 때 결측치 처리를 한다. 분리 후 결측치 처리를 하게되면 데이터가 망가진다.
 
@@ -256,7 +257,7 @@ print(train_csv.shape)           #(1328, 10)
 
 path = './_data/ddarung/'      .은 현 디렉토리 선택 path라는 변수로 지정하여 추후에 사용하기 용이하게 지정함.
 
-train_csv = pd.read_csv(path+ 'train.csv', index_col=0     pd.read_csv 함수로 train.csv를 index_col=0으로 지정하여 불러오기
+train_csv = pd.read_csv(path+ 'train.csv', index_col=0)     pd.read_csv 함수로 train.csv를 index_col=0으로 지정하여 불러오기
 
 print(train_csv.isnull().sum())    을 통해 isnull의 True 값을 합산한 결과를 본다.
 

@@ -160,3 +160,116 @@ mse = 제곱
 
 
 warning = 경고는 하지만 작동은 한다.   error = 돌아가지 않음
+
+r2는 보조지표이다. 때문에 loss와 병행해서 판단해야한다.
+
+
+
+
+verbose = 말 수가 많다
+fit과 evaluate에서 수행
+#verbose 0 ->훈련과정 삭제
+#verbose의 디폴트는 1이다. 다 보여준다.
+#verbose 2는 진행(프로그레스)바가 없다.
+#verbose 나머지는 에포만 나온다
+
+
+
+
+
+keras.io
+https://keras.io/api/models/model_training_apis/
+에서 참고하면 좋다.
+
+
+**캐글->개발자들의 놀이터**
+kaggle
+
+
+
+dacon.io
+
+*데이콘*
+
+
+
+RMSE = root mse
+
+
+'빅데이터 분석기사'
+
+
+
+
+. = 현 폴더
+/ = 아래
+[] = 자료형 리스트   
+
+'두 개 이상은 리스트'
+
+
+데이터를 받았을때 type, shape, describe, info 는 항상 확인하자
+
+
+통상적인 테스트에서는 train 파일만으로 분리해서 훈련한다.
+
+
+
+
+
+***train_csv데이터에서 x와 y를 분리!!*** 매우 중요
+x=train_csv.drop([count], axis=1)        #train_csv에서 count 라는 열(axis=1)을 분리
+y=train_csv['count']                        #train_csv에서 count 라는 열을 지정
+
+
+
+
+결측 데이터
+
+중요한 대회에서는 결측 데이터를 고의로 만들고 맞춰라는 문제도 있음.
+
+결측치 처리의 첫번째
+
+0으로 채운다 (부정확하다)
+********************결측치 처리하는 방법******************
+#통 데이터일 때 결측치 처리를 한다. 분리 후 결측치 처리를 하게되면 데이터가 망가진다.
+
+# 결측치 처리 방법
+1. 제거                (결측된 데이터의 행 자체가 사라지기 때문에 아까운 방법)
+#print(train_csv.isnull())   # isnull   -> 데이터가 null값인가요? 하고 물어보는 함수
+print(train_csv.isnull().sum())  #isnull의 트루값이 몇개인지에 대한 합계(sum) ************자주 사용한다.
+train_csv = train_csv.dropna()   #dropna = 결측치 삭제 함수*****
+print(train_csv.isnull().sum())
+print(train_csv.info())          #데이터 몇개가 남았는지 확인 
+print(train_csv.shape)           #(1328, 10)
+
+
+# loss가 nan으로 뜨는 이유 = 결측치가 너무 많다.
+
+
+따릉이파일 모델링 과정
+
+
+#1. 데이터 
+
+-> 경로 지정 불러오기
+
+path = './_data/ddarung/'      .은 현 디렉토리 선택 path라는 변수로 지정하여 추후에 사용하기 용이하게 지정함.
+
+train_csv = pd.read_csv(path+ 'train.csv', index_col=0     pd.read_csv 함수로 train.csv를 index_col=0으로 지정하여 불러오기
+
+print(train_csv.isnull().sum())    을 통해 isnull의 True 값을 합산한 결과를 본다.
+
+train_csv=train_csv.dropna()    을 통해 train_csv의 결측값을 drop한다.
+
+
+
+
+
+
+
+
+판다스
+pd.read_csv
+info()
+describe()

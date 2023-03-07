@@ -10,6 +10,9 @@ import pandas as pd # numpy 만큼 많이 나오는 자료형, 전처리 하는 
 
 #1. 데이터
 path='./_data/ddarung/'      # .=현 폴더, study    /= 하위폴더
+path_save='./_save/ddarung/'      # .=현 폴더, study    /= 하위폴더
+
+
 
 train_csv = pd.read_csv(path + 'train.csv',
                         index_col=0)                 #index_col = x번째 컬런이 index 라고 지정하는 함수
@@ -148,4 +151,13 @@ submission['count'] = y_submit     #submission의 count 열에 y_submit을 입�
 print(submission)
 # 이것을 다시 파일로 저장
 
-submission.to_csv(path + 'submit_0306_0447.csv')     #저장하는 함수 .to_
+submission.to_csv(path_save + 'submit_0306_0447.csv')     #저장하는 함수 .to_
+
+
+
+#로컬에서 추출한 값과 제출한 값이 다를것이다. 
+
+#대회에서는 제출한 점수보다 내가 만든 로컬 점수를 기준으로 튜닝하는것이 유리하다.
+
+#100% 데이터가 공개된 데이터는 제출한 점수가 기준
+

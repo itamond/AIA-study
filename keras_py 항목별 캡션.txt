@@ -66,3 +66,39 @@ x_train, x_test, y_train, y_test = train_test split(x, y, test_size=0.3, shuffle
 print('x_train shape:', x_train.shape) 등으로 모양을 확인하자
 
 나누어진 x y train, test를 각각 evaluate(트레인)와 predict(테스트)에 활용한다.
+
+
+
+
+
+keras09_scatter
+
+맷플롯라이브러리-파이플롯을 이용한 간단한 데이터 시각화
+
+
+
+keras10_R2
+
+from sklearn.metrix import r2_score를 이용한 결정계수 R2 구하는법
+
+
+
+
+keras11 
+
+sklearn.datasets import load_boston, california, diabetes 를 이용한
+모델 구성
+
+
+
+keras12_verbose
+
+verbose 함수를 이용한 fit, evaluate 아봉
+
+
+keras13
+dacon의 ddarung 데이터를 이용한 모델링
+***결측치 제거법***
+csv 입력시키는법, csv에서 x와 y 컬런을 따로 지정해 주는법
+read_csv를 이용한 입력
+파일명 뒤에 drop, dropna를 이용한 컬런 버리기 기법

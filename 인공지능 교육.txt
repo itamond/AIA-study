@@ -208,7 +208,7 @@ RMSE = root mse
 '두 개 이상은 리스트'
 
 
-데이터를 받았을때 type, shape, describe, info 는 항상 확인하자
+데이터를 받았을때 type, shape, describe, info, feature_names 는 항상 확인하자
 
 
 통상적인 테스트에서는 train 파일만으로 분리해서 훈련한다.
@@ -274,3 +274,9 @@ train_csv=train_csv.dropna()    을 통해 train_csv의 결측값을 drop한다.
 pd.read_csv
 info()
 describe()
+
+
+
+
+윤영선 강사님 email
+kingkeras@naver.com

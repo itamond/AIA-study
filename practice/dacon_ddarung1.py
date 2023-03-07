@@ -78,7 +78,7 @@ submission=pd.read_csv(path+'submission.csv',index_col=0)
 submission['count']=y_submit
 #카운트에 y서브밋을 넣고
 
-submission.to_csv(path+'submission0850.csv')
+submission.to_csv(path+'submission0934.csv')
 
 # loss: 722.6207885742188
 # RMSE 26.881613397126884

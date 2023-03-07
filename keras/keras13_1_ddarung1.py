@@ -115,7 +115,7 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train,
-          epochs= 100,
+          epochs= 10,
           batch_size=5,
           verbose=1)
 
@@ -130,3 +130,6 @@ print('loss :', loss)
 #loss : 3015.99658203125   랜덤 777  에포 100 배치 사이즈 5
 
 #loss : 2920.375732421875 랜덤221   에포 100 배치 5
+
+
+print(y_test)

@@ -15,10 +15,11 @@ y = datasets.target
 
 
 
+
 # [실습]
 
 # R2 0.62 이상
-# train_size 0.7이상 0.9 이하
+# # train_size 0.7이상 0.9 이하
 
 
 x_train, x_test, y_train, y_test = train_test_split(
@@ -34,10 +35,10 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 model=Sequential()
 model.add(Dense(10, input_dim=10))
-model.add(Dense(100))
-model.add(Dense(200))
-model.add(Dense(100))
-model.add(Dense(10))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련

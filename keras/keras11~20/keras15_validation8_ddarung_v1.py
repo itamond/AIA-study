@@ -9,6 +9,7 @@ from csv import reader
 
 #.1 데이터
 path='./_data/ddarung/'
+path_save='./_save/ddarung/'
 train_csv=pd.read_csv(path+'train.csv',index_col=0)
 submission=pd.read_csv(path+'submission.csv',index_col=0)
 test_csv=pd.read_csv(path+'test.csv',index_col=0) 
@@ -47,16 +48,16 @@ x_train,x_test,y_train,y_test=train_test_split(x,y,
 #2. 모델구성
 model=Sequential()
 model.add(Dense(20,input_dim=9))
-model.add(Dense(40))
-model.add(Dense(60))
-model.add(Dense(35))
-model.add(Dense(20))
-model.add(Dense(7))
+model.add(Dense(40, activation='relu'))
+model.add(Dense(60, activation='relu'))
+model.add(Dense(35, activation='relu'))
+model.add(Dense(20, activation='relu'))
+model.add(Dense(7, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse',optimizer="adam")
-model.fit(x_train,y_train,epochs=301,batch_size=10,validation_split=0.2)
+model.fit(x_train,y_train,epochs=300,batch_size=10,validation_split=0.1)
 
 #4. 평가, 예측
 loss=model.evaluate(x_test,y_test)
@@ -78,7 +79,7 @@ submission=pd.read_csv(path+'submission.csv',index_col=0)
 submission['count']=y_submit
 #카운트에 y서브밋을 넣고
 
-submission.to_csv(path+'submission_validation.csv')
+submission.to_csv(path_save+'submission_validation.csv')
 
 # loss: 722.6207885742188
 # RMSE 26.881613397126884
@@ -92,3 +93,6 @@ submission.to_csv(path+'submission_validation.csv')
 
 #loss: 990.2715454101562
 #rmse : 31.46858069677725   validation 적용
+
+#loss: 449.62750244140625
+# rmse : 21.20442213416921

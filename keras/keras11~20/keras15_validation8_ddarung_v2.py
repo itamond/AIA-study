@@ -36,12 +36,16 @@ y_train=y[:1000]
 #2. 모델구성
 model=Sequential()
 model.add(Dense(10, input_dim=9))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
 
 
 #3. 컴파일, 훈련
 model.compile(loss='mse',optimizer='adam')
-model.fit(x_train,y_train,epochs=100, batch_size=100, validation_data=(x_val, y_val))
+model.fit(x_train,y_train,epochs=100, batch_size=50, validation_data=(x_val, y_val))
 
 
 #4. 평가, 예측
@@ -71,3 +75,7 @@ submission.to_csv(path_save + 'submission_validation_v2.csv')
 #loss : 3081.24365234375
 # r2 : 0.5225717070839723
 # rmse : 55.50895164987975
+
+# #loss : 2577.28759765625
+# r2 : 0.6006579869347604
+# rmse : 50.76699420387334

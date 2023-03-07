@@ -266,6 +266,10 @@ train_csv=train_csv.dropna()    을 통해 train_csv의 결측값을 drop한다.
 
 
 
+## Validation = 검증, 확인   << 이 행동은 fit에서 수행
+
+#Validation->모의고사  predict(test_csv)->수능
+
 
 
 

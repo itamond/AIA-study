@@ -150,3 +150,8 @@ submission.to_csv(path_save + 'kagglebike1318.csv')
 #r2 : 0.5024578827750664
 # rmse : 125.08617857203974
 
+
+
+## Validation = 검증, 확인   << 이 행동은 fit에서 수행
+
+#Validation->모의고사  predict(test_csv)->수능

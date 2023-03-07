@@ -54,6 +54,19 @@ x = x.swapaxes(0, 1)
 x = x.transpose()      행, 열 바꾸기
 
 
+.read_csv    csv 엑셀 파일 읽어오는 판다스 함수
+.to_csv      csv 엑셀 파일로 저장하는 판다스 함수 
+변수명.drop 컬런(axis=1) 혹은 행(axis=0) 을 통째로 버릴때 사용하는 함수
+변수명.dropna() nall값을 가진 행 통째로 삭제 시키는 함수
+
+
+def 함수를 만드는 함수.
+  return 함수를 지정할때 출력되는 값을 지정한다.
+
+mean_squared_error = 평균 제곱 오차를 구하는 함수
+
+r2_score 결정계수 r2스코어를 구하는 함수
+
 
 '''  '''
 """ """    =블럭 주석 처리

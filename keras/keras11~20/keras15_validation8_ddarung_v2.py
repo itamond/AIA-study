@@ -64,6 +64,10 @@ submission['count']= y_submit
 submission.to_csv(path_save + 'submission_validation_v2.csv')
 
 
+#loss: 990.2715454101562
+#rmse : 31.46858069677725   v1 validation 적용
+
+
 #loss : 3081.24365234375
 # r2 : 0.5225717070839723
 # rmse : 55.50895164987975

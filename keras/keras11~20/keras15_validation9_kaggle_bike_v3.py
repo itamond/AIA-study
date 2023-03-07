@@ -25,12 +25,10 @@ x = train_set.drop(['count','registered','casual'], axis=1)
 y = train_set['count']
 
 
-x_val = x[8000:]
-x_test = x[6000:8000]
-x_train = x[:6000]
-y_val =y[8000:]
-y_test = y[6000:8000]
-y_train = y[:6000]
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=332)
+
+x_val, x_test, y_val, y_test = train_test_split(x_test,y_test, train_size=0.5, random_state=223)
+
 
 
 #2. 모델 구성
@@ -61,6 +59,8 @@ y_submit = model.predict(test_set)
 
 submission['count']=y_submit
 
-submission.to_csv(path_save+ 'submission_v2.csv')
+submission.to_csv(path_save+ 'submission_v3.csv')
 
-
+# loss : 39763.7734375
+# r2 : 0.04677090429631281
+# rmse : 199.40854746091273

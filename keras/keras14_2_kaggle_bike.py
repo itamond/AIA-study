@@ -74,8 +74,8 @@ y = train_csv['count']
 x_train, x_test, y_train, y_test = train_test_split(
     x, y,
     shuffle=True,
-    train_size=0.7,
-    random_state=112
+    train_size=0.9,
+    random_state=13
 )
 
 print(x_train.shape, x_test.shape) 
@@ -87,13 +87,15 @@ print(y_train.shape, y_test.shape)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(100, input_dim=8))
-model.add(Dense(150, activation='relu')) #↓ 값을 전달할때 값을 조절하는 함수 activation (활성화 함수) , 다음에 전달하는 내용을 *한정*시킨다.   
-model.add(Dense(200, activation='relu')) # Relu -> 0 이상의 값은 양수, 0이하의 값은 0이 된다. 항상 양수로 만드는 활성화 함수
-model.add(Dense(100, activation='relu'))   # 회귀모델->선형회귀. linear는 디폴트 활성화 함수
-model.add(Dense(90, activation='relu'))
-model.add(Dense(70, activation='relu'))
-model.add(Dense(30, activation='relu'))
+model.add(Dense(16, input_dim=8))
+model.add(Dense(40, activation='relu')) #↓ 값을 전달할때 값을 조절하는 함수 activation (활성화 함수) , 다음에 전달하는 내용을 *한정*시킨다.   
+model.add(Dense(80, activation='relu')) # Relu -> 0 이상의 값은 양수, 0이하의 값은 0이 된다. 항상 양수로 만드는 활성화 함수
+model.add(Dense(40, activation='relu'))   # 회귀모델->선형회귀. linear는 디폴트 활성화 함수
+model.add(Dense(80, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(80, activation='relu'))
+model.add(Dense(40, activation='relu'))
+model.add(Dense(20, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
 
@@ -101,7 +103,7 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train,
-          epochs= 270,
+          epochs= 240,
           batch_size=80,
           verbose=1)
 
@@ -131,7 +133,7 @@ submission['count'] = y_submit
 
 
 
-submission.to_csv(path_save + 'kagglebike1217.csv')
+submission.to_csv(path_save + 'kagglebike1318.csv')
 
 
 
@@ -140,3 +142,11 @@ submission.to_csv(path_save + 'kagglebike1217.csv')
 
 
 #rmse : 152.73700287967176  random 221
+#rmse : 140.02564272362673
+
+# r2 : 0.419029901125878
+# rmse : 134.51105899209864
+
+#r2 : 0.5024578827750664
+# rmse : 125.08617857203974
+

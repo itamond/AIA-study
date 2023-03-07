@@ -106,10 +106,10 @@ print(y_train.shape, y_test.shape)  #(1021,) (438,)               ->(929,) (399,
 #2. 모델구성
 model = Sequential()
 model.add(Dense(10, input_dim=9))
-model.add(Dense(100))
-model.add(Dense(200))
-model.add(Dense(100))
-model.add(Dense(10))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(100, activation='relu'))
+model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련

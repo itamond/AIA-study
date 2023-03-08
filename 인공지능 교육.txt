@@ -280,3 +280,10 @@ describe()
 
 윤영선 강사님 email
 kingkeras@naver.com
+
+
+데이터의 분리
+train, test, val       -> train에 영향주는 데이터
+predict(y가 없는 데이터)-> train에 영향을 주지 않는 데이터
+
+네가지로 분리 가능

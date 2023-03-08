@@ -4,6 +4,7 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
 #1. 데이터
 datasets= fetch_california_housing()
 x = datasets.data
@@ -39,35 +40,10 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=100, batch_size= 20)
+hist = model.fit(x_train, y_train, epochs=200, batch_size= 200, validation_split=0.2, verbose=1)
+print(hist.history)
 
-#4. 평가, 예측
-
-loss = model.evaluate(x_test,y_test)
-print("loss :", loss)
-
-
-y_predict= model.predict(x_test)
-
-
-# R2 결정계수
-
-r2=r2_score(y_test, y_predict)
-print("r2 스코어 :", r2)
-
-#r2 스코어 : 0.5505870601322881
-#r2 스코어 : 0.500457182784201
-#r2 스코어 : 0.6629057025831651  activation=relu 적용
-
-
-#**r2 스코어 : 0.5419886186838374** #배치 80
-
-#r2 스코어 : 0.5264381552539438 레이어 1층 추가
-
-#r2 스코어 : 0.5430092727962501 #배치 40
-
-#******r2 스코어 : 0.5594496337318692 배치 20******
-
-#r2 스코어 : 0.5400458434619297
-
-#r2 스코어 : 0.5595654232287597
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.plot(hist.history['loss'])
+# plt.plot(hist.history['val_loss'],color='red')
+plt.show()

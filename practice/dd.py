@@ -45,17 +45,17 @@ model.add(Dense(1))
 es = EarlyStopping(monitor='val_loss',
                    mode='min',
                    restore_best_weights=True,
-                   patience=100,
+                   patience=200,
                    verbose=1)
 
 
 
 model.compile(loss = 'mse', optimizer='adam')
 hist = model.fit(x_train, y_train,
-                 epochs=2000,
-                 batch_size=1,
+                 epochs=1000,
+                 batch_size=10,
                  verbose=1,
-                 validation_split=0.2,
+                 validation_split=0.19,
                  callbacks=[es])
 
 
@@ -110,3 +110,16 @@ plt.show()
 # loss : 1714.6185302734375
 # r2 : 0.7144258740372252
 # rmse : 41.407950818712166
+
+# loss : 1391.35986328125
+# r2 : 0.7682654167476359
+# rmse : 37.30093656001328
+
+# loss : 1290.2593994140625
+# r2 : 0.7851039691779599
+# rmse : 35.92018028365604
+
+
+# loss : 1179.8721923828125
+# r2 : 0.8034892274376035
+# rmse : 34.34926845556993

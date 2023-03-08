@@ -18,17 +18,18 @@ print(x.shape, y.shape) #(506, 13) (506,)
 x_train, x_test, y_train, y_test = train_test_split(
     x, y,
     shuffle=True,
-    random_state=123,
-    test_size=0.2,
+    random_state=31731,
+    test_size=0.3,
     )
 
 
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(30,activation='relu', input_dim=13))     #sigmoid = 0~10까지 숫자로 한정시키는 액티베이션 함수
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10,activation='relu'))
+model.add(Dense(30, input_dim=13))     #sigmoid = 0~10까지 숫자로 한정시키는 액티베이션 함수
+model.add(Dense(30))
+model.add(Dense(20))
+model.add(Dense(10))
 model.add(Dense(10,activation='relu'))
 model.add(Dense(1,activation='linear'))
 
@@ -37,7 +38,7 @@ model.compile(loss = 'mse', optimizer='adam')
 
 from tensorflow.python.keras.callbacks import EarlyStopping
 #땡겨온 얼리스토핑에 대한 정의
-es = EarlyStopping(monitor='val_loss', patience=20, mode='min',   # monitor = 나는 val_loss를 기준으로 할 것이다.(일반적으로 val_loss가 loss보다 나음) , patience=참을성. 5번 참겠다는 의미
+es = EarlyStopping(monitor='loss', patience=100, mode='min',   # monitor = 나는 val_loss를 기준으로 할 것이다.(일반적으로 val_loss가 loss보다 나음) , patience=참을성. 5번 참겠다는 의미
               verbose=1,                                            # verbose=1을 쳐주면 어디서 stop 했는지 출력->Epoch 00011: early stopping
               restore_best_weights=True,                                # 최소의 loss 지점, 얼리 스톱된 지점의 w값을 저장하는 명령어
               )
@@ -46,8 +47,8 @@ es = EarlyStopping(monitor='val_loss', patience=20, mode='min',   # monitor = �
                                                             # 
 
 hist = model.fit(x_train, y_train, epochs = 2000, verbose=1,
-                 batch_size=16,
-                 validation_split=0.2,
+                 batch_size=10,
+                 validation_split=0.1,
                  callbacks=[es])   #callbacks= 호출하다. es를 호출해라 # validation_split 은 train에서 땡겨온다
 
 
@@ -97,3 +98,14 @@ plt.show()
 # 훈련이 잘 되고있는지 
 
 
+#0.8 이상
+
+# loss : 19.252098083496094
+# r2스코어 : 0.7659420103744777
+
+#loss : 22.50664520263672
+# r2스코어 : 0.7735589568962427
+
+
+#loss : 18.828857421875
+# r2스코어 : 0.8105614567791353    monitor = loss

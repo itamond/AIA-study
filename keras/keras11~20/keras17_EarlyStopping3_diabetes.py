@@ -42,12 +42,12 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer='adam')
 
 es = EarlyStopping(monitor='val_loss',
-                   patience=10,
+                   patience=50,
                    mode='min',
                    verbose=1,
                    restore_best_weights=True)
 
-hist = model.fit(x_train,y_train, epochs=100, batch_size=1, validation_split=0.2,callbacks=[es])
+hist = model.fit(x_train,y_train, epochs=1000, batch_size=10, validation_split=0.2,callbacks=[es])
 
 print(hist.history)
 
@@ -75,3 +75,9 @@ plt.plot(hist.history['val_loss'], c='blue', marker='.', label='발_로스')
 plt.grid()  #격자
 plt.legend()  #선에 대한 주석
 plt.show()
+
+# loss : 2619.177978515625
+# r2 : 0.6809021467058503
+
+# loss : 2664.231689453125
+# r2 : 0.6754132455800013

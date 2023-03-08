@@ -25,8 +25,8 @@ y= train_csv['count']
 
 x_train, x_test, y_train, y_test =train_test_split(
     x, y,
-    train_size=0.75,
-    random_state=31
+    train_size=0.96,
+    random_state=130
 )
 
 print(x_train.shape, x_test.shape)  #(9797, 8) (1089, 8)
@@ -35,14 +35,18 @@ print(y_train.shape, y_test.shape)
 
 #2. 모델 구성
 
-model=Sequential()
-model.add(Dense(10, input_dim=8))
-model.add(Dense(100, activation='relu'))
-model.add(Dense(10, activation='relu'))
-model.add(Dense(100, activation='relu'))
+model = Sequential()
+model.add(Dense(20, input_dim=8))
+model.add(Dense(40, activation='relu')) #↓ 값을 전달할때 값을 조절하는 함수 activation (활성화 함수) , 다음에 전달하는 내용을 *한정*시킨다.   
+model.add(Dense(80)) # Relu -> 0 이상의 값은 양수, 0이하의 값은 0이 된다. 항상 양수로 만드는 활성화 함수
+model.add(Dense(40))   # 회귀모델->선형회귀. linear는 디폴트 활성화 함수
+model.add(Dense(80, activation='relu'))
+model.add(Dense(100))
+model.add(Dense(80, activation='relu'))
+model.add(Dense(40))
+model.add(Dense(20))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(1))
-
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
@@ -55,10 +59,10 @@ es=EarlyStopping(monitor='val_loss',
 
 hist = model.fit(x_train,y_train,
           epochs=1000,
-          batch_size=80,
+          batch_size=100,
           verbose=1,
           callbacks=[es],
-          validation_split=0.15)
+          validation_split=0.05)
 
 
 #4. 평가, 예측
@@ -78,7 +82,7 @@ print('rmse :', rmse)
 
 y_submit = model.predict(test_csv)
 submission['count'] = y_submit
-submission.to_csv(path_save + 'submissionES1.csv')
+submission.to_csv(path_save + 'submissionES2.csv')
 
 
 # #모델링
@@ -100,3 +104,18 @@ submission.to_csv(path_save + 'submissionES1.csv')
 # loss : 21219.5625
 # r2 : 0.31286170079867437
 # rmse : 145.66935905955194
+
+
+# loss : 21414.458984375
+# r2 : 0.33140530945500246
+# rmse : 146.33679914745838
+
+
+# loss : 16957.0078125
+# r2 : 0.3563331703984126
+# rmse : 130.21906733558473
+
+
+#loss : 17214.6953125
+# r2 : 0.3424948068351267
+# rmse : 131.20477885157035

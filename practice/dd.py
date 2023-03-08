@@ -45,15 +45,15 @@ model.add(Dense(1))
 es = EarlyStopping(monitor='val_loss',
                    mode='min',
                    restore_best_weights=True,
-                   patience=50,
+                   patience=100,
                    verbose=1)
 
 
 
 model.compile(loss = 'mse', optimizer='adam')
 hist = model.fit(x_train, y_train,
-                 epochs=1000,
-                 batch_size=10,
+                 epochs=2000,
+                 batch_size=1,
                  verbose=1,
                  validation_split=0.2,
                  callbacks=[es])

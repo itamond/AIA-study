@@ -40,10 +40,21 @@ model.add(Dense(1))
 #3. 컴파일, 훈련
 
 model.compile(loss='mse', optimizer='adam')
-hist = model.fit(x_train, y_train, epochs=200, batch_size= 200, validation_split=0.2, verbose=1)
+hist = model.fit(x_train, y_train, epochs=2000, batch_size= 200, validation_split=0.2, verbose=1)
 print(hist.history)
 
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.plot(hist.history['loss'])
 # plt.plot(hist.history['val_loss'],color='red')
 plt.show()
+
+
+
+# [실습]
+# R2 0.55~ 0.6  이상
+# train_size 0.9 이하
+
+
+
+# loss : 0.4506089687347412
+# r2 스코어 : 0.6640667257834905

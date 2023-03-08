@@ -46,14 +46,14 @@ model.compile(loss='mse', optimizer='adam')
 #es -> EarlyStopping에 대한 정의
 
 es = EarlyStopping(monitor='val_loss',     #발로스를 주시할거다
-                   patience=30,             #30번 참아라
+                   patience=50,             #30번 참아라
                    mode='min',               #최소값으로
                    verbose=1,                  #텍스트로 출력해라
                    restore_best_weights=True     #최고의 w값을 저장해라
                    )
 
 
-hist = model.fit(x_train, y_train, epochs=100, batch_size= 1000,
+hist = model.fit(x_train, y_train, epochs=1000, batch_size= 100,
           validation_split=0.2, callbacks=[es])
 
 #4. 평가, 예측
@@ -79,11 +79,15 @@ print("r2 스코어 :", r2)
 
 #plt 이용한 시각화
 
-plt.rcParams['font.family'] = 'Malgun Gothic'
-plt.title='캘리포니아'
-plt.grid()
-plt.figure(figsize=(9,6))
-plt.plot(hist.history['loss'], c='red', label='로쓰', marker='.')
-plt.plot(hist.history['val_loss'], c='blue', label='발_로쓰', marker='.')
-plt.legend()
-plt.show()
+# plt.rcParams['font.family'] = 'Malgun Gothic'
+# plt.title='캘리포니아'
+# plt.grid()
+# plt.figure(figsize=(9,6))
+# plt.plot(hist.history['loss'], c='red', label='로쓰', marker='.')
+# plt.plot(hist.history['val_loss'], c='blue', label='발_로쓰', marker='.')
+# plt.legend()
+# plt.show()
+
+
+# loss : 0.4312790036201477
+# r2 스코어 : 0.6784774127262672

@@ -331,3 +331,31 @@ EarlyStopping < 대문자로 씌여진 부분(의미가 생기는 부분)
 train_test_split < 뱀처럼 생겼다 해서 스네이크 케이스
 가능하면 언더바 이용한 스네이크 케이스로 만들자. 가독성이 좋다.
 
+
+
+
+시각화
+# plt.rcParams['font.family']='Malgun Gothic'    #폰트변경
+# plt.figure(figsize=(9,6))     #시각화 사이즈
+# plt.title='쩌는 캐글 바이크'   #시각화 타이틀
+# plt.plot(hist.history['loss'], c='red', label='로쓰', marker='.')  #시각화 선긋기
+# plt.plot(hist.history['val_loss'], c='blue', label='발_로쓰', marker='.')
+# plt.grid()   #격자 넣기
+# plt.legend() #데이터 주석
+# plt.show()   #show 해라
+
+
+
+
+
+리스트 = [1,2,3,4,5,1,2,3,4,1,]   #대괄호
+['바보','바ㅏ바','안바보'] 등등 쭉 이어져 있는 형태
+
+튜플 = (3123,4123,4321) 튜플은 변경할 수 없다   #소괄호
+
+딕셔너리 = { 앞에 뭔가 있고 : 이후 값이 입력되어 있음         #키 : 벨류 구조    /   중괄호
+    {'데이터' : [389217,2134,123,4,123]} 이런식
+    진짜 '사전'식, 키와 벨류 한쌍으로 되어있음
+
+
+

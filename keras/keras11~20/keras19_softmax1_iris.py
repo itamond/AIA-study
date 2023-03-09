@@ -1,0 +1,109 @@
+#iris 데이터셋 = 꽃받침과 이파리로 꽃을 맞추는 데이터셋
+#케라스 원 핫 인코딩
+
+
+
+import numpy as np
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.layers import Dense
+from sklearn.metrics import accuracy_score
+from keras.utils import to_categorical
+
+
+
+from tensorflow.python.keras.callbacks import EarlyStopping
+#1. 데이터
+
+datasets=load_iris()
+# print(datasets.DESCR)      #판다스 describe
+# print(datasets.feature_names)   # 판다스 columns
+
+x = datasets.data
+y = datasets['target'].reshape(-1,1)    #사이킷런 원핫 인코딩 할때 씀
+print(x.shape, y.shape)   #(150, 4) (150,)
+print('y의 라벨값 :', np.unique(y))    #unique =  각 라벨값을 표시
+
+########################요 지점에서 원핫을 해야한다###########################
+#1. 판다스 
+#import pandas as pd
+# y = pd.get_dummies(y)
+# print(y.shape)
+
+#2. 사이킷런
+from sklearn.preprocessing import OneHotEncoder
+encoder = OneHotEncoder()
+y=encoder.fit_transform(y)
+
+#3. 케라스
+# y = to_categorical(y)
+# print(y.shape)
+
+###################################################
+
+x_train,x_test, y_train, y_test = train_test_split(
+    x,y,
+    shuffle=True,
+    random_state=321,
+    train_size=0.8,
+    stratify=y              #y를 통계적으로 해라. (y 데이터의 비율따라 나누기) 
+    )
+
+print(y_train)
+print(np.unique(y_train, return_counts=True))     #unique< 라벨값 표시, return_counts = 갯수까지 표시
+#          (array([0, 1, 2]), array([40, 40, 40], dtype=int64))
+
+
+
+
+#2. 모델구성
+model=Sequential()
+model.add(Dense(50,activation='relu', input_dim=4))
+model.add(Dense(40,activation='relu'))
+model.add(Dense(30,activation='relu'))
+model.add(Dense(20,activation='relu'))
+model.add(Dense(10,activation='relu'))
+model.add(Dense(3,activation='softmax'))     # softmax 는 각각의 라벨에 대한 확률을 부여하여 출력한다.
+                                            #y의 라벨의 갯수(클래스의 갯수)만큼 노드를 잡는다.
+                                            #ex 1번이 0.5확률이면 1번이 답.
+                                            #다중분류의 마지막 activation은 softmax
+
+
+
+
+
+#3. 컴파일, 훈련                                     #softmax, 다중분류의 loss는 categorical_crossentropy 하나뿐
+model.compile(loss='categorical_crossentropy', optimizer='adam',
+              metrics=['acc'])
+
+
+es = EarlyStopping(monitor='val_acc',
+                   mode='max',
+                   verbose=1,
+                   patience=50)
+
+
+
+model.fit(x_train, y_train,
+          epochs=1000, batch_size=5,
+          validation_split=0.4,
+          verbose=1,
+          callbacks=[es],
+          )
+
+#4. 평가, 예측
+result = model.evaluate(x_test,y_test)    #엄밀히 얘기하면 loss = result이다. 
+                                         #model.evaluate=
+                                         #model.compile에 추가한 loss 및 metrix 모두 result로 표시된다.
+                                         #metrix의 accuracy는 sklearn의 accuracy_score 값과 동일하다.
+print('result :', result)
+
+y_predict= np.round(model.predict(x_test))
+print(y_predict)
+acc = accuracy_score(y_test, y_predict)
+print('acc :', acc)
+
+
+# accuracy_score를 사용하여 스코어를 빼세요.

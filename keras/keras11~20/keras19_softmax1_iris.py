@@ -22,7 +22,8 @@ datasets=load_iris()
 # print(datasets.feature_names)   # 판다스 columns
 
 x = datasets.data
-y = datasets['target'].reshape(-1,1)    #사이킷런 원핫 인코딩 할때 씀
+y = datasets['target']
+# .reshape(-1,1)    #사이킷런 원핫 인코딩 할때 씀
 print(x.shape, y.shape)   #(150, 4) (150,)
 print('y의 라벨값 :', np.unique(y))    #unique =  각 라벨값을 표시
 
@@ -35,7 +36,9 @@ print('y의 라벨값 :', np.unique(y))    #unique =  각 라벨값을 표시
 #2. 사이킷런
 from sklearn.preprocessing import OneHotEncoder
 encoder = OneHotEncoder()
-y=encoder.fit_transform(y)
+y= y.reshape(-1,1)
+y=encoder.fit_transform(y).toarray()
+
 
 #3. 케라스
 # y = to_categorical(y)

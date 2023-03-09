@@ -72,7 +72,7 @@ es = EarlyStopping(monitor='val_acc',
 
 
 model.fit(x_train, y_train,
-          epochs=300,
+          epochs=3,
           batch_size=5,
           verbose=1,
           validation_split=0.2,
@@ -83,6 +83,9 @@ model.fit(x_train, y_train,
 result = model.evaluate(x_test, y_test)
 print('result :',result)
 
-y_predict = np.round(model.predict(x_test))
-acc= accuracy_score(y_test, y_predict)
-print('acc :', acc)
+
+y_predict=model.predict(x_test)
+y_predict=np.argmax(y_predict,axis=1)
+
+
+print(y_predict)

@@ -46,12 +46,22 @@ y=train_csv['count']
 x_train,x_test,y_train,y_test=train_test_split(x,y,
         train_size=0.98,shuffle=True, random_state=5330)
 
+
+# scaler = MinMaxScaler()
+# # scaler = MaxAbsScaler()
+# # scaler = RobustScaler()
+# scaler.fit(x_train)     #scaler의 fit의 범위가 x_train이라는 뜻. (x_train을 0~1로 변환)
+# x_train = scaler.transform(x_train)
+# x_test = scaler.transform(x_test)  
+
+
+
 #2. 모델구성
 model=Sequential()
-model.add(Dense(10,input_dim=9))
-model.add(Dense(20, activation='relu'))
+model.add(Dense(20,input_dim=9))
 model.add(Dense(40, activation='relu'))
-model.add(Dense(10, activation='relu'))
+model.add(Dense(60, activation='relu'))
+model.add(Dense(20, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
@@ -66,7 +76,7 @@ es = EarlyStopping(monitor='val_loss',
 
 model.fit(x_train,y_train,
           epochs=3000,
-          batch_size=16,
+          batch_size=32,
           validation_split=0.2,
           callbacks=[es],
           )

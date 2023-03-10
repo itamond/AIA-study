@@ -49,7 +49,7 @@ print(np.min(x_test), np.max(x_test))          #-0.00557837618540494 1.147818009
 
 
 
-# 일반적으로 훈련 데이터만 정규화한다. 그 이유는 1이상의 값을 predict 할수도 있기때문
+# 일반적으로 훈련 데이터만 정규화한다. 그 이유는 1이상, 0이하의 값을 predict 할수도 있기때문
 # 전체 데이터를 정규화 하지 않는 이유는 실제로 해보면 과적합되는 경우가 많기 때문이다.
 # 훈련데이터(x_train)를 정규화 한 후, 훈련데이터의 정규화 '비율'에 맞춰서 test data를 변환시킨다.
 # # 또한, x_predict 또한 비율에 맞춰서 변환시킨다. x_predict값은 1을 초과할수도, 0 미만일수도 있다.
@@ -72,3 +72,48 @@ print(np.min(x_test), np.max(x_test))          #-0.00557837618540494 1.147818009
 # #4. 평가, 예측
 # loss = model.evaluate(x_test, y_test)
 # print('loss :', loss)
+
+
+
+
+
+# 각 Scaler의 차이점과 장단점은 다음과 같습니다:
+
+# 1. StandardScaler:
+
+# 각 feature의 평균을 0으로, 표준편차를 1로 변환합니다.
+# Outlier가 존재할 경우 영향을 크게 받을 수 있습니다.
+# 이상치가 없는 경우에는 대체로 잘 작동합니다.
+# 선형 모델, SVM, KNN 등에서 사용됩니다.
+
+
+# 2. MaxAbsScaler:
+
+# 각 feature의 최대값의 절댓값으로 나눕니다.
+# 각 feature가 0과 1 사이에 위치합니다.
+# Outlier에 덜 민감합니다.
+# 데이터가 양수인 경우에는 대체로 잘 작동합니다.
+# 선형 모델, SVM, KNN 등에서 사용됩니다.
+
+
+# 3. RobustScaler:
+
+# 중앙값(median)을 0으로, IQR(interquartile range)로 scale합니다.
+# 이상치에 덜 민감합니다.
+# 이상치가 있는 경우에 사용하는 것이 좋습니다.
+# SVM 등에서 사용됩니다.
+
+
+# 4. MinMaxScaler:
+
+# 각 feature의 최솟값을 0으로, 최댓값을 1로 변환합니다.
+# 각 feature가 0과 1 사이에 위치합니다.
+# Outlier에 민감합니다.
+# 데이터가 양수인 경우에는 대체로 잘 작동합니다.
+# 선형 모델, SVM, KNN 등에서 사용됩니다.
+
+
+# 각 Scaler는 다른 데이터 분포 및 목적에 적합합니다. 
+# 따라서 적절한 Scaler를 선택해야 합니다. 예를 들어, 
+# 이상치가 많은 경우 RobustScaler를 사용하는 것이 좋습니다. 
+# 반면, 데이터가 음수인 경우 MaxAbsScaler 대신 StandardScaler를 사용하는 것이 좋습니다.

@@ -27,7 +27,8 @@
 
 
 # 결론적으로, pandas의 get_dummies는 간단하고 빠르게 범주형 데이터를 처리할 수 있는 장점이 있으며, 
-# keras의 to_categorical은 다중 분류 문제에서 유용합니다. 하지만 sklearn의 OneHotEncoder는 대용량 데이터에 대한 처리와 더 다양한 옵션을 제공하므로 유연한 처리가 가능합니다.
+# keras의 to_categorical은 다중 분류 문제에서 유용합니다. 
+# 하지만 sklearn의 OneHotEncoder는 대용량 데이터에 대한 처리와 더 다양한 옵션을 제공하므로 유연한 처리가 가능합니다.
 
 
 

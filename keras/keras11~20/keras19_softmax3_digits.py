@@ -61,7 +61,7 @@ es = EarlyStopping(monitor='val_loss',
 
 
 hist = model.fit(x_train, y_train,
-                 epochs = 10,
+                 epochs = 1000,
                  validation_split=0.2,
                  batch_size=300,
                  verbose=1,

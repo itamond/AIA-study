@@ -89,7 +89,7 @@ print(np.min(x_test), np.max(x_test))          #-0.00557837618540494 1.147818009
 
 # 2. MaxAbsScaler:
 
-# 각 feature의 최대값의 절댓값으로 나눕니다.
+# 각 feature의 최대값의 절대값으로 나눕니다.
 # 각 feature가 0과 1 사이에 위치합니다.
 # Outlier에 덜 민감합니다.
 # 데이터가 양수인 경우에는 대체로 잘 작동합니다.
@@ -98,7 +98,7 @@ print(np.min(x_test), np.max(x_test))          #-0.00557837618540494 1.147818009
 
 # 3. RobustScaler:
 
-# 중앙값(median)을 0으로, IQR(interquartile range)로 scale합니다.
+# 중앙값(median)을 0으로, IQR(중간 50%범위)로 scale합니다.
 # 이상치에 덜 민감합니다.
 # 이상치가 있는 경우에 사용하는 것이 좋습니다.
 # SVM 등에서 사용됩니다.
@@ -106,7 +106,7 @@ print(np.min(x_test), np.max(x_test))          #-0.00557837618540494 1.147818009
 
 # 4. MinMaxScaler:
 
-# 각 feature의 최솟값을 0으로, 최댓값을 1로 변환합니다.
+# 각 feature의 최소값을 0으로, 최대값을 1로 변환합니다.
 # 각 feature가 0과 1 사이에 위치합니다.
 # Outlier에 민감합니다.
 # 데이터가 양수인 경우에는 대체로 잘 작동합니다.

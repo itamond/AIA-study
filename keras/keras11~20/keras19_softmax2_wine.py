@@ -28,6 +28,9 @@ y = data_sets.target
 y = pd.get_dummies(y)
 print(y.shape)
 
+y = np.array(y)
+
+
 
 # encoder =OneHotEncoder()
 # y=encoder.fit_transform(y)
@@ -80,12 +83,18 @@ model.fit(x_train, y_train,
 
 #4. 평가, 예측
 
-result = model.evaluate(x_test, y_test)
-print('result :',result)
+results = model.evaluate(x_test, y_test)
+print(results)
+print('loss :', results[0])    # 리절트의 0번째
+print('acc :', results[1])    #리절트의 1번째
+y_pred = model.predict(x_test)
+y_test_acc = np.argmax(y_test, axis=1)  # axis = 1 각 행에 있는 '열' 끼리 비교
+y_pred = np.argmax(y_pred, axis=1)
 
+# print(y_test)
+acc = accuracy_score(y_test_acc, y_pred)
+# y_test = np.drop(['id'])
 
-y_predict=model.predict(x_test)
-y_predict=np.argmax(y_predict,axis=1)
+# y_predict=model.predict(x_test)
+# y_predict=np.argmax(y_predict,axis=1)
 
-
-print(y_predict)

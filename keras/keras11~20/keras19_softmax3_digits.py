@@ -6,11 +6,11 @@ import numpy as np
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error, accuracy_score
-
+from sklearn.metrics import accuracy_score
+import tensorflow as tf
 from sklearn.datasets import load_digits
 from tensorflow.python.keras.callbacks import EarlyStopping
-
+from keras.utils import to_categorical
 #1. 데이터 
 
 data_sets= load_digits()
@@ -24,7 +24,7 @@ y=data_sets['target']
 
 #판다스 원핫 해보기
 
-y = pd.get_dummies(y)   #
+y = to_categorical(y) #
 
 print(x.shape, y.shape)  #(1797, 64) (1797, 10)
 
@@ -51,7 +51,7 @@ model.add(Dense(10,activation='softmax'))
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam',
-              metrix=['acc']
+              metrics=['acc']
               )
 
 es = EarlyStopping(monitor='val_loss',
@@ -61,7 +61,7 @@ es = EarlyStopping(monitor='val_loss',
 
 
 hist = model.fit(x_train, y_train,
-                 epochs = 250,
+                 epochs = 10,
                  validation_split=0.2,
                  batch_size=300,
                  verbose=1,
@@ -72,7 +72,16 @@ hist = model.fit(x_train, y_train,
 
 result = model.evaluate(x_test, y_test)
 print('result :', result)
+y_predict = model.predict(x_test)
+y_predict=np.argmax(y_predict, axis=-1)
+print(y_predict.shape)
 
-y_predict=np.round(model.predict(x_test))
+print(y_test)
+
+# y_t = np.argmax(y_test, axis=-1)
+# print(y_t)
+
+
+y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc :', acc)

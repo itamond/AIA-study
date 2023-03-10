@@ -97,16 +97,30 @@ model.fit(x_train, y_train,
           )
 
 #4. 평가, 예측
-result = model.evaluate(x_test,y_test)    #엄밀히 얘기하면 loss = result이다. 
-                                         #model.evaluate=
-                                         #model.compile에 추가한 loss 및 metrix 모두 result로 표시된다.
-                                         #metrix의 accuracy는 sklearn의 accuracy_score 값과 동일하다.
-print('result :', result)
+# result = model.evaluate(x_test,y_test)    #엄밀히 얘기하면 loss = result이다. 
+#                                          #model.evaluate=
+#                                          #model.compile에 추가한 loss 및 metrix 모두 result로 표시된다.
+#                                          #metrix의 accuracy는 sklearn의 accuracy_score 값과 동일하다.
+# print('result :', result)
 
-y_predict= np.round(model.predict(x_test))
-print(y_predict)
-acc = accuracy_score(y_test, y_predict)
+# y_predict= np.argmax(model.predict(x_test), axis=1)
+# print(y_predict)
+# y_test = np.argmax(y_test, axis=1)
+# acc = accuracy_score(y_test, y_predict)
+# print('acc :', acc)
+
+
+# # accuracy_score를 사용하여 스코어를 빼세요.
+
+results = model.evaluate(x_test, y_test)
+print(results)
+print('loss :', results[0])    # 리절트의 0번째
+print('acc :', results[1])    #리절트의 1번째
+y_pred = model.predict(x_test)
+y_test_acc = np.argmax(y_test, axis=1)  # axis = 1 각 행에 있는 '열' 끼리 비교
+y_pred = np.argmax(y_pred, axis=1)
+
+# print(y_test)
+acc = accuracy_score(y_test_acc, y_pred)
+
 print('acc :', acc)
-
-
-# accuracy_score를 사용하여 스코어를 빼세요.

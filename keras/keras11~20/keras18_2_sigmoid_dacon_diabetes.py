@@ -49,7 +49,7 @@ print(x.shape, y.shape)    #(652, 8) (652,)
 x_train, x_test, y_train, y_test = train_test_split(
     x,y,
     shuffle=True,
-    random_state=7909,
+    random_state=836,
     test_size=0.2,
     stratify=y,
 )
@@ -57,10 +57,10 @@ x_train, x_test, y_train, y_test = train_test_split(
 #2. 모델구성
 
 model = Sequential()
-model.add(Dense(10, activation='linear',input_dim=8))
-model.add(Dense(30,activation='relu'))
-model.add(Dense(50,activation='relu'))
-model.add(Dense(30,activation='relu'))
+model.add(Dense(6, activation='linear',input_dim=8))
+model.add(Dense(8,activation='relu'))
+model.add(Dense(6,activation='relu'))
+model.add(Dense(4,activation='relu'))
 model.add(Dense(1,activation='sigmoid'))  
 
 
@@ -73,14 +73,14 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
                                             
 es =EarlyStopping(monitor='val_accuracy',
                   mode='max',
-                  patience=100,
+                  patience=150,
                   restore_best_weights=True,
                   verbose=1,
                   )
 
 hist = model.fit(x_train,y_train,
-                 epochs=1000,
-                 batch_size=20,
+                 epochs=5000,
+                 batch_size=27,
                  validation_split=0.2,
                  verbose=1,
                  callbacks=[es],

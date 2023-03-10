@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.datasets import fetch_covtype
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OneHotEncoder
+from keras.utils import to_categorical
 from sklearn.metrics import accuracy_score
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
@@ -19,10 +19,8 @@ y = a.target
 #(581012, 54)
 #(581012,)
 
-encoder = OneHotEncoder()
-y= y.reshape(-1,1)
-y=encoder.fit_transform(y).toarray()
-
+y = to_categorical(y)
+y = np.delete(y, 0, axis=1)
 
 x_train, x_test, y_train, y_test = train_test_split(
     x, y,
@@ -45,26 +43,36 @@ model.add(Dense(108, activation='relu'))
 model.add(Dense(54, activation='relu'))
 model.add(Dense(7, activation='softmax'))
 
+# model.summary()
+
+# Total params: 59,191
+# Trainable params: 59,191
+
 #3. 컴파일, 훈련
 
-model.compile(loss='categorical_crossentropy',
-              optimizer = 'adam',
+model.compile(loss='categorical_crossentropy',                 #sparse_categorical_crossentropy
+              optimizer = 'adam',                              #원핫을 안해도 된다.
               metrics= ['acc'],
               )
 es = EarlyStopping(monitor='val_loss',
                    mode='min',
                    patience=20,
                    verbose=1,
-                   restore_best_weights=True,
                    )
+import time
+start_time = time.time()  #현 시점에서의 시간값을 start_time에 반환
+
 hist = model.fit(x_train, y_train,
-                 epochs = 300,
+                 epochs = 10,
                  batch_size = 5000,
                  callbacks=[es],
                  verbose=1,
                  validation_split=0.2,
                  )
 
+end_time = time.time()     #현 시점에서의 시간값을 end_time 에 반환
+
+print('걸린시간 : ', round(end_time - start_time,2))    # round의 2는 소수 둘째까지 반환하라는것
 
 
 #4. 평가, 예측
@@ -97,4 +105,4 @@ print('acc :', acc)
 
 #
 
-#acc : 0.8794953658683511   
+#acc : 0.8736607488619055

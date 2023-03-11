@@ -1,3 +1,5 @@
+#시각화 모델 구현하며 과적합(오버핏)확인하기.
+
 from sklearn.datasets import load_boston
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense

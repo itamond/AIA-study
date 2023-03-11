@@ -74,7 +74,7 @@ y = train_csv['count']
 x_train, x_test, y_train, y_test = train_test_split(
     x, y,
     shuffle=True,
-    train_size=0.9,
+    train_size=0.95,
     random_state=138
 )
 
@@ -87,10 +87,10 @@ print(y_train.shape, y_test.shape)
 
 #2. 모델구성
 model = Sequential()
-model.add(Dense(10, input_dim=8))
-model.add(Dense(20, activation='relu')) #↓ 값을 전달할때 값을 조절하는 함수 activation (활성화 함수) , 다음에 전달하는 내용을 *한정*시킨다.   
-model.add(Dense(10, activation='relu')) # Relu -> 0 이상의 값은 양수, 0이하의 값은 0이 된다. 항상 양수로 만드는 활성화 함수
-model.add(Dense(4, activation='relu'))   # 회귀모델->선형회귀. linear는 디폴트 활성화 함수
+model.add(Dense(6, input_dim=8))
+model.add(Dense(8, activation='relu')) #↓ 값을 전달할때 값을 조절하는 함수 activation (활성화 함수) , 다음에 전달하는 내용을 *한정*시킨다.   
+model.add(Dense(6, activation='relu')) # Relu -> 0 이상의 값은 양수, 0이하의 값은 0이 된다. 항상 양수로 만드는 활성화 함수
+model.add(Dense(8, activation='relu'))   # 회귀모델->선형회귀. linear는 디폴트 활성화 함수
 model.add(Dense(1))
 
 
@@ -106,7 +106,7 @@ es = EarlyStopping(monitor='val_loss',
 
 model.fit(x_train, y_train,
           epochs= 2400,
-          batch_size=80,
+          batch_size=32,
           verbose=1,
           validation_split=0.2,
           callbacks=[es])
@@ -137,7 +137,7 @@ submission['count'] = y_submit
 
 
 
-submission.to_csv(path_save + 'kagglebike_validation1.csv')
+submission.to_csv(path_save + 'kagglebike_validationv1.csv')
 
 
 

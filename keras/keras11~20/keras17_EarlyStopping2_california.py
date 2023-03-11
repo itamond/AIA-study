@@ -46,7 +46,7 @@ model.compile(loss='mse', optimizer='adam')
 #es -> EarlyStopping에 대한 정의
 
 es = EarlyStopping(monitor='val_loss',     #발로스를 주시할거다
-                   patience=50,             #30번 참아라
+                   patience=50,             #50번 참아라
                    mode='min',               #최소값으로
                    verbose=1,                  #텍스트로 출력해라
                    restore_best_weights=True     #최고의 w값을 저장해라

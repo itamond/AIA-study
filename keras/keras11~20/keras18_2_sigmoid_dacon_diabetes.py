@@ -49,16 +49,16 @@ print(x.shape, y.shape)    #(652, 8) (652,)
 x_train, x_test, y_train, y_test = train_test_split(
     x,y,
     shuffle=True,
-    random_state=8367741,
-    test_size=0.2,
+    random_state=37644,
+    test_size=0.15,
     stratify=y,
 )
 
 #2. 모델구성
 
 model = Sequential()
-model.add(Dense(6, activation='linear',input_dim=8))
-model.add(Dense(8,activation='relu'))
+model.add(Dense(8, activation='linear',input_dim=8))
+model.add(Dense(6,activation='relu'))
 model.add(Dense(8,activation='relu'))
 model.add(Dense(6,activation='relu'))
 model.add(Dense(1,activation='sigmoid'))  
@@ -73,15 +73,15 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
                                             
 es =EarlyStopping(monitor='val_accuracy',
                   mode='max',
-                  patience=150,
+                  patience=400,
                   restore_best_weights=True,
                   verbose=1,
                   )
 
 hist = model.fit(x_train,y_train,
                  epochs=5000,
-                 batch_size=16,
-                 validation_split=0.3,
+                 batch_size=10,
+                 validation_split=0.2,
                  verbose=1,
                  callbacks=[es],
                  )
@@ -116,7 +116,7 @@ print('acc :', acc)
 
 y_submit = np.round(model.predict(test_set))
 submission['Outcome']=y_submit
-submission.to_csv(path_save+'submission9.csv')
+submission.to_csv(path_save+'submission14.csv')
 
 
 

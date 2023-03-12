@@ -11,7 +11,7 @@ from tensorflow.python.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from tensorflow.python.keras.callbacks import EarlyStopping
-
+from sklearn.preprocessing import MinMaxScaler
 
 #1. 데이터
 
@@ -37,7 +37,7 @@ print(x.shape, y.shape)    #(652, 8) (652,)
 
 
 
-
+# print(np.unique(y, return_counts=True))
 
 # x = datasets['data']     #딕셔너리의 key
 # y = datasets.target
@@ -50,14 +50,26 @@ x_train, x_test, y_train, y_test = train_test_split(
     x,y,
     shuffle=True,
     random_state=37644,
-    test_size=0.15,
+    test_size=0.2,
     stratify=y,
 )
+
+scaler = MinMaxScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+test_set = scaler.transform(test_set)
+
+
+
+
 
 #2. 모델구성
 
 model = Sequential()
 model.add(Dense(8, activation='linear',input_dim=8))
+model.add(Dense(6,activation='relu'))
+model.add(Dense(8,activation='relu'))
 model.add(Dense(6,activation='relu'))
 model.add(Dense(8,activation='relu'))
 model.add(Dense(6,activation='relu'))
@@ -73,14 +85,14 @@ model.compile(loss='binary_crossentropy', optimizer='adam',
                                             
 es =EarlyStopping(monitor='val_accuracy',
                   mode='max',
-                  patience=400,
+                  patience=200,
                   restore_best_weights=True,
                   verbose=1,
                   )
 
 hist = model.fit(x_train,y_train,
                  epochs=5000,
-                 batch_size=10,
+                 batch_size=8,
                  validation_split=0.2,
                  verbose=1,
                  callbacks=[es],
@@ -116,7 +128,7 @@ print('acc :', acc)
 
 y_submit = np.round(model.predict(test_set))
 submission['Outcome']=y_submit
-submission.to_csv(path_save+'submission14.csv')
+submission.to_csv(path_save+'submission_sc_1.csv')
 
 
 

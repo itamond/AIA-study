@@ -53,11 +53,11 @@ print(np.min(x_test), np.max(x_test))
 #2. 모델 구성
 
 model = Sequential()
-model.add(Dense(10, input_dim=9))
+model.add(Dense(20, input_dim=9))
+model.add(Dense(16, activation='relu'))
 model.add(Dense(20, activation='relu'))
-model.add(Dense(50, activation='relu'))
-model.add(Dense(30, activation='relu'))
-model.add(Dense(10, activation='relu'))
+model.add(Dense(16, activation='relu'))
+model.add(Dense(8, activation='relu'))
 model.add(Dense(1, activation='relu'))
 
 #3. 컴파일, 훈련
@@ -66,7 +66,7 @@ model.compile(loss='mse', optimizer='adam', metrics=['mae'])
 
 es = EarlyStopping(monitor='val_mae',
                    mode='min',
-                   patience=100,
+                   patience=200,
                    verbose=1,
                    restore_best_weights=True,
                    )
@@ -75,7 +75,7 @@ hist = model.fit(x_train,y_train,
                  epochs = 5000,
                  validation_split=0.2,
                  verbose=1,
-                 batch_size = 32,
+                 batch_size = 64,
                  callbacks=[es],
                  )
 

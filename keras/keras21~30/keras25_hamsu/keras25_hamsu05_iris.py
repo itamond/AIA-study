@@ -7,11 +7,11 @@ import numpy as np
 
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Input
 from sklearn.metrics import accuracy_score
 from keras.utils import to_categorical
-
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
 
 
 from tensorflow.python.keras.callbacks import EarlyStopping
@@ -54,6 +54,19 @@ x_train,x_test, y_train, y_test = train_test_split(
     stratify=y              #y를 통계적으로 해라. (y 데이터의 비율따라 나누기) 
     )
 
+
+# scaler=MinMaxScaler()
+scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
+
+
 print(y_train)
 print(np.unique(y_train, return_counts=True))     #unique< 라벨값 표시, return_counts = 갯수까지 표시
 #          (array([0, 1, 2]), array([40, 40, 40], dtype=int64))
@@ -62,16 +75,26 @@ print(np.unique(y_train, return_counts=True))     #unique< 라벨값 표시, ret
 
 
 #2. 모델구성
-model=Sequential()
-model.add(Dense(50,activation='relu', input_dim=4))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(30,activation='relu'))
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10,activation='relu'))
-model.add(Dense(3,activation='softmax'))     # softmax 는 각각의 라벨에 대한 확률을 부여하여 출력한다.
+# model=Sequential()
+# model.add(Dense(50,activation='relu', input_dim=4))
+# model.add(Dense(40,activation='relu'))
+# model.add(Dense(30,activation='relu'))
+# model.add(Dense(20,activation='relu'))
+# model.add(Dense(10,activation='relu'))
+# model.add(Dense(3,activation='softmax'))     # softmax 는 각각의 라벨에 대한 확률을 부여하여 출력한다.
                                             #y의 라벨의 갯수(클래스의 갯수)만큼 노드를 잡는다.
                                             #ex 1번이 0.5확률이면 1번이 답.
                                             #다중분류의 마지막 activation은 softmax
+
+input1 = Input(shape=(4,))
+dense1 = Dense(50,activation='relu')(input1)
+dense2 = Dense(40,activation='relu')(dense1)
+dense3 = Dense(30,activation='relu')(dense2)
+dense4 = Dense(20,activation='relu')(dense3)
+dense5 = Dense(10,activation='relu')(dense4)
+outputs1 = Dense(3,activation='softmax')(dense5)
+
+model = Model(inputs=input1, outputs=outputs1)
 
 
 
@@ -124,3 +147,10 @@ y_pred = np.argmax(y_pred, axis=1)
 acc = accuracy_score(y_test_acc, y_pred)
 
 print('acc :', acc)
+
+
+
+
+# loss : 0.09008350968360901
+# acc : 0.9666666388511658
+# acc : 0.9666666666666667    maxabs스케일러 적용

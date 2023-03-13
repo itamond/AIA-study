@@ -11,6 +11,8 @@ import tensorflow as tf
 from sklearn.datasets import load_digits
 from tensorflow.python.keras.callbacks import EarlyStopping
 from keras.utils import to_categorical
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
+
 #1. 데이터 
 
 data_sets= load_digits()
@@ -36,6 +38,18 @@ x_train, x_test, y_train, y_test = train_test_split(x, y,
                                                     )
 
 
+
+scaler=MinMaxScaler()
+# scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
+
 # print(np.unique(y_train, return_counts=True))
 
 #2. 모델 구성
@@ -56,7 +70,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
 
 es = EarlyStopping(monitor='val_loss',
                    mode='min',
-                   patience=50,
+                   patience=150,
                    verbose=1)
 
 
@@ -79,3 +93,8 @@ print(y_predict.shape)
 y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc :', acc)
+
+
+# acc : 0.9666666666666667 맥스앱스 스케일러 적용
+
+# acc : 0.9694444444444444 민맥스 스케일러 적용

@@ -3,14 +3,16 @@
 
 import pandas as pd
 import numpy as np
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Input
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import tensorflow as tf
 from sklearn.datasets import load_digits
 from tensorflow.python.keras.callbacks import EarlyStopping
 from keras.utils import to_categorical
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
+
 #1. 데이터 
 
 data_sets= load_digits()
@@ -36,17 +38,41 @@ x_train, x_test, y_train, y_test = train_test_split(x, y,
                                                     )
 
 
+
+scaler=MinMaxScaler()
+# scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
+
 # print(np.unique(y_train, return_counts=True))
 
-#2. 모델 구성
+# #2. 모델 구성
 
-model = Sequential()
-model.add(Dense(100, input_dim=64))
-model.add(Dense(80,activation='relu'))
-model.add(Dense(60,activation='relu'))
-model.add(Dense(40,activation='relu'))
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10,activation='softmax'))
+# model = Sequential()
+# model.add(Dense(100, input_dim=64))
+# model.add(Dense(80,activation='relu'))
+# model.add(Dense(60,activation='relu'))
+# model.add(Dense(40,activation='relu'))
+# model.add(Dense(20,activation='relu'))
+# model.add(Dense(10,activation='softmax'))
+
+input1 = Input(shape=(64,))
+dense1 = Dense(100,activation='relu')(input1)
+dense2 = Dense(80,activation='relu')(dense1)
+dense3 = Dense(60,activation='relu')(dense2)
+dense4 = Dense(40,activation='relu')(dense3)
+dense5 = Dense(20,activation='relu')(dense4)
+output1 = Dense(10,activation='relu')(dense5)
+
+model = Model(inputs = input1, outputs=output1)
+
+
 
 
 #3. 컴파일, 훈련
@@ -56,7 +82,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
 
 es = EarlyStopping(monitor='val_loss',
                    mode='min',
-                   patience=50,
+                   patience=150,
                    verbose=1)
 
 
@@ -79,3 +105,8 @@ print(y_predict.shape)
 y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc :', acc)
+
+
+# acc : 0.9666666666666667 맥스앱스 스케일러 적용
+
+# acc : 0.9694444444444444 민맥스 스케일러 적용

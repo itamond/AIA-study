@@ -3,9 +3,10 @@ from sklearn.datasets import fetch_covtype
 from sklearn.model_selection import train_test_split
 from keras.utils import to_categorical
 from sklearn.metrics import accuracy_score
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense
+from tensorflow.python.keras.models import Sequential, Model
+from tensorflow.python.keras.layers import Dense, Input
 from tensorflow.python.keras.callbacks import EarlyStopping
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
 #다중분류, 
 
 #1. 데이터
@@ -29,6 +30,16 @@ x_train, x_test, y_train, y_test = train_test_split(
     random_state=388,
 )
 
+# scaler=MinMaxScaler()
+scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
 
 # print(x_train.shape, x_test.shape)
 # print(y_train.shape, y_test.shape)
@@ -36,12 +47,21 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 #2. 모델 구성
 
-model=Sequential()
-model.add(Dense(108, input_dim=54))
-model.add(Dense(216, activation='relu'))
-model.add(Dense(108, activation='relu'))
-model.add(Dense(54, activation='relu'))
-model.add(Dense(7, activation='softmax'))
+# model=Sequential()
+# model.add(Dense(108, input_dim=54))
+# model.add(Dense(216, activation='relu'))
+# model.add(Dense(108, activation='relu'))
+# model.add(Dense(54, activation='relu'))
+# model.add(Dense(7, activation='softmax'))
+
+input1 = Input(shape=(54,))
+dense1 = Dense(108,activation='relu')(input1)
+dense2 = Dense(216,activation='relu')(dense1)
+dense3 = Dense(108,activation='relu')(dense2)
+dense4 = Dense(54,activation='relu')(dense3)
+output1 = Dense(7,activation='softmax')(dense4)
+
+model = Model(inputs=input1, outputs=output1)
 
 #3. 컴파일, 훈련
 
@@ -96,3 +116,6 @@ print('acc :', acc)
 #
 
 #acc : 0.8736607488619055
+
+# acc : 0.9119299845959227 맥스 앱스 스케일러 적용
+

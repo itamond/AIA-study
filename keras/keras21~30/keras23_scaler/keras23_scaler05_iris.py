@@ -11,7 +11,7 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from sklearn.metrics import accuracy_score
 from keras.utils import to_categorical
-
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
 
 
 from tensorflow.python.keras.callbacks import EarlyStopping
@@ -53,6 +53,19 @@ x_train,x_test, y_train, y_test = train_test_split(
     train_size=0.8,
     stratify=y              #y를 통계적으로 해라. (y 데이터의 비율따라 나누기) 
     )
+
+
+# scaler=MinMaxScaler()
+scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
+
 
 print(y_train)
 print(np.unique(y_train, return_counts=True))     #unique< 라벨값 표시, return_counts = 갯수까지 표시
@@ -124,3 +137,10 @@ y_pred = np.argmax(y_pred, axis=1)
 acc = accuracy_score(y_test_acc, y_pred)
 
 print('acc :', acc)
+
+
+
+
+# loss : 0.09008350968360901
+# acc : 0.9666666388511658
+# acc : 0.9666666666666667    maxabs스케일러 적용

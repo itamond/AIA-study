@@ -434,3 +434,42 @@ ex) 1배치에 1mb라면, 10배치에는 10mb를 한번에 던지니까 그런�
 #과부화걸리지 않게함, 속도를 빠르게함, 성능도 좋아질 '수도' 있다**
 #x가 나누어지더라도 가르치는 y는 동일하다. 
 #(x-min)/(max-min)
+
+
+
+인공지능 모델은 두개밖에 없다.
+
+회귀모델, 분류 모델
+
+y값에 따른 모델 분류
+y값이 수치로 나온다 (선형회귀 모델)
+y값이 클래스,라벨로 나온다 (분류 모델)
+
+
+
+
+
+scaler = StandardScaler()
+# scaler.fit(x_train)   
+# x_train = scaler.transform(x_train)
+
+x_train= scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)            
+print(np.min(x_test), np.max(x_test))   
+
+
+
+
+
+
+
+
+
+******model.save(경로)*******
+세이브 모델은 모델을 저장하는것 뿐만 아니라 가중치도 저장한다.
+모델 구성 다음에 저장하면 모델만 저장,
+fit 뒤에서 save 하면 가중치도 저장. 때문에 w가 고정된다.
+
+*******model = load_model(경로)*********
+
+

@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import Dense
 from tensorflow.python.keras.callbacks import EarlyStopping
+from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
 #다중분류, 
 
 #1. 데이터
@@ -28,6 +29,16 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=y,
     random_state=388,
 )
+
+# scaler=MinMaxScaler()
+scaler=MaxAbsScaler()
+# scaler=StandardScaler()
+# scaler=RobustScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+
 
 
 # print(x_train.shape, x_test.shape)
@@ -96,3 +107,6 @@ print('acc :', acc)
 #
 
 #acc : 0.8736607488619055
+
+# acc : 0.9119299845959227 맥스 앱스 스케일러 적용
+

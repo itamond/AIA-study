@@ -52,7 +52,7 @@ model = Model(inputs=input1, outputs=output1)
 
 
 model.load_weights('./_save/keras26_5_save_weights2.h5')
-#컴파일은 항상 필요하다.
+#컴파일은 항상 필요하다. 핏 후에 저장하면 가중치도 저장이됨
 
 
 

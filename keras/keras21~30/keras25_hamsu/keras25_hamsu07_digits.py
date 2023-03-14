@@ -100,8 +100,6 @@ result = model.evaluate(x_test, y_test)
 print('result :', result)
 y_predict = model.predict(x_test)
 y_predict=np.argmax(y_predict, axis=-1)
-print(y_predict.shape)
-
 y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_predict)
 print('acc :', acc)

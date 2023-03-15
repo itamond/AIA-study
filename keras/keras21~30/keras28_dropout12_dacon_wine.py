@@ -153,10 +153,9 @@ y_submit += 3
 
 submission['quality'] = y_submit
 print(y_submit)
-submission.to_csv(path_save+'submission_wine_DO_5.csv')
+submission.to_csv(path_save+'submission_' + date+ '.csv')
 
-model.fit(x_train, y_train)
-print(model.feature_importances_)
+
 
 # print(y_submit)
 

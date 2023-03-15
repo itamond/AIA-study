@@ -29,7 +29,7 @@ train_csv['type'] = aaa
 test_csv['type'] = le.transform(test_csv['type'])
 #정의->핏->트랜스폼
 
-print(le.transform(['red','white']))    # 변환 전에 뭐였는지 확인하는 법
+print(le.transform(['red','white']))    # 변환 전 값을 확인하는 법
 
 
 # print(train_csv.columns)

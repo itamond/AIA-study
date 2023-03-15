@@ -46,21 +46,22 @@ test_csv['type'] = enc.transform(test_csv['type'])
 print(train_csv.shape)
 
 
-x= train_csv.drop(['quality'], axis=1)
+x= train_csv.drop(['quality','type'], axis=1)
 y= train_csv['quality']
+test_csv = test_csv.drop(['type'], axis=1)
 print(np.unique(y,return_counts=True))
 # test_csv = test_csv.drop(['type'], axis=1)
 
-
 y = to_categorical(y)
 y = y[:,3:]
+
 
 # print(y.shape)
 
 # print(x.shape)   #(5497, 12)
 # print(y.shape)
 # print(test_csv)
-print(np.unique(y,return_counts=True))
+# print(np.unique(y,return_counts=True))
 #array([3, 4, 5, 6, 7, 8, 9], dtype=int64)
 #array([  26,  186, 1788, 2416,  924,  152,    5]
 # print(y.shape)   # (5497, 7)
@@ -73,12 +74,12 @@ x_train, x_test, y_train, y_test = train_test_split(
     train_size=0.8
 )
 
-
-scaler = StandardScaler()
+scaler = RobustScaler()
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
+
 
 
 
@@ -94,14 +95,14 @@ filename = '{epoch:04d}-{val_acc:.2f}.hdf5'
 #2. 모델구성
 
 
-input1 = Input(shape=(12,))
-dense1 = Dense(200,activation='relu')(input1)
+input1 = Input(shape=(11,))
+dense1 = Dense(50,activation='relu')(input1)
 drop1 = Dropout(0.5)(dense1)
-dense2 = Dense(100,activation='relu')(drop1)
+dense2 = Dense(20,activation='relu')(drop1)
 drop2 = Dropout(0.5)(dense2)
-dense3 = Dense(200,activation='relu')(drop2)
+dense3 = Dense(50,activation='relu')(drop2)
 drop3 = Dropout(0.5)(dense3)
-dense4 = Dense(100,activation='relu')(drop3)
+dense4 = Dense(20,activation='relu')(drop3)
 drop4 = Dropout(0.2)(dense4)
 dense5 = Dense(40,activation='relu')(drop4)
 dense6 = Dense(20,activation='relu')(dense5)

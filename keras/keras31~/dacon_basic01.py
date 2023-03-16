@@ -62,18 +62,38 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 test_set = scaler.transform(test_set)
 
-train_x=x_train
+# train_x=x_train
+# x_train['주간통화시간'] = x_train['주간통화시간'].astype(int)
+# x_train['저녁통화시간'] = x_train['저녁통화시간'].astype(int)
+# x_train['밤통화시간'] = x_train['밤통화시간'].astype(int)
 
-train_x['총통화시간'] = train_x['주간통화시간'] + train_x['저녁통화시간'] + train_x['밤통화시간']
+# x_train['주간통화횟수'] = x_train['주간통화횟수'].astype(int)
+# x_train['저녁통화횟수'] = x_train['저녁 통화 시간'].astype(int)
+# x_train['밤통화횟수'] = x_train['밤통화횟수'].astype(int)
 
-train_x['총통화횟수'] = train_x['주간통화횟수'] + train_x['저녁통화횟수'] + train_x['밤통화횟수']
-
-train_x['총통화요금'] = train_x['주간통화요금'] + train_x['저녁통화요금'] + train_x['밤통화요금']
-
-train_x['평균통화시간'] = train_x['총통화시간'] / train_x['총통화횟수']
-train_x['평균통화요금'] = train_x['총통화요금'] / train_x['총통화횟수']
+# x_train['주간통화요금'] = x_train['주간통화요금'].astype(int)
+# x_train['저녁통화요금'] = x_train['저녁통화요금'].astype(int)
+# x_train['밤통화요금'] = x_train['밤통화요금'].astype(int)
 
 
+# train_x['총통화시간'] = train_x['주간통화시간'] + train_x['저녁통화시간'] + train_x['밤통화시간']
+
+# train_x['총통화횟수'] = train_x['주간통화횟수'] + train_x['저녁통화횟수'] + train_x['밤통화횟수']
+
+# train_x['총통화요금'] = train_x['주간통화요금'] + train_x['저녁통화요금'] + train_x['밤통화요금']
+
+# train_x['평균통화시간'] = train_x['총통화시간'] / train_x['총통화횟수']
+# train_x['평균통화요금'] = train_x['총통화요금'] / train_x['총통화횟수']
+
+
+# test_set['총통화시간'] = test_set['주간통화시간'] + test_set['저녁통화시간'] + test_set['밤통화시간']
+
+# test_set['총통화횟수'] = test_set['주간통화횟수'] + test_set['저녁통화횟수'] + test_set['밤통화횟수']
+
+# test_set['총통화요금'] = test_set['주간통화요금'] + test_set['저녁통화요금'] + test_set['밤통화요금']
+
+# test_set['평균통화시간'] = test_set['총통화시간'] / test_set['총통화횟수']
+# test_set['평균통화요금'] = test_set['총통화요금'] / test_set['총통화횟수']
 
 
 #2. 모델구성

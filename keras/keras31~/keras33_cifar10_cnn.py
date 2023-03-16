@@ -1,38 +1,39 @@
-from keras.datasets import mnist
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
+from keras.datasets import cifar10
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
-import datetime
 from sklearn.metrics import accuracy_score
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 import datetime
 #1. 데이터
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-print(np.unique(y_train, return_counts=True))
-#(array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=uint8), array([5923, 6742, 5958, 6131, 5842, 5421, 5918, 6265, 5851, 5949],
-#실습#
+
+print(x_train.shape, y_train.shape)
+print(x_test.shape, y_test.shape)
+# (50000, 32, 32, 3) (50000, 1)
+# (10000, 32, 32, 3) (10000, 1)
+
+# x_train = x_train.reshape(50000, 32*32*3)
+# x_test = x_test.reshape(10000, 32*32*3)
+
+
 # scaler = MinMaxScaler()
 # scaler.fit(x_train)
 # x_train = scaler.transform(x_train)
 # x_test = scaler.transform(x_test)
-x_train = x_train.reshape(60000, 28*28)
-x_test = x_test.reshape(10000, 28*28)
+#****************x_train = x_train/255.     - 콤마는 파이썬의 부동 소수점 연산이라는 표시
+#****************x_test = x_test/255.
 
-scaler = MinMaxScaler()
-scaler.fit(x_train)
-x_train = scaler.transform(x_train)
-x_test = scaler.transform(x_test)
 
-x_train = x_train.reshape(60000, 28, 28, 1)
-x_test = x_test.reshape(10000, 28, 28, 1)
-#reshape = 안에 있는 내용과 순서는 바뀌면 안됨, 구조만 바꾸는 함수.
-# 60000,28, 14, 2 이런 식도 가능하다.
-# 60000,14, 28, 2 도 가능. 
-# 뒤의 rows, columns, channels 의 곲은 항상 같아야한다.
-#Transpose = 열과 행을 바꾸는것. reshape와 다르다
+x_train = x_train.reshape(50000, 32*32*3)/255.
+x_test = x_test.reshape(10000, 32*32*3)/255.         #reshape와 scaling 동시에 하기.
+
+
+x_train = x_train.reshape(50000, 32, 32, 3)
+x_test = x_test.reshape(10000, 32, 32, 3)
 
 
 y_train = to_categorical(y_train)
@@ -49,27 +50,28 @@ filename='{epoch:04d}-{val_acc:.4f}.hdf5'
 #2. 모델구성
 
 model = Sequential()
-model.add(Conv2D(20, 
-                 (2,2),
+model.add(Conv2D(64, 
+                 (3,3),
                  padding='same',
-                 input_shape = (28, 28, 1),
+                 input_shape = (32, 32, 3),
                  activation='relu'))
-model.add(Conv2D(10,
+model.add(Conv2D(64,
                  (3,3),
                  padding='same',
                  activation='relu'))
-model.add(Conv2D(10,
-                 (4,4),
-                #  padding='same',
+model.add(MaxPooling2D())   
+model.add(Conv2D(128,
+                 (3,3),
+                 padding='same',
                  activation='relu'))
-model.add(Conv2D(10,
-                 (2,2),
-                #  padding='same',
+model.add(MaxPooling2D())   
+model.add(Conv2D(256,
+                 (3,3),
+                 padding='same',
                  activation='relu'))
 model.add(Flatten())
-model.add(Dense(32,activation='relu'))
-model.add(Dense(20,activation='relu'))
-model.add(Dense(10,activation='relu'))
+model.add(Dense(512,activation='relu'))
+model.add(Dense(512,activation='relu'))
 model.add(Dense(10,activation='softmax'))
 
 model.summary()
@@ -95,8 +97,8 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['acc'])
 
 hist = model.fit(x_train,y_train,
-                 epochs = 500,
-                 batch_size = 6000,
+                 epochs = 5000,
+                 batch_size =64,
                  verbose=1,
                  validation_split=0.2,
                  callbacks=[es,mcp])
@@ -117,8 +119,17 @@ print('acc :', acc)
 
 print('걸린시간 : ', round(end_time - start_time,2))    # round의 2는 소수 둘째까지 반환하라는것
 
-# result : [0.07119229435920715, 0.9807999730110168]
-# acc : 0.9808
 
 
 
+# result : [2.391897201538086, 0.7656000256538391]
+# acc : 0.7656
+# 걸린시간 :  424.89
+
+
+# result : [1.910552978515625, 0.741100013256073]
+# acc : 0.7411
+# 걸린시간 :  252.9
+
+# acc : 0.7448
+# 걸린시간 :  205.25

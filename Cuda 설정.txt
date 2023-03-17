@@ -1,0 +1,43 @@
+Cuda11.4.4
+사용자 정의 
+->cuda -> samples 해제 , documentation 해제 , **********visual studio integration 필수 해제*********
+
+
+
+CuDNN v8.2.4 for CUDA 11.4	
+풀어서 폴더에 씌우기
+c:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\11.4
+
+
+Tensorflow-gpu == 2.7.4
+가상환경에 설치
+cmd
+conda env list ->base 출력
+->activate base  base환경불러오기
+->deactivate     base환경 나가기
+conda create -n tf274gpu python=3.9.12 anaconda    나는 콘다의 가상환경을 tf274gpu라는 이름으로 작명하고, python 3.9.12버전을 불러올거야
+엔터->						anaconda = 파이썬 친구들도 설치함
+
+
+conda env list로 확인
+tf274gpu 가상환경 생성 확인
+
+activate tf274gpu   (가상환경 불러오기)
+
+pip install tensorflow-gpu==2.7.4
+
+-> python  으로 확인
+->import tensorflow as tf
+->tf.__version__
+'2.7.4'
+->from tensorflow.keras.models import Sequential
+->ctrl+z로 빠져나감
+->deactivate 로 가상환경 밖으로 나감
+->activate base base 가상환경으로 이동
+->conda deactivate 또 나감
+->conda activate tf274gpu    가상환경 들어감
+
+
+
+diskmgmt.msc
+포멧 후 디스크 잡는 프로그램.(디스크 관리)

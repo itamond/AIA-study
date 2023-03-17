@@ -1,0 +1,75 @@
+함수
+
+
+
+
+# = 주석 , 이 코드는 실행시키지 않음. 설명문
+
+
+"" 따옴표 -> 따옴표 안의 글씨를 그대로 출력
+
+print("a와 b를 더한 값 : ", c)
+'-> a와  b를 더한 값 : c 로' 출력
+
+pip list -  아나콘다 설치 프로그램 버전확인
+
+pip install tensorflow - 텐서플로 설치 
+
+import 포함시켜라
+
+import tensorflow as tf -> 텐서플로를 포함시키는데 tf라고 부를거다.
+
+print(tf.__version__) 텐서플로 버전 출력
+
+import numpy as np - >numpy  라는 글자 형식을 불러옴
+
+x = np.array([1,2,3])  -> x는 1과 2와 3이다 np 형식으로 불러온.
+
+numpy = 인간이 하는 계산과 매우 비슷. 그래서 많이 쓴다.
+
+print(x.shape) = 모양을 확인하는 함수. 모델링 전에 많이 사용
+
+optimizer  최적화
+
+Sequential 모델 =  순차적 모델.
+
+Dense = 이전층의 노드를 다음 층의 모든 노드에 훈련
+
+evaluate()= 평가 함수. fit에서 생성된 w 값에데이터를 넣어서 평가를 시킨다
+
+predict()= 예측 함수 위에서 []라는 데이터를 넣었으므로 여기서도 []를 넣는다
+	fit에서 생성된 w값으로 predict 한다
+
+batch_size= 핏(fit)에서 수행, 데이터를 x만큼 묶어서 계산시켜라
+
+model.compile() = 컴파일 시켜라
+
+model.fit() = 훈련시켜라
+
+x = np.array(range(10)) = [0부터 9]까지
+
+x = np.array(range(21, 31)) = [21부터 30]까지
+
+x = x.swapaxes(0, 1)
+x = x.transpose()      행, 열 바꾸기
+
+
+.read_csv    csv 엑셀 파일 읽어오는 판다스 함수
+.to_csv      csv 엑셀 파일로 저장하는 판다스 함수 
+변수명.drop 컬런(axis=1) 혹은 행(axis=0) 을 통째로 버릴때 사용하는 함수
+변수명.dropna() nall값을 가진 행 통째로 삭제 시키는 함수
+
+
+def 함수를 만드는 함수.
+  return 함수를 지정할때 출력되는 값을 지정한다.
+
+mean_squared_error = 평균 제곱 오차를 구하는 함수
+
+r2_score 결정계수 r2스코어를 구하는 함수
+
+
+'''  '''
+""" """    =블럭 주석 처리
+
+
+R2 = 1.0이 최대치

@@ -1,12 +1,12 @@
 from keras.datasets import mnist
-from tensorflow.python.keras.models import Sequential
+from tensorflow.python.keras.models import Sequential, load_model
 from tensorflow.python.keras.layers import Dense, Conv2D, Flatten
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 import datetime
 from sklearn.metrics import accuracy_score
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 import datetime
 #1. 데이터
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -74,6 +74,7 @@ model.add(Dense(10,activation='softmax'))
 
 model.summary()
 
+model = load_model('./_save/cnn/mnist/_k32_2_0316_2056_0920-0.9886.hdf5') 
 #3. 컴파일, 훈련
 import time
 start_time = time.time()
@@ -95,8 +96,8 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['acc'])
 
 hist = model.fit(x_train,y_train,
-                 epochs = 500,
-                 batch_size = 6000,
+                 epochs = 5000,
+                 batch_size = 32,
                  verbose=1,
                  validation_split=0.2,
                  callbacks=[es,mcp])
@@ -121,4 +122,6 @@ print('걸린시간 : ', round(end_time - start_time,2))    # round의 2는 소�
 # acc : 0.9808
 
 
-
+# result : [0.21724455058574677, 0.988099992275238]
+# acc : 0.9881
+# 걸린시간 :  461.0

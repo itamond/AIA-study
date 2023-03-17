@@ -122,7 +122,7 @@ class_weight={0:10, 1:80}
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam',
               metrics=['acc'],
-              # 훈련 과정에 accuracy를 추가.   hist.history에 다 기록됨. 대괄호=리스트
+              # 훈련 과정에 accuracy를 추가.   hist.history에 다 기록됨. 대괄호=리스트  
               )                             #대괄호 안에 다른 지표도 추가 가능(list이기 때문에)
                                             #metrics = 훈련에 영향을 주지않음. 지표확인용, 풀네임 줄임말 상관 없음
 

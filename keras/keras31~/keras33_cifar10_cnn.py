@@ -42,7 +42,7 @@ y_test = to_categorical(y_test)
 
 date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M")
-filepath='./_save/cnn/mnist/'
+filepath='./_save/cnn/cifar10/'
 filename='{epoch:04d}-{val_acc:.4f}.hdf5'
 
 
@@ -90,7 +90,7 @@ mcp = ModelCheckpoint(monitor='val_acc',
                       mode='auto',
                       save_best_only=True,
                       verbose=1,
-                      filepath = ''.join([filepath+'_k32_2_'+date+'_'+filename]))
+                      filepath = ''.join([filepath+'_k33_2_'+date+'_'+filename]))
 
 
 model.compile(loss='categorical_crossentropy', optimizer='adam',
@@ -133,3 +133,6 @@ print('걸린시간 : ', round(end_time - start_time,2))    # round의 2는 소�
 
 # acc : 0.7448
 # 걸린시간 :  205.25
+
+# acc : 0.7469
+# 걸린시간 :  242.4

@@ -1,0 +1,24 @@
+﻿API
+
+import numpy as np   넘파이 api 불러오기
+import pandas as pd 판다스 api 불러오기
+
+
+import tensorflow as tf 
+from tensorflow.python.keras.models import Sequential   시퀀셜 모델 불러오기
+from tensorflow.python.keras.layers import Dense   덴스 레이어 불러오기
+from tensorflow.python.keras.callbacks import EarlyStopping 얼리스토핑 불러오기
+from keras.utils import to_categorical   케라스 카테코리컬 ohe 불러오기
+
+import sklearn 사이킷런 불러오기
+from sklearn.model_selection import train_test_split 사이킷런의 트레인 테스트 스플릿 함수 불러오기
+from sklearn.datasets import xx 데이터셋 불러오기
+from sklearn.metrics import r2_score, accurate_score, mean_squared_error 등등 수치 계산 함수 불러오기
+from sklearn.preprocessing import    데이터 전처리에 관련
+                                  OneHotEncoder      사이킷런 ohe
+		          MinMaxScaler, StandardScaler    스케일러
+
+
+import matplotlib.pyplot as plt    #가장 많이 사용하는 시각화 api
+
+

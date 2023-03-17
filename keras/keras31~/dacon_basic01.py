@@ -27,9 +27,10 @@ filename = '{epoch:04d}-{val_acc:.2f}.hdf5'
 
 
 
-x=train_set.drop(['전화해지여부'], axis=1)
+x=train_set.drop(['전화해지여부','음성사서함이용'], axis=1)
 y=train_set['전화해지여부']
 print(x.shape, y.shape)  #(30200, 12) (30200,)
+test_set = test_set.drop(['음성사서함이용'], axis=1)
 
 
 
@@ -106,12 +107,15 @@ test_set = scaler.transform(test_set)
 # model.add(Dense(1,activation='sigmoid'))  
 
 
-input1 = Input(shape=(10,))
-dense1 = Dense(200,activation='linear')(input1)
+input1 = Input(shape=11,)
+dense1 = Dense(80,activation='linear')(input1)
 drop1 = Dropout(0.5)(dense1)
-dense2 = Dense(100,activation='relu')(drop1)
+dense2 = Dense(60,activation='relu')(drop1)
 drop2 = Dropout(0.5)(dense2)
 dense3 = Dense(40,activation='relu')(drop2)
+drop3 = Dropout(0.5)(dense3)
+dense4 = Dense(30,activation='relu')(drop3)
+dense3 = Dense(20,activation='relu')(dense4)
 drop3 = Dropout(0.5)(dense3)
 dense4 = Dense(10,activation='relu')(drop3)
 output1 = Dense(1,activation='sigmoid')(dense4)
@@ -171,7 +175,6 @@ rmse = RMSE(y_test, y_predict)
 print('rmse :', rmse)
 
 #평소처럼 수치가 아닌 0이냐 1이냐를 맞춰야한다면 accuracy_score 사용 
-
 
 
 from sklearn.metrics import accuracy_score, r2_score

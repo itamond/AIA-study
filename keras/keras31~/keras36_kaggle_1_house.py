@@ -43,23 +43,23 @@ for col in tqdm_notebook(cols):
     test_set[col]=le.fit_transform(test_set[col])
 
 
-print(test_set)
-print(train_set.shape) #(1460,76)
-print(test_set.shape) #(1459, 75) #train_set과 열 값이 '1'차이 나는 건 count를 제외했기 때문이다. 예측할때 다시 씀
+# print(test_set)
+# print(train_set.shape) #(1460,76)
+# print(test_set.shape) #(1459, 75)
 
-print(train_set.columns)
-print(train_set.info()) 
-print(train_set.describe()) 
+# print(train_set.columns)
+# print(train_set.info()) 
+# print(train_set.describe()) 
 
-print(train_set.isnull().sum())
+# print(train_set.isnull().sum())
 train_set = train_set.fillna(train_set.median())
-print(train_set.isnull().sum())
-print(train_set.shape)
+# print(train_set.isnull().sum())
+# print(train_set.shape)
 test_set = test_set.fillna(test_set.median())
 
 x = train_set.drop(['SalePrice'],axis=1) 
-print(x.columns)
-print(x.shape) #(1460, 75)
+# print(x.columns)
+# print(x.shape) #(1460, 75)
 
 y = train_set['SalePrice']
 x_train, x_test, y_train, y_test = train_test_split(
@@ -154,4 +154,4 @@ r2 = r2_score(y_test, y_predict)
 print('r2스코어 :', r2)
 submit = model.predict(test_set)
 submission['SalePrice'] = submit
-submission.to_csv('./_save/house_price/subtest3.csv')
+submission.to_csv('./_save/house_price/subtest3'+date+'.csv')

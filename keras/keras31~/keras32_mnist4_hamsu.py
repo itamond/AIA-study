@@ -64,7 +64,7 @@ dense1 = Dense(32,activation='relu')(flat1)
 dense2 = Dense(20,activation='relu')(dense1)
 dense3 = Dense(10,activation='relu')(dense2)
 output1 = Dense(10,activation='softmax')(dense3)
-model = Model(inputs=input1, outputs=output1)
+model = Model(inputs=input1, outputs=output1)   
 model.summary()
 
 

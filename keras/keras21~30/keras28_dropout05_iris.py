@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.models import Sequential, Model, load_model
 from tensorflow.python.keras.layers import Dense, Input, Dropout
 from sklearn.metrics import accuracy_score
-from keras.utils import to_categorical
+# from tensorflow.utils import to_categorical
 from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
 
 

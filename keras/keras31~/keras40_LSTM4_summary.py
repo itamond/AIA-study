@@ -31,3 +31,27 @@ model.summary()
 # Trainable params: 205
 # Non-trainable params: 0
 # _________________________________________________________________
+
+
+
+# =================================================================
+#  lstm (LSTM)                 (None, 10)                480          LSTM은 네배의 연산량, LSTM parameter number = 4 × (( x  +  h ) ×  h  + h )
+                                                                        #4개의 게이트가 있으므로 rnn params X 4 = 120 * 4
+#  dense (Dense)               (None, 7)                 77
+
+#  dense_1 (Dense)             (None, 1)                 8
+
+# =================================================================
+# Total params: 565
+# Trainable params: 565
+# Non-trainable params: 0
+# _________________________________________________________________
+
+
+# params = dim(W)+dim(V)+dim(U) = n*n + kn + nm
+
+# n - dimension of hidden layer
+
+# k - dimension of output layer
+
+# m - dimension of input layer

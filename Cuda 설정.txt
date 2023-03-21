@@ -39,5 +39,71 @@ pip install tensorflow-gpu==2.7.4
 
 
 
+가상환경 지우기 conda env remove -n x
+
 diskmgmt.msc
 포멧 후 디스크 잡는 프로그램.(디스크 관리)
+
+
+
+
+
+cmd 창에서
+md temp => md = make directory
+cd temp => temp폴더 안으로 들어가기
+
+
+
+
+cls = 화면 초기화
+
+
+
+
+dir/w
+디렉토리의 프로그램 확인.
+
+
+
+
+
+
+텐서플로 로컬 설치 방법
+pip download 통해서 로컬로 설치파일을 미리 받아놔야함
+pip install (텐서플로 설치 디렉토리)
+텐서플로를 다운로드하면 이것저것 많이 깔림. 전부 인과관계가 있는 데이터.(전부 다 있어야 설치가능)
+dir/w 로 파일 확인,
+conda create -n tf272cpu python=3.9.15  파이썬3.9.15 기반의 가상환경 생성
+activate tf272cpu
+pip list
+dir/w로 파일 확인하고
+pip install tensorflow_cpu-2.7.2-cp39-cp39-win_amd64.whl
+
+
+
+
+
+
+
+
+~~원격 데스크톱 연결~~
+
+IP
+
+ipconfig, ipconfig/all   = ip확인
+
+192.168.0.175:33175  =  :33175 문을 열어 놓겠다는 의미
+
+
+
+
+conda create -n tf273cpu python=3.9.13 anaconda
+tf273cpu 가상환경에 파이썬 3.9.13 버전 및 아나콘다 부속물 설치
+
+activate tf273cpu
+
+pip install tensorflow-cpu==2.7.3
+
+
+
+LSTM parameter number = 4 × (( x  +  h ) ×  h  + h )

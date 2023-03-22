@@ -106,4 +106,15 @@ pip install tensorflow-cpu==2.7.3
 
 
 
-LSTM parameter number = 4 × (( x  +  h ) ×  h  + h )
+
+
+
+
+
+
+
+
+
+
+
+가상환경 핑 확인

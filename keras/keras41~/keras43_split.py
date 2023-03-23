@@ -20,5 +20,17 @@ def split_x(dataset, timesteps):
 
 bbb = split_x(dataset, timesteps)
 print(bbb)
-print(bbb.shape)
+print(bbb.shape)    #(6, 5)
 
+# [[ 1  2  3  4  5]
+#  [ 2  3  4  5  6]
+#  [ 3  4  5  6  7]
+#  [ 4  5  6  7  8]
+#  [ 5  6  7  8  9]
+#  [ 6  7  8  9 10]]
+
+
+x = bbb[:, :4]   #콤마 다음은 열에 대한 이야기 이다
+x = bbb[:, :-1]  #모든행, 마지막 열 전'까지'
+y = bbb[:, -1]   #모든 행, 마지막 열
+print(x)

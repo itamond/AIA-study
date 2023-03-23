@@ -1,4 +1,5 @@
 CNN
+Conv2D
 입력 #(batch_size, rows, columns, channels) 4차원
 출력 4차원
 
@@ -7,6 +8,11 @@ model.add(Conv2D(7, (2,2), input_shape=(8,8,1)))
 (kernal_size + bias)*input*output
 (2*2+1)*1*7
 
+Conv1D
+입력 3차원 출력 3차원
+시계열 데이터에 주로 사용
+다른 RNN보다 속도가 빠르고 속도에 비해 성능이 좋다
+컨브2디와 같이 패딩, 스트라이드 다 가능
 
 DNN
 입력 통상적으로 2차원

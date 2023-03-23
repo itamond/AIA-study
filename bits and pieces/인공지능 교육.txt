@@ -528,18 +528,22 @@ RNN의 단점
 timesteps가 길어질수록 데이터의 효용성이 의심된다.
 때문에 사용하는
 
-LSTM (Long Short Term Memory)는 기존의 RNN이 출력과 
+LSTM (Long Short Term Memory)은 기존의 RNN이 출력과 
 먼 위치에 있는 정보를 기억할 수 없다는 단점을 보완하여 
 장/단기 기억을 가능하게 설계한 신경망의 구조를 말한다.
 LSTM은 RNN의 계량형. 통상적으로 네배의 계산을 더 함
 너무 오래되어 망각되는 데이터(vanishing gradient)를 
-cell state를 통해보존하여 계산시키는 모델
+cell state를 통해 보존하여 계산시키는 모델
 
 
 
-
-
-
+4차원 사진 데이터를
+행,가로,세로,칼라 -> 행, 플래튼, 컬러
+Conv2D           -> Conv1D
+사진 데이터를 -> 펼쳐서 3차원 데이터로 바꿀수도 있음
+Conv1D의 데이터는 시계열 데이터가 많다 (time series)
+기본적인 RNN은 데이터가 방대해지면 너무 느리다. (하지만 성능이 조금 더 좋다)
+Conv1D는 성능이 LSTM에 비해 아주 조금 안좋지만 속도가 빠르다
 
 
 

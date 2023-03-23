@@ -1,6 +1,6 @@
 import numpy as np
 from tensorflow.python.keras.models import Sequential, Model
-from tensorflow.python.keras.layers import LSTM, Dense, GRU, Input, Bidirectional
+from tensorflow.python.keras.layers import LSTM, Dense, GRU, Input, Bidirectional, Conv1D, Flatten
 from tensorflow.python.keras.callbacks import EarlyStopping
 #1. 데이터
 x = np.array([[1,2,3],[2,3,4],[3,4,5],[4,5,6],
@@ -20,8 +20,10 @@ x = x.reshape(13, 3, 1)
 import time
 
 input1=Input(shape=(3,1))
-dense1=Bidirectional(GRU(32, activation='linear'))(input1)
-dense2=Dense(32,activation='relu')(dense1)
+Conv1=Conv1D(32, 2)(input1)
+Conv2=Conv1D(32, 2)(Conv1)
+Flat1=Flatten()(Conv2)
+dense2=Dense(32,activation='relu')(Flat1)
 dense3=Dense(16,activation='relu')(dense2)
 dense4=Dense(8,activation='relu')(dense3)
 dense5=Dense(16,activation='relu')(dense4)
@@ -65,3 +67,7 @@ print('걸린 시간 : ', np.round(ent-stt, 2))
 #Bidirectional 적용
 # 50, 60, 70의 결과물 : [[81.521194]]
 # 50, 60, 70의 결과물 : [[80.99734]]
+
+
+#Conv1D 적용
+#50, 60, 70의 결과물 : [[79.83409]]

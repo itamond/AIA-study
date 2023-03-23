@@ -35,20 +35,25 @@ filename='{epoch:04d}-{val_acc:.4f}.hdf5'
 
 #2. 모델구성
 
-model = Sequential()    
-model.add(Conv1D(128, 2, input_shape=(32,96)))
-model.add(Dropout(0.5))
-model.add(Conv1D(64, 2))
-model.add(Dropout(0.2))
-model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(4, activation='relu'))
-model.add(Dense(2, activation='relu'))
-model.add(Dense(100, activation='softmax')) 
 
+input1 = Input(shape=(32,32*3))
+Conv1 = Conv1D(30, 2, padding='causal')(input1)
+drop1 = Dropout(0.2)(Conv1)
+Conv2 = Conv1D(20, 2, padding='causal')(drop1)
+drop2 = Dropout(0.2)(Conv2)
+MXP1 = MaxPooling1D()(drop2)
+Conv3 = Conv1D(10, 2, padding='causal')(MXP1)
+Conv4 = Conv1D(30, 2, padding='causal')(Conv3)
+Conv5 = Conv1D(20, 2, padding='causal')(Conv4)
+MXP2 = MaxPooling1D()(Conv5)
+Conv6 = Conv1D(10, 2, padding='causal')(MXP2)
+Flat1 = Flatten()(Conv6)
+dense1 = Dense(30, activation='relu')(Flat1)
+dense2 = Dense(20, activation='relu')(dense1)
+dense3 = Dense(10, activation='relu')(dense2)
+output1 = Dense(100,activation='softmax')(dense3)
+model = Model(inputs=input1, outputs=output1)
+model.summary()
 
 
 
@@ -75,7 +80,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam',
 
 hist = model.fit(x_train,y_train,
                  epochs = 5000,
-                 batch_size =512,
+                 batch_size =128,
                  verbose=1,
                  validation_split=0.2,
                  callbacks=[es])

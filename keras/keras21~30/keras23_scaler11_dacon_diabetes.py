@@ -66,6 +66,8 @@ test_set = scaler.transform(test_set)
 
 
 
+
+
 #2. 모델구성
 
 model = Sequential()

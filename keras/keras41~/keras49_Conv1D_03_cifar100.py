@@ -37,23 +37,23 @@ filename='{epoch:04d}-{val_acc:.4f}.hdf5'
 
 
 input1 = Input(shape=(32,32*3))
-Conv1 = Conv1D(30, 2, padding='causal')(input1)
-drop1 = Dropout(0.2)(Conv1)
-Conv2 = Conv1D(20, 2, padding='causal')(drop1)
-drop2 = Dropout(0.2)(Conv2)
-MXP1 = MaxPooling1D()(dro2)
-Conv3 = Conv1D(10, 2, padding='causal')(MXP1)
-Conv4 = Conv1D(30, 2, padding='causal')(Conv3)
-Conv5 = Conv1D(20, 2, padding='causal')(Conv4)
+Conv1 = Conv1D(128, 2, padding='causal')(input1)
+drop1 = Dropout(0.5)(Conv1)
+Conv2 = Conv1D(64, 2, padding='causal')(drop1)
+drop2 = Dropout(0.4)(Conv2)
+MXP1 = MaxPooling1D()(drop2)
+Conv3 = Conv1D(32, 2, padding='causal')(MXP1)
+Conv4 = Conv1D(16, 2, padding='causal')(Conv3)
+Conv5 = Conv1D(8, 2)(Conv4)
 MXP2 = MaxPooling1D()(Conv5)
-Conv6 = Conv1D(10, 2, padding='causal')(MXP2)
+Conv6 = Conv1D(4, 2, padding='same')(MXP2)
 Flat1 = Flatten()(Conv6)
-dense1 = Dense(30, activation='relu')(Flat1)
-dense2 = Dense(20, activation='relu')(dense1)
-dense3 = Dense(10, activation='relu')(dense2)
+dense1 = Dense(128, activation='relu')(Flat1)
+dense2 = Dense(64, activation='relu')(dense1)
+dense3 = Dense(32, activation='relu')(dense2)
 output1 = Dense(100,activation='softmax')(dense3)
 model = Model(inputs=input1, outputs=output1)
-model.summary()
+# model.summary()
 
 
 
@@ -68,11 +68,11 @@ es = EarlyStopping(monitor='val_acc',
                    restore_best_weights=True,
                    patience=30)
 
-mcp = ModelCheckpoint(monitor='val_acc',
-                      mode='auto',
-                      save_best_only=True,
-                      verbose=1,
-                      filepath = ''.join([filepath+'_k33_2_'+date+'_'+filename]))
+# mcp = ModelCheckpoint(monitor='val_acc',
+#                       mode='auto',
+#                       save_best_only=True,
+#                       verbose=1,
+#                       filepath = ''.join([filepath+'_k33_2_'+date+'_'+filename]))
 
 
 model.compile(loss='categorical_crossentropy', optimizer='adam',    
@@ -117,3 +117,8 @@ print('걸린시간 : ', round(end_time - start_time,2),'초')
 
 # acc : 0.218
 # 걸린시간 :  364.68 초   causal 적용
+
+
+
+# acc : 0.2356
+# 걸린시간 :  699.32 초 causal 적용

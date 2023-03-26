@@ -30,13 +30,13 @@ print(dataset)  #[420551 rows x 14 columns]
 #10분단위인 데이터를 몇개씩 자를지 선택! 
 
 
-#1-1 데이터 확인 및 결측치 제거 
-print(dataset.columns)
-print(dataset.info()) #결측치 없음 
-print(dataset.describe()) # T(temperature)를 y값으로
+# #1-1 데이터 확인 및 결측치 제거 
+# print(dataset.columns)
+# print(dataset.info()) #결측치 없음 
+# print(dataset.describe()) # T(temperature)를 y값으로
 
 print(dataset['T (degC)'].values)  #pandas데이터 형식으로 출력됨  -> numpy로 바꿔줌 
- 
+ #넘파이에서 판다스로 넘길때는 데이터 프레임으로 만들어야함. 인덱스와 헤드 잡아야줘야함
 # import matplotlib.pyplot as plt   
 # plt.plot(dataset['T (degC)'].values)    #numpy데이터 형식으로 바꿔줘야함 
 # plt.show()
@@ -59,7 +59,7 @@ print(x_pred.shape, y_pred.shape)  #(41635, 13) (41635,)
 timesteps = 10          
 def split_X(dataset, timesteps):                   
     aaa = []                                      
-    for i in range(len(dataset) - timesteps): 
+    for i in range(len(dataset) - timesteps-1): 
         subset = dataset[i : (i + timesteps)]     
         aaa.append(subset)                         
     return np.array(aaa)                          
@@ -84,18 +84,15 @@ print(x_train1.shape) #(294375, 10, 13)
 print(x_test1.shape)  #(84521, 10, 13)
 print(x_pred1.shape)  #(41625, 10, 13)
 
-y_train = y_train[timesteps:]
-y_test = y_test[timesteps:]
-y_pred = y_pred[timesteps:]
+y_train = y_train[timesteps+1:]
+y_test = y_test[timesteps+1:]
+y_pred = y_pred[timesteps+1:]
 
 print(y_train.shape) #(294375,)
 
 #2. 모델구성 
 model = Sequential()
 model.add(LSTM(16, input_shape=(10,13))) 
-model.add(Dense(16, activation='relu'))
-model.add(Dense(8))
-model.add(Dense(8, activation='relu'))
 model.add(Dense(1)) 
 
 #3. 컴파일, 훈련 
@@ -106,7 +103,7 @@ es = EarlyStopping(monitor='loss', patience=10, mode='auto',
                    restore_best_weights=True
                    )
 
-model.fit(x_train1, y_train, epochs=1, callbacks=(es))
+model.fit(x_train1, y_train, epochs=5, batch_size=512, callbacks=[es])
 
 #4. 평가, 예측 
 
@@ -116,6 +113,7 @@ print('loss : ', loss)
 predict = model.predict(x_pred1)
 print('y_pred:', predict)
 
+print(y_pred.shape)
 #'mse'->rmse로 변경
 import numpy as np
 def RMSE(predict, y_pred): 

@@ -91,7 +91,7 @@ merge1 = concatenate([output1, output2, output3], name='mg1')   #a모델과 b모
 #리스트 형태로 입력
 merge2 = Dense(30, activation='swish', name='mg2')(merge1)
 merge3 = Dense(20, activation='swish', name='mg3')(merge2)
-output4 = Dense(1, name='last')(merge3)
+output4 = Dense(10, name='last')(merge3)
 
 
 
@@ -102,8 +102,8 @@ bungi4 = Dense(10,activation='swish')(bungi3)
 output5 =Dense(1)(bungi4)
 
 
-bungi21 = Dense(10,activation='swish')(output4)
-bungi22 = Dense(10,activation='swish')(bungi21)
+bungi21 = Dense(30,activation='swish')(output4)
+bungi22 = Dense(20,activation='swish')(bungi21)
 bungi23 = Dense(10,activation='swish')(bungi22)
 output6 = Dense(1)(bungi23)
 
@@ -148,16 +148,16 @@ print('result :', result)
 
 predict = model.predict([x1_test, x2_test, x3_test])
 
-r21 = r2_score(y1_test, predict[0])
-r22 = r2_score(y2_test, predict[1])
-print('r2 :', (r21+r22)/2)
+r2_1 = r2_score(y1_test, predict[0])
+r2_2 = r2_score(y2_test, predict[1])
+print('r2 :', (r2_1+r2_2)/2)
 
 rmse1 = RMSE(y1_test, predict[0])
 rmse2 = RMSE(y2_test, predict[1])
 print('rmse :', (rmse1+rmse2)/2)
 
 print(predict)
-print(len(predict))    #리스트의 길이 보는법
+print(len(predict), len(predict[0]))       # 2, 30     #리스트의 열과 행 보는법
 
 # result : [110.96007537841797, 22.88892936706543, 88.0711441040039]          #첫번째= 로스의 합, 두번째 = 첫번째 로스, 세번째 = 두번째 로스
 # r2 : 0.9059950760159865

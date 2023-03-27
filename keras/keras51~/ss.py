@@ -188,7 +188,7 @@ es = EarlyStopping(monitor='val_loss',
 mcp = ModelCheckpoint(monitor='val_loss',
                       save_best_only=True,
                       mode='auto',
-                      filepath=''.join('_save/samsung/keras53_samsung4_bhh.hdf5'))
+                      filepath=''.join('_save/samsung/keras53_samsung4_b4hh.hdf5'))
 
 
 model.compile(loss = 'mse', optimizer = 'adam',
@@ -202,7 +202,7 @@ hist = model.fit([x1_train, x2_train], y_train,
                  validation_split=0.2,
                  callbacks=[es, mcp])
 
-model.save_weights("./_save/samsung/keras_samsung2_bhh.h5")
+model.save_weights("./_save/samsung/keras_samsung2_bhh3.h5")
 #4. 평가, 예측
 
 
@@ -226,3 +226,6 @@ print('y_pred :', pred[-1:])
 # r2_score : -20.981716345929573
 # rmse : 14580.4009582106
 # y_pred : [[60589.418]]
+
+
+# print(x1_test)

@@ -166,6 +166,8 @@ dense4 = Dense(64, activation='swish', name='dense4')(dense3)
 dense5 = Dense(32, activation='swish', name='dense5')(dense4)
 output1 = Dense(16, name='output1')(dense5)
 
+
+
 # 2-2. 모델2
 input2 = Input(shape=(timesteps, 10))
 lstm2 = LSTM(256, activation='swish', name='lstm2')(input2)

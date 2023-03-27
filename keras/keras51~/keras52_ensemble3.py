@@ -87,7 +87,11 @@ from tensorflow.keras.layers import concatenate, Concatenate
 
 #concatenate  사슬처럼 엮다. 소문자는 함수 대문자는 클래스
 
-merge1 = concatenate([output1, output2, output3], name='mg1')   #a모델과 b모델의 아웃풋이 merge의 인풋이 된다.
+merge1 = Concatenate()([output1, output2, output3])   #a모델과 b모델의 아웃풋이 merge의 인풋이 된다.
+#Concatenate() 는 클래스 문법으로써 괄호 안에는 axis=-1이 생략 되어 있다. 괄호 뒤에 인풋 써줌
+#concatenate는 함수 문법으로써 괄호 안에 inputs 등 변수 적용 가능
+
+#********** 퍼스널컬러 **********
 #리스트 형태로 입력
 merge2 = Dense(30, activation='swish', name='mg2')(merge1)
 merge3 = Dense(20, activation='swish', name='mg3')(merge2)
@@ -157,8 +161,23 @@ rmse2 = RMSE(y2_test, predict[1])
 print('rmse :', (rmse1+rmse2)/2)
 
 print(predict)
-print(len(predict), len(predict[0]))       # 2, 30     #리스트의 열과 행 보는법
+print(len(predict), len(predict[0]))       # 2, 30     #리스트의 행과 열 보는법
+#리스트는 파이썬 기본 자료형으로써 shape 함수를 사용할 수 없다. 따라서 len을 사용하여 데이터를 확인함
+#np.array 로 넘파이화 하면 쉐이프 볼수잇음
+
 
 # result : [110.96007537841797, 22.88892936706543, 88.0711441040039]          #첫번째= 로스의 합, 두번째 = 첫번째 로스, 세번째 = 두번째 로스
 # r2 : 0.9059950760159865
 # rmse : 7.0844300831876605
+
+
+# 클래스 함수 정의 단계시 그 식별자 뒤에 오는 괄호 안에는 클래스 함수 호출시 입력하는 인자를 받아내는 변수(파라미터)를 표시할 수 없게 되어 있습니다.
+# 왜냐하면 여기에 명시할 수 있는 것은 원칙적으로 클래스 함수의 식별자뿐이기 때문입니다. 그래서 클래스 함수 호출시 인자를 입력할 필요가 있는 경우 이를 클래스 함수
+# 내부에서 받아내는 식별자는 위 자리 대신 클래스 함수 정의시 클래스 함수 내부에서 '__init__' 함수을 반드시 정의하면서 이 '__init__' 함수의 인자 자리에 표시되어야 합니다.
+
+
+# 클래스 뒤에 괄호는 해당 클래스의 인스턴스를 생성하기 위한 문법이다.
+# 클래스는 실제로 사용하기 위해서는 인스턴스를 생성해야 합니다.
+# 인스턴스는 클래스를 기반으로 생성된 개별 객체를 말하며
+# 이 객체는 클래스에서 정의한 속성과 메서드를 가지고있습니다
+# 이를 통해 프로그래머는 클래스에서 정의한 기능을 구현할 수 있습니다

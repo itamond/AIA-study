@@ -73,9 +73,9 @@ y = np.array(y)
 # x1.fillna('None', inplace=True)
 # x2.fillna('None', inplace=True)
 # y.fillna(y.mean(), inplace=True)
-x1 = x1[:200]
-x2 = x2[:200]
-y = y[:200]
+x1 = x1[:1000]
+x2 = x2[:1000]
+y = y[:1000]
 
 # print(x1)
 x1 = np.flip(x1, axis=1)
@@ -198,7 +198,7 @@ es = EarlyStopping(monitor='val_loss',
 mcp = ModelCheckpoint(monitor='val_loss',
                       save_best_only=True,
                       mode='auto',
-                      filepath=''.join('_save/samsung/keras53_samsung2_bhh.hdf5'))
+                      filepath=''.join('_save/samsung/keras53_samsung2_bhh.h5'))
 
 
 model.compile(loss = 'mse', optimizer = 'adam',
@@ -212,7 +212,6 @@ hist = model.fit([x1_train, x2_train], y_train,
                  validation_split=0.2,
                  callbacks=[es, mcp],shuffle=False)
 
-model.save("./_save/samsung/keras53_samsung2_bhh.h5")
 #4. 평가, 예측
 
 
@@ -245,7 +244,8 @@ plt.plot(range(len(y_test)),model.predict([x1_test,x2_test]),label='model')
 plt.legend()
 plt.show()
 
-model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
+# model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
+model.save("./_save/samsung/keras53_samsung2_bhh1.h5")
 
 # mse_loss : 12736994.0
 # y_pred : [[62259.945]]

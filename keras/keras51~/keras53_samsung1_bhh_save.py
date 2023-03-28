@@ -31,6 +31,13 @@ import numpy as np
 import pandas as pd
 import datetime
 import time
+import random
+import tensorflow as tf
+# 0. 시드 초기화
+seed=0
+random.seed(seed)
+np.random.seed(seed)
+tf.random.set_seed(seed)
 
 #1. 데이터
 
@@ -97,8 +104,8 @@ def split_x(datasets, timesteps):
         aaa.append(subset)
     return np.array(aaa)
 
-x1_pred = x1[-timesteps:]
-x2_pred = x2[-timesteps:]
+
+
 
 # print(x1_pred.shape, x2_pred.shape)
 
@@ -116,59 +123,22 @@ x1_train,x1_test, x2_train, x2_test, y_train, y_test = tts(x1,x2,y,
 
 
 
-scaler = Normalizer()
 
-x1_train = split_x(x1_train, timesteps)
-x1_test = split_x(x1_test, timesteps)
-x2_train = split_x(x2_train, timesteps)
-x2_test = split_x(x2_test, timesteps)
+
+def split_and_reshape(x_train,x_test,timesteps,scaler):
+    x_train = scaler.fit_transform(x_train)
+    x_test = scaler.transform(x_test)
+    x_pred = x_test[-timesteps:].reshape(1,timesteps,10)
+    x_train = split_x(x_train, timesteps)
+    x_test = split_x(x_test, timesteps)  
+    return x_train,x_test,x_pred
+
+scaler = MinMaxScaler()
+x1_train,x1_test,x1_pred=split_and_reshape(x1_train,x1_test,timesteps,scaler)
+x2_train,x2_test,x2_pred=split_and_reshape(x2_train,x2_test,timesteps,scaler)
 y_train = y_train[timesteps:]
 y_test = y_test[timesteps:]
 
-x1_pred = split_x(x1_pred, timesteps)
-x2_pred = split_x(x2_pred, timesteps)
-print(x1_pred.shape)
-
-x1_train = x1_train.reshape(-1,timesteps*10)
-x1_test = x1_test.reshape(-1,timesteps*10)
-x1_train = scaler.fit_transform(x1_train)
-x1_test = scaler.transform(x1_test)
-
-x2_train = x2_train.reshape(-1,timesteps*10)
-x2_test = x2_test.reshape(-1,timesteps*10)
-x2_train = scaler.fit_transform(x2_train)
-x2_test = scaler.transform(x2_test)
-
-
-scaler = MinMaxScaler()
-x1_train = scaler.fit_transform(x1_train)
-x1_test = scaler.transform(x1_test)
-
-x2_train = scaler.fit_transform(x2_train)
-x2_test = scaler.transform(x2_test)
-
-
-
-
-
-# x1_train = x1_train.reshape(-1,20, 10)
-# x1_test = x1_test.reshape(-1,20, 10)
-# x2_train = x2_train.reshape(-1,20, 10)
-# x2_test = x2_test.reshape(-1,20, 10)
-
-
-
-x1_train = np.array(x1_train)
-x1_test = np.array(x1_test)
-x1_train= x1_train.reshape(-1,timesteps,10)
-x1_test= x1_test.reshape(-1,timesteps,10)
-
-
-
-x2_train = np.array(x2_train)
-x2_test = np.array(x2_test)
-x2_train= x2_train.reshape(-1,timesteps,10)
-x2_test= x2_test.reshape(-1,timesteps,10)
 
 
 #print(x1_train.shape, x1_test.shape)
@@ -177,32 +147,41 @@ x2_test= x2_test.reshape(-1,timesteps,10)
 
 # 2-1. 모델1
 input1 = Input(shape=(timesteps,10))
-lstm1 = LSTM(256, activation='swish', name='lstm1')(input1)
-dense1 = Dense(128, activation='swish', name='dense1')(lstm1)
+conv1d1 =Conv1D(256,2)(input1)
+drop1 = Dropout(0.5)(conv1d1)
+lstm1 = LSTM(256, activation='swish', name='lstm1')(drop1)
+drop2 = Dropout(0.5)(lstm1)
+dense1 = Dense(128, activation='relu', name='dense1')(drop2)
 dense2 = Dense(64, activation='swish', name='dense2')(dense1)
 dense3 = Dense(32, activation='swish', name='dense3')(dense2)
-dense4 = Dense(64, activation='swish', name='dense4')(dense3)
+dense4 = Dense(64, activation='relu', name='dense4')(dense3)
 dense5 = Dense(32, activation='swish', name='dense5')(dense4)
-output1 = Dense(16, name='output1')(dense5)
+output1 = Dense(32, name='output1')(dense5)
 
 
 
 # 2-2. 모델2
 input2 = Input(shape=(timesteps, 10))
-lstm2 = LSTM(256, activation='swish', name='lstm2')(input2)
-dense11 = Dense(128, activation='swish', name='dense11')(lstm2)
+conv1d2 =Conv1D(256,2)(input2)
+drop11 = Dropout(0.5)(conv1d2)
+lstm2 = LSTM(256, activation='swish', name='lstm2')(drop11)
+drop12 = Dropout(0.5)(lstm2)
+dense11 = Dense(128, activation='swish', name='dense11')(drop12)
 dense12 = Dense(64, activation='swish', name='dense12')(dense11)
 dense13 = Dense(32, activation='swish', name='dense13')(dense12)
 dense14 = Dense(64, activation='swish', name='dense14')(dense13)
 dense15 = Dense(32, activation='swish', name='dense15')(dense14)
-output2 = Dense(16, name='output2')(dense13)
+output2 = Dense(32, name='output2')(dense13)
+
+
 
 merge1 = concatenate([output1, output2], name='merge1')
-merge2 = Dense(50, activation='swish', name='merge2')(merge1)
-merge3 = Dense(30, activation='swish', name='merge3')(merge2)
-merge4 = Dense(20, activation='swish', name='merge4')(merge3)
-merge5 = Dense(10, activation='swish', name='merge5')(merge4)
-last_output = Dense(1, name='last')(merge5)
+merge2 = Dense(128, activation='swish', name='merge2')(merge1)
+merge3 = Dense(64, activation='swish', name='merge3')(merge2)
+merge4 = Dense(32, activation='swish', name='merge4')(merge3)
+merge5 = Dense(16, activation='swish', name='merge5')(merge4)
+merge6 = Dense(8, activation='swish', name='merge6')(merge5)
+last_output = Dense(1, name='last')(merge6)
 
 model = Model(inputs=[input1, input2], outputs=[last_output])
 
@@ -227,11 +206,11 @@ model.compile(loss = 'mse', optimizer = 'adam',
 
 
 hist = model.fit([x1_train, x2_train], y_train,
-                 epochs=200,
-                 batch_size=64,
+                 epochs=300,
+                 batch_size=8,
                  verbose=1,
                  validation_split=0.2,
-                 callbacks=[es, mcp])
+                 callbacks=[es, mcp],shuffle=False)
 
 model.save("./_save/samsung/keras53_samsung2_bhh.h5")
 #4. 평가, 예측
@@ -241,7 +220,12 @@ model.save("./_save/samsung/keras53_samsung2_bhh.h5")
 result= model.evaluate([x1_test,x2_test], y_test)
 print('mse_loss :', result)
 
-pred = model.predict([x1_test,x2_test])
+
+
+
+pred = model.predict([x1_pred, x2_pred])
+
+# print(pred)
 # r2 = r2_score(y_test, pred)
 # print('r2_score :', r2)
 
@@ -250,7 +234,18 @@ pred = model.predict([x1_test,x2_test])
 
 # rmse = RMSE(y_test, pred)
 # print('rmse :', rmse)
-print('y_pred :', pred[-1:])
+
+
+
+print(f'결정 계수 : {r2_score(y_test,model.predict([x1_test,x2_test]))}\n마지막 날 종가 : {y[-1]} \ny_pred : {np.round(pred[0],2)}')
+
+import matplotlib.pyplot as plt
+plt.scatter(range(len(y_test)),y_test,label='real')
+plt.plot(range(len(y_test)),model.predict([x1_test,x2_test]),label='model')
+plt.legend()
+plt.show()
+
+model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
 
 # mse_loss : 12736994.0
 # y_pred : [[62259.945]]

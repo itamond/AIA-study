@@ -126,7 +126,6 @@ _, x1_test, _, x2_test, _, y_test = tts(x1, x2, y, train_size=0.8, shuffle=False
 
 
 
-
 def split_and_reshape(x_train,x_test,timesteps,scaler):
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.transform(x_test)

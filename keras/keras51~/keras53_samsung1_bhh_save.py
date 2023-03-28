@@ -71,6 +71,11 @@ x2 = x2[:200]
 y = y[:200]
 
 # print(x1)
+x1 = np.flip(x1, axis=1)
+x2 = np.flip(x2, axis=1)
+y = np.flip(y)
+
+
 
 x1 =np.char.replace(x1.astype(str), ',', '').astype(np.float64)
 x2 = np.char.replace(x2.astype(str), ',', '').astype(np.float64)
@@ -92,6 +97,10 @@ def split_x(datasets, timesteps):
         aaa.append(subset)
     return np.array(aaa)
 
+x1_pred = x1[-timesteps:]
+x2_pred = x2[-timesteps:]
+
+# print(x1_pred.shape, x2_pred.shape)
 
 
 # print(x1.shape, x2.shape, y.shape)
@@ -107,7 +116,7 @@ x1_train,x1_test, x2_train, x2_test, y_train, y_test = tts(x1,x2,y,
 
 
 
-scaler = MinMaxScaler()
+scaler = Normalizer()
 
 x1_train = split_x(x1_train, timesteps)
 x1_test = split_x(x1_test, timesteps)
@@ -116,20 +125,29 @@ x2_test = split_x(x2_test, timesteps)
 y_train = y_train[timesteps:]
 y_test = y_test[timesteps:]
 
+x1_pred = split_x(x1_pred, timesteps)
+x2_pred = split_x(x2_pred, timesteps)
+print(x1_pred.shape)
 
 x1_train = x1_train.reshape(-1,timesteps*10)
 x1_test = x1_test.reshape(-1,timesteps*10)
 x1_train = scaler.fit_transform(x1_train)
 x1_test = scaler.transform(x1_test)
 
-
-
-
-
 x2_train = x2_train.reshape(-1,timesteps*10)
 x2_test = x2_test.reshape(-1,timesteps*10)
 x2_train = scaler.fit_transform(x2_train)
 x2_test = scaler.transform(x2_test)
+
+
+scaler = MinMaxScaler()
+x1_train = scaler.fit_transform(x1_train)
+x1_test = scaler.transform(x1_test)
+
+x2_train = scaler.fit_transform(x2_train)
+x2_test = scaler.transform(x2_test)
+
+
 
 
 
@@ -151,6 +169,7 @@ x2_train = np.array(x2_train)
 x2_test = np.array(x2_test)
 x2_train= x2_train.reshape(-1,timesteps,10)
 x2_test= x2_test.reshape(-1,timesteps,10)
+
 
 #print(x1_train.shape, x1_test.shape)
 
@@ -200,7 +219,7 @@ es = EarlyStopping(monitor='val_loss',
 mcp = ModelCheckpoint(monitor='val_loss',
                       save_best_only=True,
                       mode='auto',
-                      filepath=''.join('_save/samsung/keras53_samsung4_bhh.hdf5'))
+                      filepath=''.join('_save/samsung/keras53_samsung2_bhh.hdf5'))
 
 
 model.compile(loss = 'mse', optimizer = 'adam',
@@ -214,7 +233,7 @@ hist = model.fit([x1_train, x2_train], y_train,
                  validation_split=0.2,
                  callbacks=[es, mcp])
 
-model.save_weights("./_save/samsung/keras_samsung2_bhh.h5")
+model.save("./_save/samsung/keras53_samsung2_bhh.h5")
 #4. 평가, 예측
 
 
@@ -235,3 +254,10 @@ print('y_pred :', pred[-1:])
 
 # mse_loss : 12736994.0
 # y_pred : [[62259.945]]
+
+
+# mse_loss : 11248996.0
+# y_pred : [[61722.22]]
+
+# mse_loss : 15840713.0
+# y_pred : [[62498.883]]

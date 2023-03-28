@@ -210,7 +210,11 @@ model.save_weights("./_save/samsung/keras_samsung2_bhh3.h5")
 result= model.evaluate([x1_test,x2_test], y_test)
 print('mse_loss :', result)
 
-pred = model.predict([x1_test,x2_test])
+x1_pred = x1_test[-timesteps:]
+x2_pred = x2_test[-timesteps:]
+
+
+pred = model.predict([x1_pred,x2_pred])
 # r2 = r2_score(y_test, pred)
 # print('r2_score :', r2)
 

@@ -48,11 +48,15 @@ mcpname = '{epoch:04d}-{val_loss:.2f}.hdf5'
 date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M")
 
-datasets1= pd.read_csv(path1+'삼성전자 주가2.csv', index_col=0, encoding='cp949')
-datasets2= pd.read_csv(path1+'현대자동차.csv', index_col=0, encoding='cp949')
+datasets1= pd.read_csv(path1+'삼성전자 주가3.csv', index_col=0, encoding='cp949')
+datasets2= pd.read_csv(path1+'현대자동차2.csv', index_col=0, encoding='cp949')
 
 
-feature_cols = ['시가', '고가', '저가', 'Unnamed: 6', '등락률','기관', '개인', '외국계', '종가']
+# print(datasets1.columns)
+# Index(['시가', '고가', '저가', '종가', '전일비', 'Unnamed: 6', '등락률', '거래량', '금액(백만)',
+#        '신용비', '개인', '기관', '외인(수량)', '외국계', '프로그램', '외인비'],
+
+feature_cols = ['시가', '고가', '저가', 'Unnamed: 6', '등락률','기관','거래량', '개인', '외국계', '종가']
 
 
 x1 = datasets1[feature_cols]
@@ -64,10 +68,14 @@ y = datasets1['종가']
 x1 = np.array(x1)
 x2 = np.array(x2)
 y = np.array(y)
+# print(x1)
 
-x1 = x1[:1000]
-x2 = x2[:1000]
-y = y[:1000]
+# x1.fillna('None', inplace=True)
+# x2.fillna('None', inplace=True)
+# y.fillna(y.mean(), inplace=True)
+x1 = x1[:200]
+x2 = x2[:200]
+y = y[:200]
 
 # print(x1)
 x1 = np.flip(x1, axis=1)
@@ -86,7 +94,7 @@ def RMSE(a,b) :
     return np.sqrt(mean_squared_error(a,b))
 
 
-timesteps=10
+timesteps=30
 
 
 def split_x(datasets, timesteps):
@@ -97,18 +105,32 @@ def split_x(datasets, timesteps):
     return np.array(aaa)
 
 
-x1_train,x1_test, x2_train, x2_test, y_train, y_test = tts(x1,x2,y,
-                                                           train_size=0.8,
-                                                           shuffle=False,
-                                                           random_state=30,
-                                                           )
+
+
+# print(x1_pred.shape, x2_pred.shape)
+
+
+# print(x1.shape, x2.shape, y.shape)
+#(1186, 20, 10) (1186, 20, 10) (1186,)
+_, x1_test, _, x2_test, _, y_test = tts(x1, x2, y, train_size=0.8, shuffle=False)
+(x1_train, x2_train, y_train) = (x1, x2, y)
+
+# x1_train,x1_test, x2_train, x2_test, y_train, y_test = tts(x1,x2,y,
+#                                                            train_size=0.8,
+#                                                            shuffle=False,
+#                                                            random_state=30,
+#                                                            )
+
+# print(x1_train.shape, x1_test.shape)
+
+
 
 
 
 def split_and_reshape(x_train,x_test,timesteps,scaler):
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.transform(x_test)
-    x_pred = x_test[-timesteps:].reshape(1,timesteps,9)
+    x_pred = x_test[-timesteps:].reshape(1,timesteps,10)
     x_train = split_x(x_train, timesteps)
     x_test = split_x(x_test, timesteps)  
     return x_train,x_test,x_pred
@@ -126,7 +148,7 @@ y_test = y_test[timesteps:]
 #2. 모델구성
 
 # 2-1. 모델1
-# input1 = Input(shape=(timesteps,9))
+# input1 = Input(shape=(timesteps,10))
 # conv1d1 =Conv1D(256,2)(input1)
 # drop1 = Dropout(0.5)(conv1d1)
 # lstm1 = LSTM(256, activation='swish', name='lstm1')(drop1)
@@ -141,7 +163,7 @@ y_test = y_test[timesteps:]
 
 
 # # 2-2. 모델2
-# input2 = Input(shape=(timesteps, 9))
+# input2 = Input(shape=(timesteps, 10))
 # conv1d2 =Conv1D(256,2)(input2)
 # drop11 = Dropout(0.5)(conv1d2)
 # lstm2 = LSTM(256, activation='swish', name='lstm2')(drop11)
@@ -151,7 +173,7 @@ y_test = y_test[timesteps:]
 # dense13 = Dense(32, activation='relu', name='dense13')(dense12)
 # dense14 = Dense(64, activation='swish', name='dense14')(dense13)
 # dense15 = Dense(32, activation='relu', name='dense15')(dense14)
-# output2 = Dense(32, name='output2')(dense13)
+# output2 = Dense(32, name='output2')(dense15)
 
 
 
@@ -165,14 +187,14 @@ y_test = y_test[timesteps:]
 
 # model = Model(inputs=[input1, input2], outputs=[last_output])
 
-
-# #3. 컴파일, 훈련
-# es = EarlyStopping(monitor='val_loss',
-#                    patience=10,
-#                    restore_best_weights=True,
-#                    verbose=1,
-#                    mode='auto',
-#                    )
+model = load_model("./_save/samsung/keras53_samsung2_bhh63311.h5")
+#3. 컴파일, 훈련
+es = EarlyStopping(monitor='val_loss',
+                   patience=30,
+                   restore_best_weights=True,
+                   verbose=1,
+                   mode='auto',
+                   )
 
 
 # mcp = ModelCheckpoint(monitor='val_loss',
@@ -180,15 +202,14 @@ y_test = y_test[timesteps:]
 #                       mode='auto',
 #                       filepath=''.join('_save/samsung/keras53_samsung2_bhh.h5'))
 
-model = load_model('./_save/samsung/keras53_samsung2_bhh62469.h5')
 
 model.compile(loss = 'mse', optimizer = 'adam',
               )
 
 
 # hist = model.fit([x1_train, x2_train], y_train,
-#                  epochs=100,
-#                  batch_size=8,
+#                  epochs=200,
+#                  batch_size=16,
 #                  verbose=1,
 #                  validation_split=0.2,
 #                  callbacks=[es],shuffle=False)
@@ -201,7 +222,19 @@ result= model.evaluate([x1_test,x2_test], y_test)
 print('mse_loss :', result)
 
 
+
+
 pred = model.predict([x1_pred, x2_pred])
+
+# print(pred)
+# r2 = r2_score(y_test, pred)
+# print('r2_score :', r2)
+
+# def RMSE(a,b) :
+#     return np.sqrt(mean_squared_error(a,b))
+
+# rmse = RMSE(y_test, pred)
+# print('rmse :', rmse)
 
 
 
@@ -213,15 +246,8 @@ print(f'결정 계수 : {r2_score(y_test,model.predict([x1_test,x2_test]))}\n마
 # plt.legend()
 # plt.show()
 
-# model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
+# # model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
 # model.save("./_save/samsung/keras53_samsung2_bhh.h5")
 
-# mse_loss : 12736994.0
-# y_pred : [[62259.945]]
 
 
-# mse_loss : 11248996.0
-# y_pred : [[61722.22]]
-
-# mse_loss : 15840713.0
-# y_pred : [[62498.883]]

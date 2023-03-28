@@ -45,14 +45,14 @@ def split_x(datasets, timesteps) :
 x_train = split_x(x_train, timesteps)
 x_test = split_x(x_test, timesteps)
 x_pred = split_x(x_pred, timesteps)
-print(x_pred)
+# print(x_pred)
 
 y_train = y_train[(timesteps+1) :]
 y_test = y_test[(timesteps+1) :]
 y_pred = y_pred[(timesteps+1) :]
 
 
-print(x_train.shape)    #(294374, 10, 13)
+# print(x_train.shape)    #(294374, 10, 13)
 model = Sequential()
 model.add(LSTM(128, input_shape=(10,13)))
 model.add(Dense(1,activation='relu'))

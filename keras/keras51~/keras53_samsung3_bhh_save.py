@@ -147,10 +147,10 @@ y_test = y_test[(timesteps+1):]
 #2. 모델구성
 # 2-1. 모델1
 input1 = Input(shape=(timesteps,10))
-conv1d1 = Conv1D(80,5, activation=LeakyReLU(0.9))(input1)
-lstm1 = LSTM(40, activation='swish', return_sequences=True, name='lstm32')(conv1d1)
-lstm31 = LSTM(70, activation='swish', name = 'lstm3')(lstm1)
-dense1 = Dense(68, activation='swish', name='dense1')(lstm31)
+conv1d1 = Conv1D(256,5, activation=LeakyReLU(0.9))(input1)
+lstm1 = LSTM(128, activation='swish', return_sequences=True, name='lstm32')(conv1d1)
+lstm31 = LSTM(64, activation='swish', name = 'lstm3')(lstm1)
+dense1 = Dense(108, activation='swish', name='dense1')(lstm31)
 dense2 = Dense(64, activation='swish', name='dense2')(dense1)
 dense3 = Dense(32, activation='swish', name='dense3')(dense2)
 dense4 = Dense(64, activation='swish', name='dense4')(dense3)
@@ -159,9 +159,9 @@ output1 = Dense(32, name='output1')(dense4)
 
 # 2-2. 모델2
 input2 = Input(shape=(timesteps, 10))
-conv1d2 =Conv1D(80,5, activation=LeakyReLU(0.9))(input2)
-lstm2 = LSTM(40, activation='swish', return_sequences=True,  name='lstm2')(conv1d2)
-lstm3 = LSTM(70, activation='swish', name = 'lstm33')(lstm2)
+conv1d2 =Conv1D(256,5, activation=LeakyReLU(0.9))(input2)
+lstm2 = LSTM(128, activation='swish', return_sequences=True,  name='lstm2')(conv1d2)
+lstm3 = LSTM(64, activation='swish', name = 'lstm33')(lstm2)
 dense11 = Dense(108, activation='swish', name='dense11')(lstm3)
 dense12 = Dense(64, activation='swish', name='dense12')(dense11)
 dense13 = Dense(32, activation='swish', name='dense13')(dense12)
@@ -240,6 +240,7 @@ plt.legend()
 plt.show()
 
 # # model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
+
 model.save("./_save/samsung/keras53_samsung4_bhh.h5")
 
 

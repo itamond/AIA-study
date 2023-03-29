@@ -56,7 +56,7 @@ datasets2= pd.read_csv(path1+'현대자동차2.csv', index_col=0, encoding='cp94
 # Index(['시가', '고가', '저가', '종가', '전일비', 'Unnamed: 6', '등락률', '거래량', '금액(백만)',
 #        '신용비', '개인', '기관', '외인(수량)', '외국계', '프로그램', '외인비'],
 
-feature_cols = ['시가', '고가', '저가', 'Unnamed: 6', '등락률','기관','거래량', '개인', '외국계', '종가']
+feature_cols = ['시가']
 
 
 x1 = datasets1[feature_cols]
@@ -73,9 +73,9 @@ y = np.array(y)
 # x1.fillna('None', inplace=True)
 # x2.fillna('None', inplace=True)
 # y.fillna(y.mean(), inplace=True)
-x1 = x1[:200]
-x2 = x2[:200]
-y = y[:200]
+x1 = x1[:500]
+x2 = x2[:500]
+y = y[:500]
 
 # print(x1)
 x1 = np.flip(x1, axis=1)
@@ -94,7 +94,7 @@ def RMSE(a,b) :
     return np.sqrt(mean_squared_error(a,b))
 
 
-timesteps=30
+timesteps=7
 
 
 def split_x(datasets, timesteps):
@@ -129,7 +129,7 @@ _, x1_test, _, x2_test, _, y_test = tts(x1, x2, y, train_size=0.8, shuffle=False
 def split_and_reshape(x_train,x_test,timesteps,scaler):
     x_train = scaler.fit_transform(x_train)
     x_test = scaler.transform(x_test)
-    x_pred = x_test[-timesteps:].reshape(1,timesteps,10)
+    x_pred = x_test[-timesteps:].reshape(1,timesteps,1)
     x_train = split_x(x_train, timesteps)
     x_test = split_x(x_test, timesteps)  
     return x_train,x_test,x_pred
@@ -146,11 +146,11 @@ y_test = y_test[(timesteps+1):]
 
 #2. 모델구성
 # 2-1. 모델1
-input1 = Input(shape=(timesteps,10))
-conv1d1 = Conv1D(80,5, activation=LeakyReLU(0.9))(input1)
-lstm1 = LSTM(40, activation='swish', return_sequences=True, name='lstm32')(conv1d1)
-lstm31 = LSTM(70, activation='swish', name = 'lstm3')(lstm1)
-dense1 = Dense(68, activation='swish', name='dense1')(lstm31)
+input1 = Input(shape=(timesteps,1))
+# conv1d1 = Conv1D(80,5, activation=LeakyReLU(0.9))(input1)
+# lstm1 = LSTM(40, activation='swish', return_sequences=True, name='lstm32')(input1)
+lstm31 = LSTM(70, activation='swish', name = 'lstm3')(input1)
+dense1 = Dense(108, activation='swish', name='dense1')(lstm31)
 dense2 = Dense(64, activation='swish', name='dense2')(dense1)
 dense3 = Dense(32, activation='swish', name='dense3')(dense2)
 dense4 = Dense(64, activation='swish', name='dense4')(dense3)
@@ -158,14 +158,14 @@ output1 = Dense(32, name='output1')(dense4)
 
 
 # 2-2. 모델2
-input2 = Input(shape=(timesteps, 10))
-conv1d2 =Conv1D(80,5, activation=LeakyReLU(0.9))(input2)
-lstm2 = LSTM(40, activation='swish', return_sequences=True,  name='lstm2')(conv1d2)
-lstm3 = LSTM(70, activation='swish', name = 'lstm33')(lstm2)
+input2 = Input(shape=(timesteps, 1))
+# conv1d2 =Conv1D(80,5, activation=LeakyReLU(0.9))(input2)
+# lstm2 = LSTM(40, activation='swish', return_sequences=True,  name='lstm2')(conv1d2)
+lstm3 = LSTM(70, activation='swish', name = 'lstm33')(input2)
 dense11 = Dense(108, activation='swish', name='dense11')(lstm3)
 dense12 = Dense(64, activation='swish', name='dense12')(dense11)
 dense13 = Dense(32, activation='swish', name='dense13')(dense12)
-dense14 = Dense(34, activation='swish', name='dense14')(dense13)
+dense14 = Dense(64, activation='swish', name='dense14')(dense13)
 output2 = Dense(32, name='output2')(dense14)
 
 
@@ -183,7 +183,7 @@ model = Model(inputs=[input1, input2], outputs=[last_output])
 #3. 컴파일, 훈련
 es = EarlyStopping(monitor='val_loss',
                    patience=200,
-                #    restore_best_weights=True,
+                   restore_best_weights=True,
                    verbose=1,
                    mode='min',
                    )
@@ -201,7 +201,7 @@ model.compile(loss = 'mae', optimizer = 'adam',
 
 hist = model.fit([x1_train, x2_train], y_train,
                  epochs=2000,
-                 batch_size=32,
+                 batch_size=8,
                  verbose=1,
                  validation_split=0.2,
                  callbacks=[es],

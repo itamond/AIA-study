@@ -187,7 +187,7 @@ y_test = y_test[timesteps:]
 
 # model = Model(inputs=[input1, input2], outputs=[last_output])
 
-model = load_model("./_save/samsung/keras53_samsung2_bhh63311.h5")
+model = load_model("./_save/samsung/keras53_samsung2_bhh.h5")
 #3. 컴파일, 훈련
 es = EarlyStopping(monitor='val_loss',
                    patience=30,
@@ -238,7 +238,7 @@ pred = model.predict([x1_pred, x2_pred])
 
 
 
-print(f'결정 계수 : {r2_score(y_test,model.predict([x1_test,x2_test]))}\n마지막 날 종가 : {y[-1]} \ny_pred : {np.round(pred[0],2)}')
+print(f'결정 계수 : {r2_score(y_test,model.predict([x1_test,x2_test]))}\n3월 28일 종가 : {y[-1]} \n3월 29일 종가 예측 : {np.round(pred[0],2)}')
 
 # import matplotlib.pyplot as plt
 # plt.scatter(range(len(y_test)),y_test,label='real')

@@ -1,0 +1,251 @@
+# 삼성전자와 현대자동차 주가로 삼성전자 주가 맞추기
+
+# 각각 데이터에서 컬럼 7개 이상 추출(그 중 거래량은 반드시 들어갈 것)
+# timesteps와 feature는 알아서 잘라라
+
+# 제공된 데이터 외 추가 데이터 사용금지
+
+# 1. 삼성전자 29일(수) 종가 맞추기 (점수 배점 0.3)
+# 2. 현대시가 30일(목) 시가 맞추기 (점수 배점 0.7)
+
+
+#마감시간 : 27일 월 23시 59분 59초        /    28일 화 23시 59분 59초
+#배환희 [삼성 1차] 60,350,07원   (np.round 소수 둘째자리까지)
+#배환희 [현대 2차] 60,350.07원
+#첨부파일 : keras53_samsung2_bhh_submit.py       데이터 및 가중치 불러오는 로드가 있어야함
+#          keras53_samsung4_bhh_submit.py
+#가중치 :  _save/samsung/keras53_samsung2_bhh.h5 / hdf5
+#         _save/samsung/keras53_samsung4_bhh.h5 / hdf5
+
+
+
+from tensorflow.python.keras.layers import concatenate
+from tensorflow.keras.models import Sequential, Model, load_model
+from tensorflow.keras.layers import Dense, Conv1D, Flatten, MaxPooling2D, Input, LSTM, Dropout, Bidirectional, LeakyReLU
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from sklearn.preprocessing import MinMaxScaler, Normalizer
+from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
+from sklearn.model_selection import train_test_split as tts
+import numpy as np
+import pandas as pd
+import datetime
+import time
+import random
+import tensorflow as tf
+# 0. 시드 초기화
+# seed=0
+# random.seed(seed)
+# np.random.seed(seed)
+# tf.random.set_seed(seed)
+
+#1. 데이터
+
+path1 = './_data/시험/'
+savepath = './_save/samsung/'
+mcpname = '{epoch:04d}-{val_loss:.2f}.hdf5'
+
+date = datetime.datetime.now()
+date = date.strftime("%m%d_%H%M")
+
+datasets1= pd.read_csv(path1+'삼성전자 주가3.csv', index_col=0, encoding='cp949')
+datasets2= pd.read_csv(path1+'현대자동차2.csv', index_col=0, encoding='cp949')
+
+
+# print(datasets1.columns)
+# Index(['시가', '고가', '저가', '종가', '전일비', 'Unnamed: 6', '등락률', '거래량', '금액(백만)',
+#        '신용비', '개인', '기관', '외인(수량)', '외국계', '프로그램', '외인비'],
+
+feature_cols = ['시가', '고가', '저가', 'Unnamed: 6', '등락률','기관','거래량', '개인', '외국계', '종가']
+
+
+x1 = datasets1[feature_cols]
+x2 = datasets2[feature_cols]
+x1 = x1.rename(columns={'Unnamed: 6':'증감량'})
+x2 = x2.rename(columns={'Unnamed: 6':'증감량'})
+y = datasets2['시가']
+#concat
+x1 = np.array(x1)
+x2 = np.array(x2)
+y = np.array(y)
+# print(x1)
+
+# x1.fillna('None', inplace=True)
+# x2.fillna('None', inplace=True)
+# y.fillna(y.mean(), inplace=True)
+x1 = x1[:200]
+x2 = x2[:200]
+y = y[:200]
+
+# print(x1)
+x1 = np.flip(x1, axis=1)
+x2 = np.flip(x2, axis=1)
+y = np.flip(y)
+
+
+
+x1 =np.char.replace(x1.astype(str), ',', '').astype(np.float64)
+x2 = np.char.replace(x2.astype(str), ',', '').astype(np.float64)
+y = np.char.replace(y.astype(str), ',', '').astype(np.float64)
+
+
+
+def RMSE(a,b) :
+    return np.sqrt(mean_squared_error(a,b))
+
+
+timesteps=30
+
+
+def split_x(datasets, timesteps):
+    aaa=[]
+    for i in range(len(datasets)-timesteps-1):
+        subset = datasets[i:(i+timesteps)]
+        aaa.append(subset)
+    return np.array(aaa)
+
+
+
+
+# print(x1_pred.shape, x2_pred.shape)
+
+
+# print(x1.shape, x2.shape, y.shape)
+#(1186, 20, 10) (1186, 20, 10) (1186,)
+_, x1_test, _, x2_test, _, y_test = tts(x1, x2, y, train_size=0.8, shuffle=False)
+(x1_train, x2_train, y_train) = (x1, x2, y)
+
+# x1_train,x1_test, x2_train, x2_test, y_train, y_test = tts(x1,x2,y,
+#                                                            train_size=0.8,
+#                                                            shuffle=False,
+#                                                            random_state=30,
+#                                                            )
+
+# print(x1_train.shape, x1_test.shape)
+
+
+
+
+def split_and_reshape(x_train,x_test,timesteps,scaler):
+    x_train = scaler.fit_transform(x_train)
+    x_test = scaler.transform(x_test)
+    x_pred = x_test[-timesteps:].reshape(1,timesteps,10)
+    x_train = split_x(x_train, timesteps)
+    x_test = split_x(x_test, timesteps)  
+    return x_train,x_test,x_pred
+
+scaler = MinMaxScaler()
+x1_train,x1_test,x1_pred=split_and_reshape(x1_train,x1_test,timesteps,scaler)
+x2_train,x2_test,x2_pred=split_and_reshape(x2_train,x2_test,timesteps,scaler)
+y_train = y_train[(timesteps+1):]
+y_test = y_test[(timesteps+1):]
+
+
+
+#print(x1_train.shape, x1_test.shape)
+
+#2. 모델구성
+# 2-1. 모델1
+# input1 = Input(shape=(timesteps,10))
+# conv1d1 = Conv1D(256,5, activation=LeakyReLU(0.9))(input1)
+# lstm1 = LSTM(128, activation='swish', return_sequences=True, name='lstm32')(conv1d1)
+# lstm31 = LSTM(64, activation='swish', name = 'lstm3')(lstm1)
+# dense1 = Dense(108, activation='swish', name='dense1')(lstm31)
+# dense2 = Dense(64, activation='swish', name='dense2')(dense1)
+# dense3 = Dense(32, activation='swish', name='dense3')(dense2)
+# dense4 = Dense(64, activation='swish', name='dense4')(dense3)
+# output1 = Dense(32, name='output1')(dense4)
+
+
+# # 2-2. 모델2
+# input2 = Input(shape=(timesteps, 10))
+# conv1d2 =Conv1D(256,5, activation=LeakyReLU(0.9))(input2)
+# lstm2 = LSTM(128, activation='swish', return_sequences=True,  name='lstm2')(conv1d2)
+# lstm3 = LSTM(64, activation='swish', name = 'lstm33')(lstm2)
+# dense11 = Dense(108, activation='swish', name='dense11')(lstm3)
+# dense12 = Dense(64, activation='swish', name='dense12')(dense11)
+# dense13 = Dense(32, activation='swish', name='dense13')(dense12)
+# dense14 = Dense(34, activation='swish', name='dense14')(dense13)
+# output2 = Dense(32, name='output2')(dense14)
+
+
+# merge1 = concatenate([output1, output2], name='merge1')
+# merge2 = Dense(68, activation='swish', name='merge2')(merge1)
+# merge3 = Dense(54, activation='swish', name='merge3')(merge2)
+# merge4 = Dense(32, activation='swish', name='merge4')(merge3)
+# merge5 = Dense(16, activation='swish', name='merge5')(merge4)
+# merge6 = Dense(8, activation='swish', name='merge6')(merge5)
+# last_output = Dense(1, name='last')(merge6)
+
+# model = Model(inputs=[input1, input2], outputs=[last_output])
+
+
+model = load_model("./_save/samsung/keras53_samsung4_bhh.h5")
+
+
+# model = load_model("./_save/samsung/keras53_samsung2_bhh.h5")
+#3. 컴파일, 훈련
+es = EarlyStopping(monitor='val_loss',
+                   patience=200,
+                #    restore_best_weights=True,
+                   verbose=1,
+                   mode='min',
+                   )
+
+
+# mcp = ModelCheckpoint(monitor='val_loss',
+#                       save_best_only=True,
+#                       mode='auto',
+#                       filepath=''.join('_save/samsung/keras53_samsung2_bhh.h5'))
+
+
+model.compile(loss = 'mae', optimizer = 'adam',
+              )
+
+
+# hist = model.fit([x1_train, x2_train], y_train,
+#                  epochs=2000,
+#                  batch_size=32,
+#                  verbose=1,
+#                  validation_split=0.2,
+#                  callbacks=[es],
+#                  shuffle=False)
+
+#4. 평가, 예측
+
+
+
+result= model.evaluate([x1_test,x2_test], y_test)
+# print('mae_loss :', result)
+
+
+
+
+pred = model.predict([x1_pred, x2_pred])
+
+# print(pred)
+# r2 = r2_score(y_test, pred)
+# print('r2_score :', r2)
+
+# def RMSE(a,b) :
+#     return np.sqrt(mean_squared_error(a,b))
+
+# rmse = RMSE(y_test, pred)
+# print('rmse :', rmse)
+
+
+
+print(f'3월 28일 시가 : {y[-1]} \n3월 30일 예측 시가 : {np.round(pred[0],2)}')
+
+# import matplotlib.pyplot as plt
+# plt.scatter(range(len(y_train)),y_train,label='real')
+# plt.plot(range(len(y_train)),model.predict([x1_train,x2_train]),label='model')
+# plt.legend()
+# plt.show()
+
+# # model.save_weights('_save/samsung/keras53_samsung2_bhh.h5')
+
+# model.save("./_save/samsung/keras53_samsung4_bhh.h5")
+
+
+

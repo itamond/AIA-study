@@ -180,7 +180,7 @@ y_test = y_test[(timesteps+1):]
 # model = Model(inputs=[input1, input2], outputs=[last_output])
 
 
-model = load_model("./_save/samsung/keras53_samsung4_bhh179973.h5")
+model = load_model("./_save/samsung/keras53_samsung4_bhh.h5")
 
 
 # model = load_model("./_save/samsung/keras53_samsung2_bhh.h5")
@@ -216,7 +216,7 @@ model.compile(loss = 'mae', optimizer = 'adam',
 
 
 result= model.evaluate([x1_test,x2_test], y_test)
-print('mae_loss :', result)
+# print('mae_loss :', result)
 
 
 
@@ -235,7 +235,7 @@ pred = model.predict([x1_pred, x2_pred])
 
 
 
-print(f'마지막 날 시가 : {y[-1]} \ny_pred : {np.round(pred[0],2)}')
+print(f'3월 28일 시가 : {y[-1]} \n3월 30일 예측 시가 : {np.round(pred[0],2)}')
 
 # import matplotlib.pyplot as plt
 # plt.scatter(range(len(y_train)),y_train,label='real')

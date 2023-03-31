@@ -5,16 +5,17 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import LeakyReLU
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split as tts
+from sklearn.metrics import accuracy_score
 import time
 
 #1. 데이터
 
-path = 'd:/study_data/_save/rps/'
+path = 'd:/study_data/_save/horse-or-human/'
 
 stt = time.time()
-x = np.load(path+'keras56_5_x_train.npy')
+x = np.load(path+'keras56_3_x_train.npy')
 # x_test = np.load(path+'keras55_1_x_test.npy')
-y = np.load(path+'keras56_5_y_train.npy')
+y = np.load(path+'keras56_3_y_train.npy')
 # y_test = np.load(path+'keras55_1_y_test.npy')
 # print(x_train.shape, x_test.shape, y_train.shape, y_test.shape)       #(160, 100, 100, 1)
 # (160, 100, 100, 1) (120, 100, 100, 1) (160,) (120,)
@@ -46,10 +47,10 @@ model.add(Flatten())
 model.add(Dense(64,activation='relu'))
 model.add(Dense(32,activation='relu'))
 model.add(Dense(16,activation='relu'))
-model.add(Dense(3,activation='softmax'))
+model.add(Dense(1,activation='sigmoid'))
 
 #3. 컴파일, 훈련
-model.compile(loss='categorical_crossentropy', 
+model.compile(loss='binary_crossentropy', 
               optimizer='adam', metrics=['acc'])
 
 # model.fit(xy_train[:][0], xy_train[:][1],
@@ -86,8 +87,26 @@ val_loss = hist.history['val_loss']
 acc = hist.history['acc']
 val_acc = hist.history['val_acc']
 
+# print('loss : ', loss[-1])
+# print('val_loss : ', val_loss[-1])
+# print('acc : ', acc[-1])
+# print('val_ac : ', val_acc[-1])
+
+
+#1. 그림그려              subplot()
+# 하나는 로스 발로스
+# 하나는 애큐 발애큐
 
 ett = time.time()
+
+
+pred = np.round(model.predict(x_test))
+
+acc = accuracy_score(y_test, pred)
+
+print('acc :', acc)
+
+
 
 print('로드까지 걸린 시간 :', np.round(ett1-stt, 2))
 print('연산 걸린 시간 :', np.round(ett-stt, 2))

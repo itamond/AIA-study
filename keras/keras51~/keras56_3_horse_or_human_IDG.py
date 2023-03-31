@@ -8,8 +8,8 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 
-path = 'd:/study_data/_data/cat_dog/Petimages/'
-save_path = 'd:/study_data/_save/cat_dog/'
+path = 'd:/study_data/_data/horse-or-human/'
+save_path = 'd:/study_data/_save/horse-or-human/'
 
 
 
@@ -47,8 +47,8 @@ test_datagen = ImageDataGenerator(
 
 
 xy_train =train_datagen.flow_from_directory(                     #폴더에서 가져올거야~    
-    'd:/study_data/_data/cat_dog/Petimages/',                #이미지제너레이터는 폴더별로 라벨값 부여. 때문에 분류 폴더 이전 상위폴더까지만 설정해도됨
-    target_size=(300, 300),                            #이미지 데이터를 200x200으로 확대 혹은 축소해라. 사이즈를 동일하게 만들어준다.
+    'd:/study_data/_data/horse-or-human/',                #이미지제너레이터는 폴더별로 라벨값 부여. 때문에 분류 폴더 이전 상위폴더까지만 설정해도됨
+    target_size=(150, 150),                            #이미지 데이터를 200x200으로 확대 혹은 축소해라. 사이즈를 동일하게 만들어준다.
     batch_size=25000,                                      #5장씩 잘라라
     class_mode='binary',                               #0과 1을 찾는 mode, int형 수치화해서 만들어줌 
     # color_mode='rgb',
@@ -65,24 +65,24 @@ xy_train =train_datagen.flow_from_directory(                     #폴더에서 �
 #     shuffle=True,
 # )   #Found 120 images belonging to 2 classes.   0과 1의 클래스로 분류되었다.        #x=120, 200, 200, 1 로 변환 됐음  y=120,
 
-ett1 = time.time()
-print('이미지 수치화 소요 시간 :', np.round(ett1-stt, 2))
 
 
-print(xy_train[0][0])
 
 
-path = 'd:/study_data/_save/_npy/'
-np.save(save_path + 'keras56_x_train.npy', arr=xy_train[0][0])          #수치화된 데이터를 np형태로 저장
+# print(xy_train[0][0])
+
+
+np.save(save_path + 'keras56_3_x_train.npy', arr=xy_train[0][0])          #수치화된 데이터를 np형태로 저장
 # np.save(path + 'keras56_x_test.npy', arr=xy_test[0][0])    
-np.save(save_path + 'keras56_y_train.npy', arr=xy_train[0][1])    
+np.save(save_path + 'keras56_3_y_train.npy', arr=xy_train[0][1])    
 # np.save(path + 'keras56_y_test.npy', arr=xy_test[0][1])
 
 
-ett2 = time.time()
+ett1 = time.time()
 
 
 
-print('넘파이 변경 소요 시간 :', np.round(ett2-stt, 2))
+print('이미지 수치화 소요 시간 :', np.round(ett1-stt, 2))
 
 
+# 넘파이 변경 소요 시간 : 2863.97

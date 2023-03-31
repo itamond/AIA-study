@@ -95,17 +95,13 @@ model.add(Dense(64,activation='relu'))
 model.add(Dense(32,activation='relu'))
 model.add(Dense(16,activation='relu'))
 model.add(Dense(1,activation='sigmoid'))
-
+model.summary()
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 # model.fit(xy_train[:][0], xy_train[:][1],
 #           epochs=10,
 #           )   #에러
-
-# model.fit(xy_train[0][0], xy_train[0][1],
-#           epochs=10,
-#           )   #전체 데이터를 배치로 잡으면 가능
 
 es = EarlyStopping(monitor='val_acc',
                    mode = 'max',
@@ -114,7 +110,12 @@ es = EarlyStopping(monitor='val_acc',
                    restore_best_weights=True,
                    )
 
-hist = model.fit_generator(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
+model.fit(xy_train[0][0], xy_train[0][1],
+          epochs=10,
+          validation_data=(xy_test[0][0], xy_test[0][1])
+          )   #전체 데이터를 배치로 잡으면 가능
+
+hist = model.fit(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
                     steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
                     validation_data=xy_test,
                     validation_steps=24,    #발리데이터/batch = 120/5 = 24

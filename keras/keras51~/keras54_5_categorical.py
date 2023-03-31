@@ -38,7 +38,7 @@ xy_train =train_datagen.flow_from_directory(                     #폴더에서 �
     'd:/study_data/_data/brain/train/',                #이미지제너레이터는 폴더별로 라벨값 부여. 때문에 분류 폴더 이전 상위폴더까지만 설정해도됨
     target_size=(100, 100),                            #이미지 데이터를 200x200으로 확대 혹은 축소해라. 사이즈를 동일하게 만들어준다.
     batch_size=5,                                      #5장씩 잘라라
-    class_mode='binary',                               #0과 1을 찾는 mode, int형 수치화해서 만들어줌 
+    class_mode='categorical',                               #0과 1을 찾는 mode, int형 수치화해서 만들어줌 
     # color_mode='rgba',
     color_mode='grayscale',
     shuffle=True,
@@ -48,7 +48,7 @@ xy_test = test_datagen.flow_from_directory(
     'd:/study_data/_data/brain/test/',
     target_size=(100, 100),
     batch_size=5,                                      #전체 데이터를 배치로 잡아도 된다.
-    class_mode='binary',
+    class_mode='categorical',           #y의 클래스에 대한 얘기     binary=수치로 빼라는 얘기     categorical = 원핫시켜서 위치로 저장
     color_mode='grayscale',
     shuffle=True,
 )   #Found 120 images belonging to 2 classes.   0과 1의 클래스로 분류되었다.        #x=120, 200, 200, 1 로 변환 됐음  y=120,
@@ -69,11 +69,19 @@ print(xy_train[0][0].shape)   #(batch_size, 200, 200, 1) shape가 먹힌다는�
 print(xy_train[0][1].shape)   #(batch_size,)
 # #x와 y가 합쳐진 이터레이터 형태의 데이터이다.
 
-print("=========================================================")
-print(type(xy_train))      #<class 'keras.preprocessing.image.DirectoryIterator'>
-print(type(xy_train[0]))   #<class 'tuple'>
-print(type(xy_train[0][0]))#<class 'numpy.ndarray'>
-print(type(xy_train[0][1]))#<class 'numpy.ndarray'>
+
+
+
+
+
+
+
+
+# print("=========================================================")
+# print(type(xy_train))      #<class 'keras.preprocessing.image.DirectoryIterator'>
+# print(type(xy_train[0]))   #<class 'tuple'>
+# print(type(xy_train[0][0]))#<class 'numpy.ndarray'>
+# print(type(xy_train[0][1]))#<class 'numpy.ndarray'>
 
 #현재 x는 (5,200,200,1) 짜리 데이터가 32덩어리
 
@@ -94,18 +102,15 @@ model.add(Flatten())
 model.add(Dense(64,activation='relu'))
 model.add(Dense(32,activation='relu'))
 model.add(Dense(16,activation='relu'))
-model.add(Dense(1,activation='sigmoid'))
+model.add(Dense(2,activation='softmax'))
 
 #3. 컴파일, 훈련
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='categorical_crossentropy', 
+              optimizer='adam', metrics=['acc'])
 
 # model.fit(xy_train[:][0], xy_train[:][1],
 #           epochs=10,
 #           )   #에러
-
-# model.fit(xy_train[0][0], xy_train[0][1],
-#           epochs=10,
-#           )   #전체 데이터를 배치로 잡으면 가능
 
 es = EarlyStopping(monitor='val_acc',
                    mode = 'max',
@@ -114,7 +119,16 @@ es = EarlyStopping(monitor='val_acc',
                    restore_best_weights=True,
                    )
 
-hist = model.fit_generator(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
+# model.fit(xy_train[0][0], xy_train[0][1],
+#           epochs=10,
+#           )   #전체 데이터를 배치로 잡으면 가능
+# hist = model.fit_generator(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
+#                     steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
+#                     validation_data=xy_test,
+#                     validation_steps=24,    #발리데이터/batch = 120/5 = 24
+#                     )
+
+hist = model.fit(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
                     steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
                     validation_data=xy_test,
                     validation_steps=24,    #발리데이터/batch = 120/5 = 24

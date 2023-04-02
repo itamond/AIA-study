@@ -35,60 +35,55 @@ if gpus:
 
 #1. 데이터
 
-path = "D:/study_data/_save/dog's_breed/"
+x_train = np.load("d:/study_data/_save/dog's_breed/dog_breed_x_train150.npy")
+y_train = np.load("d:/study_data/_save/dog's_breed/dog_breed_y_train150.npy")
+x_test = np.load("d:/study_data/_save/dog's_breed/dog_breed_x_test150.npy")
+y_test = np.load("d:/study_data/_save/dog's_breed/dog_breed_y_test150.npy")
 
-stt = time.time()
-x = np.load(path+'dog_breed_x_train.npy')
-y = np.load(path+'dog_breed_y_train.npy')
-
-ett1 = time.time()
-
-
-
-x_train, x_test, y_train, y_test =  tts(x, y,
-                                        train_size=0.7,
-                                        random_state=323,
-                                        # stratify=y,
-                                        )
 
 #2. 모델구성
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Flatten, Dense,MaxPooling2D
 
 # model = Sequential()
-# model.add(Conv2D(256, (2,2), input_shape=(300, 300, 3),padding='same', activation=Leakyswish(0.9)))
+# model.add(Conv2D(256, (2,2), input_shape=(150, 150, 3),padding='same', activation=LeakyReLU(0.9)))
 # model.add(MaxPooling2D())
-# model.add(Conv2D(128, (2,2),padding='same', activation=Leakyswish(0.9)))
+# model.add(Conv2D(128, (2,2),padding='same', activation=LeakyReLU(0.9)))
 # model.add(MaxPooling2D())
-# model.add(Conv2D(64, (2,2), activation=Leakyswish(0.9)))
+# model.add(Conv2D(64, (2,2), activation=LeakyReLU(0.9)))
 # # model.add(MaxPooling2D())
-# model.add(Conv2D(32, (2,2), activation=Leakyswish(0.9)))
+# model.add(Conv2D(32, (2,2), activation=LeakyReLU(0.9)))
 # # model.add(MaxPooling2D())
-# model.add(Conv2D(16, (2,2), activation=Leakyswish(0.9)))
+# model.add(Conv2D(16, (2,2), activation=LeakyReLU(0.9)))
 # model.add(Flatten())
-# model.add(Dense(128,activation='swish'))
-# model.add(Dense(64,activation='swish'))
-# model.add(Dense(32,activation='swish'))
-# model.add(Dense(16,activation='swish'))
+# model.add(Dense(128,activation='relu'))
+# model.add(Dense(64,activation='relu'))
+# model.add(Dense(32,activation='relu'))
+# model.add(Dense(16,activation='relu'))
 # model.add(Dense(5,activation='softmax'))
+print(x_train.shape, y_train.shape)
+print(x_test.shape, y_test.shape)
+# (3824, 150, 150, 3) (3824, 5)
+# (206, 150, 150, 3) (206, 5)
+
 
 
 model = Sequential()
 
-model.add(Conv2D(32, (3, 3), activation='swish', input_shape=(300, 300, 3)))
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)))
+# model.add(Dropout(0.5))
+model.add(MaxPooling2D())
+model.add(Conv2D(64, (3, 3), activation='relu'))
+# model.add(Dropout(0.5))
+model.add(MaxPooling2D())
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(Dropout(0.5))
 model.add(MaxPooling2D())
-model.add(Conv2D(64, (3, 3), activation='swish'))
-model.add(Dropout(0.5))
-model.add(MaxPooling2D())
-model.add(Conv2D(128, (3, 3), activation='swish'))
-model.add(Dropout(0.5))
-model.add(MaxPooling2D())
-model.add(Conv2D(128, (3, 3), activation='swish'))
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(Dropout(0.5))
 model.add(MaxPooling2D())
 model.add(Flatten())
-model.add(Dense(512, activation='swish'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(5, activation='softmax'))
 
@@ -131,8 +126,8 @@ val_acc = hist.history['val_acc']
 
 ett = time.time()
 
-print('로드까지 걸린 시간 :', np.round(ett1-stt, 2))
-print('연산 걸린 시간 :', np.round(ett-stt, 2))
+# print('로드까지 걸린 시간 :', np.round(ett1-stt, 2))
+# print('연산 걸린 시간 :', np.round(ett-stt, 2))
 
 # from matplotlib import pyplot as plt
 

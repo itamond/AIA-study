@@ -36,25 +36,43 @@ print(np.zeros(augment_size).shape) #(100,)
 #flow_from_directory는 폴더에서 가져와서 x,y만드는것
 #flow는 원래 있는 데이터 셋에서 x,y 만드는것
 x_data = train_datagen.flow(
-    np.tile(x_train[0].reshape(28*28),augment_size).reshape(-1,28,28,1),# x데이터
+    np.tile(x_train[0].reshape(28*28),
+            augment_size).reshape(-1,28,28,1),# x데이터
     np.zeros(augment_size), #y데이터 : 그림만 그릴꺼라 필요없어서 걍 0 넣음                        
     batch_size=augment_size,
     shuffle=True,
-    )
+).next()                #위 코드블록을 한번 실행 시켜주는 것(이터레이터의 첫번째 배치)
+
+ #x와 y가 다 나옴. 첫번째 
 
 
-print(x_data)
+################# .next() 사용 ##############################
+print(x_data)                 # 넥스트 미사용시 print(x_data[0])와 같음. x_data의 next값이기 때문
+print(type(x_data))           #<class 'tuple'>
+print(x_data[0])              #x데이터
+print(x_data[1])              #y데이터
+print(x_data[0].shape, x_data[1].shape)       #이터레이터에서 next로 호출한, 튜플 안에 넘파이가 들어가 있는 구조이기 때문에 shape를 찍을 수 있음
+print(type(x_data[0]))        #<class 'numpy.ndarray'>
+
+
+################## .next() 미사용 ##############################
+# print(x_data)        
 #<keras.preprocessing.image.NumpyArrayIterator object at 0x0000026159505EE0>
-print(x_data[0])   # x와 y가 모두 포함
-print(x_data[0][0].shape)   #(100, 28, 28, 1)
-print(x_data[0][1].shape)   #(100,)
+# print(x_data[0])   # x와 y가 모두 포함
+# print(x_data[0][0].shape)   #(100, 28, 28, 1)
+# print(x_data[0][1].shape)   #(100,)
+
+
+
+
 
 import matplotlib.pyplot as plt
 plt.figure(figsize=(7,7))
 for i in range(49):
     plt.subplot(7, 7, i+1)      #7바이 7의 서브플롯을 만든다.
     plt.axis('off')
-    plt.imshow(x_data[0][0][i], cmap='gray')
+    # plt.imshow(x_data[0][0][i], cmap='gray')  #.next() 미사용
+    plt.imshow(x_data[0][i], cmap='gray')       #.next()를 통해서 쉐이프 하나가 줄었다. 때문에 [0] 하나 삭제
 plt.show()
 
 

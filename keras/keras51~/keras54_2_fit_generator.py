@@ -115,7 +115,7 @@ es = EarlyStopping(monitor='val_acc',
                    )
 
 hist = model.fit_generator(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
-                    steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
+                    steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32     이 수치를 조정한다고 해서 에러가 나진 않지만, 계산 과정이 달라질 수 있음
                     validation_data=xy_test,
                     validation_steps=24,    #발리데이터/batch = 120/5 = 24
                     )

@@ -37,7 +37,7 @@ test_datagen = ImageDataGenerator(
 xy_train =train_datagen.flow_from_directory(                     #폴더에서 가져올거야~    
     'd:/study_data/_data/brain/train/',                #이미지제너레이터는 폴더별로 라벨값 부여. 때문에 분류 폴더 이전 상위폴더까지만 설정해도됨
     target_size=(100, 100),                            #이미지 데이터를 200x200으로 확대 혹은 축소해라. 사이즈를 동일하게 만들어준다.
-    batch_size=5,                                      #5장씩 잘라라
+    batch_size=200,                                      #5장씩 잘라라
     class_mode='binary',                               #0과 1을 찾는 mode, int형 수치화해서 만들어줌 
     # color_mode='rgba',
     color_mode='grayscale',
@@ -110,16 +110,16 @@ es = EarlyStopping(monitor='val_acc',
                    restore_best_weights=True,
                    )
 
-model.fit(xy_train[0][0], xy_train[0][1],
+hist =model.fit(xy_train[0][0], xy_train[0][1],
           epochs=10,
           validation_data=(xy_test[0][0], xy_test[0][1])
           )   #전체 데이터를 배치로 잡으면 가능
 
-hist = model.fit(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
-                    steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
-                    validation_data=xy_test,
-                    validation_steps=24,    #발리데이터/batch = 120/5 = 24
-                    )
+# hist = model.fit(xy_train, epochs=3000,   #x데이터 y데이터 배치사이즈가 한 데이터에 있을때 fit 하는 방법
+#                     steps_per_epoch=32,    #전체데이터크기/batch = 160/5 = 32
+#                     validation_data=xy_test,
+#                     validation_steps=24,    #발리데이터/batch = 120/5 = 24
+#                     )
 
 
 loss = hist.history['loss']

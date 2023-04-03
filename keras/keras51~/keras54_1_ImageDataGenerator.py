@@ -50,12 +50,13 @@ xy_test = test_datagen.flow_from_directory(
 # np.unique = pd.value_counts
 # print(xy_train)        
 #<keras.preprocessing.image.DirectoryIterator object at 0x000002E1DFC72790>
-#Iterator 반복자. 반복자의 대표 LIST
+#Iterator 반복자. 반복자의 대표 
+#포문이나 넥스트를 써서 데이터를 뽑아낸다
 
 # print(xy_train[0])
-# #pirnt(xy_train.shape)
-# print(len(xy_train))     #32
-# print(len(xy_train[0]))  #2     #xy_train의 첫번째 데이터는 배치5 사이즈의 x와 y  한묵음이다.
+# #pirnt(xy_train.shape)   #에러뜸. 넘파이와 판다스 형태가 아니라서. 이터레이터 형태이다.
+# print(len(xy_train))     #32    160개인데 배치 5로 짤라서 32개
+# print(len(xy_train[0]))  #2     #xy_train의 첫번째 데이터는 배치5 사이즈의 x와 y한묵음이다.
 
 # print(xy_train[0][0]) # batch_size개의 x가 들어가있다.
 # print(xy_train[0][1]) # batch_size개의 y가 들어가있다.

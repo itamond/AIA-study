@@ -21,9 +21,9 @@ train_datagen = ImageDataGenerator(
     # fill_mode='nearest',
 )
 
-xy_train = train_datagen.flow_from_directory(
+xy_train = train_datagen.flow_from_directory(             #디렉토리의 이미지를 데려다 쓰겠다.
     "D:/study_data/_data/dog's_breed/",
-    target_size=(500, 500),
+    target_size=(300, 300),                               #이 사이즈로 바꿔줭
     batch_size=2000,
     class_mode='categorical',
     color_mode='rgba',

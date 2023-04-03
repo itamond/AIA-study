@@ -28,7 +28,7 @@ xy_train = train_datagen.flow_from_directory(
     class_mode='categorical',
     color_mode='rgba',
     shuffle=True,
-)
+) 
 
 
 np.save(save_path + 'dog_breed_x_train500.npy', arr=xy_train[0][0])

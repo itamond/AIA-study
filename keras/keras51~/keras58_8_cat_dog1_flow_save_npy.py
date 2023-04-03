@@ -46,7 +46,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 # print(y_test.shape, y_test.shape)   # (206,) (206,)                            
 
 
-augument_size = 50000                     # 반복횟수
+augument_size = 5000                     # 반복횟수
 randidx =np.random.randint(x_train.shape[0],size=augument_size)
 
 # print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 

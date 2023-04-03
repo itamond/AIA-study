@@ -13,10 +13,10 @@ from sklearn.metrics import accuracy_score
 #1. 데이터
 
 
-x_train = np.load('d:/study_data/_save/_npy/58_fashion_train_x.npy')
-y_train = np.load('d:/study_data/_save/_npy/58_fashion_train_y.npy')
-x_test = np.load('d:/study_data/_save/_npy/58_fashion_test_x.npy')
-y_test = np.load('d:/study_data/_save/_npy/58_fashion_test_y.npy')
+x_train = np.load("d:/study_data/_save/_npy/58_dog's_breed_train_x.npy")
+y_train = np.load("d:/study_data/_save/_npy/58_dog's_breed_train_y.npy")
+x_test = np.load("d:/study_data/_save/_npy/58_dog's_breed_test_x.npy")
+y_test = np.load("d:/study_data/_save/_npy/58_dog's_breed_test_y.npy")
 
 #print(x_train)
 print(x_train.shape) #(100000, 28, 28, 1)
@@ -29,12 +29,12 @@ print(y_test.shape)  #(10000,)
 
 
 model = Sequential()
-model.add(Conv2D(32, (2,2), input_shape=(28, 28, 1), activation='relu'))
+model.add(Conv2D(32, (2,2), input_shape=(100, 100, 3), activation='relu'))
 model.add(Conv2D(32, (2,2), activation='relu'))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(Dense(64, activation='relu'))
-model.add(Dense(10, activation='softmax')) 
+model.add(Dense(5, activation='softmax')) 
 
 #3. 컴파일, 훈련
 model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['acc'])

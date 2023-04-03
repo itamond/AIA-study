@@ -22,10 +22,10 @@ test_datagen =ImageDataGenerator(               # 평가데이터는 증폭하�
 )
 
 xy = train_datagen.flow_from_directory(
-    'D:/study_data/_data/horse-or-human/',
-    target_size=(150,150),                       # 사진을 가져올때 사이즈 조정. 
+    "D:/study_data/_data/dog's_breed/",
+    target_size=(100,100),                       # 사진을 가져올때 사이즈 조정. 
     batch_size=10000,
-    class_mode='binary',                         # 흑백이라 binary, 칼라 catagorical
+    class_mode='categorical',                         # 흑백이라 binary, 칼라 catagorical
     shuffle=True,
                          # color_mode 디폴트 칼라. 
     )                                            # Found 160 images belonging to 2 classes. > 160개 사진과 0,1 2 class 생성. 
@@ -46,7 +46,7 @@ x_train, x_test, y_train, y_test = train_test_split(x,y,
 # print(y_test.shape, y_test.shape)   # (206,) (206,)                            
 
 
-augument_size = 1000                     # 반복횟수
+augument_size = 5000                     # 반복횟수
 randidx =np.random.randint(x_train.shape[0],size=augument_size)
 
 # print(np.min(randidx),np.max(randidx))      # random 함수 적용가능. 
@@ -82,7 +82,7 @@ y_train2 =np.concatenate((y_train,y_augumented))
 #                                                     random_state=58525
 #                                                     )
 
-np.save('d:/study_data/_save/_npy/58_horse_human_train_x.npy', arr=x_train1)
-np.save('d:/study_data/_save/_npy/58_horse_human_train_y.npy', arr=y_train2)
-np.save('d:/study_data/_save/_npy/58_horse_human_test_x.npy', arr=x_test)
-np.save('d:/study_data/_save/_npy/58_horse_human_test_y.npy', arr=y_test)
+np.save("d:/study_data/_save/_npy/58_dog's_breed_train_x.npy", arr=x_train1)
+np.save("d:/study_data/_save/_npy/58_dog's_breed_train_y.npy", arr=y_train2)
+np.save("d:/study_data/_save/_npy/58_dog's_breed_test_x.npy", arr=x_test)
+np.save("d:/study_data/_save/_npy/58_dog's_breed_test_y.npy", arr=y_test)

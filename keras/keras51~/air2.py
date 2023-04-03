@@ -15,7 +15,9 @@ data = pd.concat([train_data, test_data], axis=0)
 # ...
 
 # Train isolation forest model on train data
-model = IsolationForest(random_state=42)
+model = IsolationForest(n_estimators=3000,random_state=3245,max_samples=2463,
+                        max_features=8, bootstrap=False,)
+
 model.fit(train_data)
 
 # Predict anomalies in test data
@@ -25,3 +27,6 @@ predictions = model.predict(test_data)
 new_predictions = [0 if x == 1 else 1 for x in predictions]
 submission['label'] = pd.DataFrame({'Prediction': new_predictions})
 submission.to_csv(save_path+'submission.csv', index=False)
+
+
+

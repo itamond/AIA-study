@@ -3,7 +3,7 @@
 from tensorflow.keras.datasets import fashion_mnist
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
-
+from tensorflow.keras.utils import to_categorical
 
 np.random.seed(3123)   #시드값 부여 하는법
 
@@ -28,19 +28,20 @@ augment_size = 40000   #증강, 증폭
 #10만개의 데이터로 쓰고싶다. 때문에 6만+x = 10만, 4만개 증가시켜줌
 #랜덤하게 인트값을 뽑을거다, 6만개에서 4만개를 뽑을거다.그것을 랜드인덱스라고 부르겠다
 # randidx=np.random.randint(60000, size = 40000)
-randidx=np.random.randint(x_train.shape[0], size=augment_size)
+# randidx=np.random.randint(x_train.shape[0], size=augment_size)
 
-print(randidx)   #[33731  1990  5122 ... 40892  9013 29985]
-print(randidx.shape)   #(40000,)
-print(np.min(randidx), np.max(randidx))   #0 59999   4 59996
+# print(randidx)   #[33731  1990  5122 ... 40892  9013 29985]
+# print(randidx.shape)   #(40000,)
+# print(np.min(randidx), np.max(randidx))   #0 59999   4 59996
+# x_augmented = x_train[randidx].copy()          #x_train에 randidx라는 랜덤 추출 함수를 적용하여 x_augmented로 명명
+# y_augmented = y_train[randidx].copy()    
 
-
-x_augmented = x_train[randidx].copy()          #x_train에 randidx라는 랜덤 추출 함수를 적용하여 x_augmented로 명명
-y_augmented = y_train[randidx].copy()          # copy를 쓰면 x_train와 y_train의 값을 건들이지 않고 새로 만드는것
+x_augmented = x_train.copy()          #x_train에 randidx라는 랜덤 추출 함수를 적용하여 x_augmented로 명명
+y_augmented = y_train.copy()          # copy를 쓰면 x_train와 y_train의 값을 건들이지 않고 새로 만드는것
 
 print(x_augmented.shape, y_augmented.shape)   #(40000, 28, 28) (40000,)
 
-x_train = x_train.reshape(60000, 28, 28, 1)
+x_train1 = x_train.reshape(60000, 28, 28, 1)
 x_test = x_test.reshape(x_test.shape[0], 
                         x_test.shape[1], 
                         x_test.shape[2],
@@ -77,9 +78,11 @@ print(x_augmented)
 print(x_augmented.shape)   #(40000, 28, 28, 1)
 
 
-x_train = np.concatenate((x_train/255., x_augmented))   
+x_train1 = np.concatenate((x_train1/255., x_augmented))   
 y_train = np.concatenate((y_train, y_augmented))   
 x_test = x_test/255.
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
 
 print(x_train.shape, y_train.shape)
 
@@ -88,3 +91,25 @@ print(np.max(x_train), np.min(x_train))
 print(np.max(x_augmented), np.min(x_augmented))
 #255.0 0.0
 #1.0 0.0         x_augmented는 datagen에서 스케일 되어있다. 때문에 스케일링 해줘야함.
+
+
+# 모델 맹그러
+# 증폭과 안증폭 성능비교
+
+
+
+#x_augmented 10개와 x_train 10개를 비교하는 이미지 출력할 것!!!
+
+
+import matplotlib.pyplot as plt
+plt.figure(figsize=(20,20))
+for i in range(10):
+    plt.subplot(2, 10, i+1) # Create a subplot of 10 rows and 2 columns.
+    plt.axis('off')
+    plt.imshow(x_train[i], cmap='gray')
+    plt.subplot(2, 10, i+11) # Create a subplot in the second row.
+    plt.axis('off')
+    plt.imshow(x_augmented[i], cmap='gray')
+plt.show()
+
+

@@ -22,8 +22,8 @@ test_datagen =ImageDataGenerator(               # 평가데이터는 증폭하�
 )
 
 xy = train_datagen.flow_from_directory(
-    'D:/study_data/_data/horse-or-human/',
-    target_size=(150,150),                       # 사진을 가져올때 사이즈 조정. 
+    'D:/study_data/_data/men_women/',
+    target_size=(100,100),                       # 사진을 가져올때 사이즈 조정. 
     batch_size=10000,
     class_mode='binary',                         # 흑백이라 binary, 칼라 catagorical
     shuffle=True,
@@ -73,16 +73,12 @@ xy_train = train_datagen.flow(x_train,y_train,
 x_train1 =np.concatenate((x_train,x_augumented))
 y_train2 =np.concatenate((y_train,y_augumented))
 
-# xy_augumented = test_datagen.flow(x_train1, y_train2,
-#                                 batch_size = augument_size,
-#                                 shuffle=False)
 
-# x_train, x_test, y_train, y_test = train_test_split(xy_augumented[0][0],xy_augumented[0][1],
-#                                                     train_size=0.85, 
-#                                                     random_state=58525
-#                                                     )
 
-np.save('d:/study_data/_save/_npy/58_horse_human_train_x.npy', arr=x_train1)
-np.save('d:/study_data/_save/_npy/58_horse_human_train_y.npy', arr=y_train2)
-np.save('d:/study_data/_save/_npy/58_horse_human_test_x.npy', arr=x_test)
-np.save('d:/study_data/_save/_npy/58_horse_human_test_y.npy', arr=y_test)
+
+np.save('d:/study_data/_save/_npy/58_men_women_train_x.npy', arr=x_train1)
+np.save('d:/study_data/_save/_npy/58_men_women_train_y.npy', arr=y_train2)
+np.save('d:/study_data/_save/_npy/58_men_women_test_x.npy', arr=x_test)
+np.save('d:/study_data/_save/_npy/58_men_women_test_y.npy', arr=y_test)
+
+

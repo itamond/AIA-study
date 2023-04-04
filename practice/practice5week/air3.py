@@ -1,21 +1,23 @@
 import pandas as pd
-from sklearn.neighbors import LocalOutlierFactor
+from sklearn.covariance import EllipticEnvelope
 
 # Load train and test data
 path='./_data/air/'
 save_path= './_save/air/'
-train_data = pd.read_csv(path+'train_data.csv')
+train_data = pd.read_csv(path+'amplified_train_data.csv')
 test_data = pd.read_csv(path+'test_data.csv')
 submission = pd.read_csv(path+'answer_sample.csv')
 
 # Combine train and test data
 # data = pd.concat([train_data, test_data], axis=0)
 data = train_data
+test_data = test_data.drop(['out_pressure'],axis=1)
+
 # Preprocess data
 # ...
 
-# Train Local Outlier Factor model on train data
-model = LocalOutlierFactor(n_neighbors=20, contamination=0.05, novelty=True)
+# Train EllipticEnvelope model on train data
+model = EllipticEnvelope(contamination=0.35)
 
 model.fit(train_data)
 

@@ -4,7 +4,7 @@
 # 각 단어를 고정된 크기의 벡터로 변환.
 # 일반적인 원핫은 데이터가 너무 늘어남
 # 유사한 데이터끼리 모인다.
-
+# 좌표계로 데이터를 잡아주는 Embedding layer
 
 from tensorflow.keras.preprocessing.text import Tokenizer
 import numpy as np

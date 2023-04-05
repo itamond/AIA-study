@@ -9,9 +9,6 @@ path = './_data/air/'
 train_data = pd.read_csv(path + 'train_data.csv')
 test_data = pd.read_csv(path + 'test_data.csv')
 
-# Reshape train_data into a compatible shape
-train_data_reshaped = train_data.values.reshape(-1, 7, 1)
-
 # Define augmentations
 augmentations = iaa.Sequential([
     iaa.Affine(rotate=(-180, 180)),   # Random rotation
@@ -20,7 +17,7 @@ augmentations = iaa.Sequential([
 ])
 
 # Apply augmentations to train_data
-train_data_augmented = augmentations.augment_images(train_data_reshaped).reshape(-1, 7)
+train_data_augmented = augmentations.augment_images(train_data.values.reshape(-1, 7)).reshape(-1, 7)
 
 # Concatenate original and augmented train_data
 train_data_concat = pd.concat([train_data, pd.DataFrame(train_data_augmented, columns=train_data.columns)], axis=0)

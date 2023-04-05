@@ -116,11 +116,9 @@ token.fit_on_texts(x_predict)
 x_predict = token.texts_to_sequences(x_predict)
 x_predict = np.array(x_predict)
 x_pred=x_predict.reshape(x_predict.shape[0],x_predict.shape[1],1)
-
 # print(x_pred)
 # print(token.word_index)
 pred = model.predict(x_pred)
-
 # print('긍정일까 부정일까 : ',pred)
 
 def xpred(x):

@@ -51,7 +51,12 @@ font_generator = font_datagen.flow_from_directory(font_dir,
                                                   class_mode='categorical',
                                                   shuffle=True)
 
-train_generator = zip(mnist_generator, handwriting_generator.repeat(20), font_generator)
+
+
+
+
+
+train_generator = zip(mnist_generator, handwriting_generator, font_generator)
 
 
 

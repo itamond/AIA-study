@@ -10,6 +10,7 @@ image_size = (28, 28) # Resize images to 28x28 pixels
 images = []
 labels = []
 
+
 for label in range(10):
     folder_name = f"sample{label}"
     folder_path = os.path.join(data_dir, folder_name)

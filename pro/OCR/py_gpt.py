@@ -1,6 +1,6 @@
 import os
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 
 messages = []
 while True:

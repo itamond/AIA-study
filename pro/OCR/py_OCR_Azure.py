@@ -1,14 +1,10 @@
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
-from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
 from msrest.authentication import CognitiveServicesCredentials
-from array import array
 from PIL import Image,  ImageDraw, ImageFont
-import sys
 import time
-import os
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 
 subscription_key = "2f32a3b24bce4f67a376a19ad6941bed"
 endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
@@ -59,13 +55,7 @@ bg_color = (255, 255, 255)
 text_color = (0, 0, 0)
 font_size = 60
 font = ImageFont.truetype('malgun.ttf', font_size)
-
-# Create an image with a white background
 img = Image.new('RGB', (width, height), bg_color)
-
-# Draw the GPT response onto the image
 draw = ImageDraw.Draw(img)
 draw.text((10, 10), assistant_content, fill=text_color, font=font)
-
-# Save the image to disk
 img.save('D:/number/cal_img/gpt_response_Azure.jpg')

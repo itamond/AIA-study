@@ -3,20 +3,18 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import pytesseract
 import openai
-openai.api_key = "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"
-
+from PIL import Image, ImageDraw, ImageFont
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
-path = 'D:/number/cal1.png'
+
+openai.api_key = "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"
+path = 'D:/number/cal_img/question/cal_r.jpg'
 image = cv2.imread(path)
 rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 # print(rgb_image)
 text = pytesseract.image_to_string(rgb_image, lang='kor+eng')
 
-
-
 print(text)
-
 
 messages = []
 
@@ -33,13 +31,8 @@ while True:
     print(f"GPT : {assistant_content}")
     break
 
-
-
-
-from PIL import Image, ImageDraw, ImageFont
-
 # Set up image parameters
-width, height = 1800, 1800
+width, height = 180, 180
 bg_color = (255, 255, 255)
 text_color = (0, 0, 0)
 font_size = 60

@@ -7,7 +7,7 @@ openai.api_key = "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"
 
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
-path = 'D:/number/cal_img/cal_dd.jpg'
+path = 'D:/number/cal1.png'
 image = cv2.imread(path)
 rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 # print(rgb_image)
@@ -42,8 +42,8 @@ from PIL import Image, ImageDraw, ImageFont
 width, height = 1800, 1800
 bg_color = (255, 255, 255)
 text_color = (0, 0, 0)
-font_size = 20
-font = ImageFont.truetype('arial.ttf', font_size)
+font_size = 60
+font = ImageFont.truetype('malgun.ttf', font_size)
 
 # Create an image with a white background
 img = Image.new('RGB', (width, height), bg_color)

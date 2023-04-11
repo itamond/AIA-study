@@ -2,58 +2,70 @@ from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from azure.cognitiveservices.vision.computervision.models import VisualFeatureTypes
 from msrest.authentication import CognitiveServicesCredentials
-
 from array import array
-import os
-from PIL import Image
+from PIL import Image,  ImageDraw, ImageFont
 import sys
 import time
+import os
+import openai
+openai.api_key = "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"
 
-'''
-Authenticate
-Authenticates your credentials and creates a client.
-'''
 subscription_key = "2f32a3b24bce4f67a376a19ad6941bed"
 endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
 
 computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
-'''
-END - Authenticate
-'''
 
-'''
-OCR: Read File using the Read API, extract text - remote
-This example will extract text in an image, then print results, line by line.
-This API call can also extract handwriting style text (not shown).
-'''
-print("===== Read File - remote =====")
-# Get an image with text
-read_image_path = "D:/number/cal_img/cal.jpg"
+# 이미지 가져오기
+read_image_path = "https://image.yes24.com/goods/89019624/XL"
 
-# Call API with URL and raw response (allows you to get the operation location)
+# API 불러오기
 read_response = computervision_client.read(read_image_path,  raw=True)
 
-# Get the operation location (URL with an ID at the end) from the response
+
 read_operation_location = read_response.headers["Operation-Location"]
-# Grab the ID from the URL
 operation_id = read_operation_location.split("/")[-1]
 
-# Call the "GET" API and wait for it to retrieve the results 
 while True:
     read_result = computervision_client.get_read_result(operation_id)
     if read_result.status not in ['notStarted', 'running']:
         break
     time.sleep(1)
-
-# Print the detected text, line by line
+out_ocr=str()
 if read_result.status == OperationStatusCodes.succeeded:
     for text_result in read_result.analyze_result.read_results:
         for line in text_result.lines:
-            print(line.text)
-            print(line.bounding_box)
-print()
-'''
-END - Read File - remote
-'''
+            out_ocr+=line.text+'\n'
 
-print("End of Computer Vision quickstart.")
+messages = []
+
+print(out_ocr)
+
+while True:
+    user_content = out_ocr
+    messages.append({"role": "user", "content": f"{user_content}"})
+
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=messages)
+
+    assistant_content = completion.choices[0].message["content"].strip()
+
+    messages.append({"role": "assistant", "content": f"{assistant_content}"})
+
+    print(f"GPT : {assistant_content}")
+    break
+
+
+width, height = 1800, 1800
+bg_color = (255, 255, 255)
+text_color = (0, 0, 0)
+font_size = 60
+font = ImageFont.truetype('malgun.ttf', font_size)
+
+# Create an image with a white background
+img = Image.new('RGB', (width, height), bg_color)
+
+# Draw the GPT response onto the image
+draw = ImageDraw.Draw(img)
+draw.text((10, 10), assistant_content, fill=text_color, font=font)
+
+# Save the image to disk
+img.save('D:/number/cal_img/gpt_response_Azure.jpg')

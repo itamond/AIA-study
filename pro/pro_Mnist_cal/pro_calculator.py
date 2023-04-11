@@ -71,8 +71,8 @@ model.compile(loss = 'categorical_crossentropy', optimizer='adam', metrics=['acc
 num1 = np.argmax(model.predict(num1), axis=1)
 num2 = np.argmax(model.predict(num2),axis=1)
 
-num1 = num1
-num2 = num2
+num1 = num1[0]
+num2 = num2[0]
 
 print(num1)
 print(num2)

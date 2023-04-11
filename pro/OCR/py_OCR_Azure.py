@@ -4,7 +4,7 @@ from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image,  ImageDraw, ImageFont
 import time
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 
 subscription_key = "2f32a3b24bce4f67a376a19ad6941bed"
 endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
@@ -12,7 +12,7 @@ endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
 computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
 
 # 이미지 가져오기
-read_image_path = "https://image.yes24.com/goods/89019624/XL"
+read_image_path = "https://raw.githubusercontent.com/itamond/AIA-study/master/cal_r.jpg"
 
 # API 불러오기
 read_response = computervision_client.read(read_image_path,  raw=True)

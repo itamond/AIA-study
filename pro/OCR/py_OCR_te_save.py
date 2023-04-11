@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 path = 'D:/number/cal_img/question/cal_r.jpg'
 image = cv2.imread(path)
 rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

@@ -23,9 +23,9 @@ train_datagen = ImageDataGenerator(
     fill_mode='nearest',
 )
 
-goodimg_augment = 2000
-Hndimg_augment = 1
-fnt_augment = 10000
+# goodimg_augment = 2000
+# Hndimg_augment = 1
+# fnt_augment = 10000
 
 
 xy_good =train_datagen.flow_from_directory(                     #폴더에서 가져올거야~    
@@ -79,16 +79,16 @@ y_mnist = xy_mnist[0][1]
 # (10160, 28, 28, 1) (10160, 10)
 # (60000, 28, 28, 1) (60000, 10)
 good_augment_size = 2000
-Hnd_augment_size = 150000
+# Hnd_augment_size = 0
 fnt_augment_size = 10000
 good_randidx=np.random.randint(x_good.shape[0], size=good_augment_size)
-Hnd_randidx=np.random.randint(x_Hnd.shape[0], size=Hnd_augment_size)
+# Hnd_randidx=np.random.randint(x_Hnd.shape[0], size=Hnd_augment_size)
 fnt_randidx=np.random.randint(x_fnt.shape[0], size=fnt_augment_size)
 
 x_good_augmented = x_good[good_randidx].copy()
 y_good_augmented = y_good[good_randidx].copy()
-x_Hnd_augmented = x_Hnd[Hnd_randidx].copy()
-y_Hnd_augmented = y_Hnd[Hnd_randidx].copy()
+# x_Hnd_augmented = x_Hnd[Hnd_randidx].copy()
+# y_Hnd_augmented = y_Hnd[Hnd_randidx].copy()
 x_fnt_augmented = x_fnt[fnt_randidx].copy()
 y_fnt_augmented = y_fnt[fnt_randidx].copy()
 
@@ -100,11 +100,11 @@ x_good_augmented = train_datagen.flow(
 ).next()[0]
 
 
-x_Hnd_augmented = train_datagen.flow(
-    x_Hnd_augmented, y_Hnd_augmented,
-    batch_size = Hnd_augment_size,
-    shuffle=False,
-).next()[0]
+# x_Hnd_augmented = train_datagen.flow(
+#     x_Hnd_augmented, y_Hnd_augmented,
+#     batch_size = Hnd_augment_size,
+#     shuffle=False,
+# ).next()[0]
 
 x_fnt_augmented = train_datagen.flow(
     x_fnt_augmented, y_fnt_augmented,
@@ -116,18 +116,18 @@ x_fnt_augmented = train_datagen.flow(
 
 x_good = np.concatenate((x_good, x_good_augmented))
 y_good = np.concatenate((y_good, y_good_augmented))
-x_Hnd = np.concatenate((x_Hnd, x_Hnd_augmented))
-y_Hnd = np.concatenate((y_Hnd, y_Hnd_augmented))
+# x_Hnd = np.concatenate((x_Hnd, x_Hnd_augmented))
+# y_Hnd = np.concatenate((y_Hnd, y_Hnd_augmented))
 x_fnt = np.concatenate((x_fnt, x_fnt_augmented))
 y_fnt = np.concatenate((y_fnt, y_fnt_augmented))
 
 
-x = np.concatenate((x_mnist))
-y = np.concatenate((y_mnist))
+x = np.concatenate((x_mnist,x_good,x_Hnd,x_fnt))
+y = np.concatenate((y_mnist,y_good,y_Hnd,y_fnt))
 
 # print(x.shape, y.shape)
 #(121301, 28, 28, 1) (121301, 10)
 
 path = 'D:/number/_npy/'
-np.save(path + 'pro_x.npy', arr=x)
-np.save(path + 'pro_y.npy', arr=y)
+np.save(path + 'pro_x_cb.npy', arr=x)
+np.save(path + 'pro_y_cb.npy', arr=y)

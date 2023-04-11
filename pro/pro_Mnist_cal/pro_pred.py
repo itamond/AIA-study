@@ -7,7 +7,7 @@ img_height, img_width = 28, 28
 hr_dir = 'D:/number/MMP/'
 
 test_datagen = ImageDataGenerator(
-    # rescale=1./255,
+    rescale=1./255,
 )
 
 xy_hr =test_datagen.flow_from_directory(                     #폴더에서 가져올거야~    
@@ -21,10 +21,10 @@ xy_hr =test_datagen.flow_from_directory(                     #폴더에서 가�
 
 x_hr = xy_hr[0][0]
 y_hr = xy_hr[0][1]
-print(x_hr)
-print(y_hr)
-print(x_hr.shape)
-print(y_hr.shape)
+# print(x_hr)
+# print(y_hr)
+# print(x_hr.shape)
+# print(y_hr.shape)
 
 path = 'D:/number/_npy/'
 np.save(path + 'pro_x_MMP.npy', arr=x_hr)

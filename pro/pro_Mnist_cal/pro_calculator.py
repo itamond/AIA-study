@@ -60,7 +60,7 @@ model.add(Dense(284, use_bias=True, activation='relu'))
 model.add(BatchNormalization())
 model.add(Dropout(0.25))
 model.add(Dense(10, activation='softmax'))
-
+model.summary()
 model.load_weights('D:/number/h5/pro_cal.h5')
 
 

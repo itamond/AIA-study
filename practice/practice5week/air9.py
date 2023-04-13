@@ -1,8 +1,7 @@
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-
+from sklearn.preprocessing import StandardScaler,RobustScaler
+from sklearn.neighbors import LocalOutlierFactor
+from sklearn.model_selection import train_test_split
 # Load training data
 path='./_data/air/'
 save_path= './_save/air/'
@@ -12,8 +11,6 @@ submission = pd.read_csv(path+'answer_sample.csv')
 # Preprocess data
 train_data = train_data.drop(['out_pressure'],axis=1)
 test_data = test_data.drop(['out_pressure'],axis=1)
-# Combine train and test data
-# data = pd.concat([train_data, test_data], axis=0)
 
 # Preprocess data
 # ...
@@ -25,25 +22,20 @@ train_data['type']=type_to_HP(train_data['type'])
 test_data['type']=type_to_HP(test_data['type'])
 
 # Define the model
-
 # Feature Scaling
 scaler = StandardScaler()
 X_train = scaler.fit_transform(train_data.iloc[:, :-1])
-y_train = train_data.iloc[:, -1]
 X_test = scaler.transform(test_data.iloc[:, :-1])
 
 # Model Definition
-model = Sequential()
-
-
-# Model Compilation
-model.compile(loss='binary_crossentropy', optimizer='adam')
+model = LocalOutlierFactor(n_neighbors=20, contamination=0.04)
 
 # Model Training
-model.fit(X_train, y_train, batch_size=32, epochs=500, validation_split=0.1)
+model.fit(X_train)
 
 # Model Prediction
-submission['label'] = (model.predict(X_test) > 0.5).astype(int)
-
+y_pred = model.fit_predict(X_test)
+submission['label'] = [1 if label == -1 else 0 for label in y_pred]
+print(submission.value_counts())
 # Save the results to a submission file
-submission.to_csv(save_path+'submission.csv', index=False)
+submission.to_csv(save_path+'submission10.csv', index=False)

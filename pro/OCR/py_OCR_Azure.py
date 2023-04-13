@@ -4,7 +4,7 @@ from msrest.authentication import CognitiveServicesCredentials
 from PIL import Image,  ImageDraw, ImageFont
 import time
 import openai
-openai.api_key = "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"
+openai.api_key = "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"
 
 subscription_key = "2f32a3b24bce4f67a376a19ad6941bed"
 endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
@@ -12,7 +12,7 @@ endpoint = "https://baehwanhe.cognitiveservices.azure.com/"
 computervision_client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
 
 # 이미지 가져오기
-read_image_path = "https://mblogthumb-phinf.pstatic.net/MjAxOTA1MDFfNTkg/MDAxNTU2NzA1Mzg5NjI3.A1n3hHyGQutPjx8zjRTwW0QufjRaRof3OWMKEG1iTkYg.UTVRlKpp5H1KFUEfyQcQjb8IduG6Y8WyVS0QJ8Hi03Qg.JPEG.seel48/SE-28a7c1cb-5448-4c45-9a66-cb362af4ea87.jpg?type=w800"
+read_image_path = "https://raw.githubusercontent.com/itamond/AIA-study/master/test6.png"
 
 # API 불러오기
 read_response = computervision_client.read(read_image_path,  raw=True)
@@ -58,4 +58,4 @@ font = ImageFont.truetype('malgun.ttf', font_size)
 img = Image.new('RGB', (width, height), bg_color)
 draw = ImageDraw.Draw(img)
 draw.text((10, 10), assistant_content, fill=text_color, font=font)
-img.save('D:/number/cal_img/gpt_response_Azure.jpg')
+img.save('D:/number/cal_img/gpt_response_Azure1.jpg')

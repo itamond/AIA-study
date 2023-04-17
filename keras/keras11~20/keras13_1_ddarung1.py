@@ -5,6 +5,9 @@ from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error  #rmse 함수를 직접 만드는 법 
 import pandas as pd # numpy 만큼 많이 나오는 자료형, 전처리 하는 내용
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+
 #csv 파일을 판다스를 이용하면 깔끔하게 땡겨올 수 있음. 실무에서 계속 사용
 
 
@@ -100,36 +103,46 @@ print(y_train.shape, y_test.shape)  #(1021,) (438,)               ->(929,) (399,
 
 
 
-#2. 모델구성
-model = Sequential()
-model.add(Dense(18, input_dim=9))
-model.add(Dense(27))
-model.add(Dense(36))
-model.add(Dense(45))
-model.add(Dense(36))
-model.add(Dense(27))
-model.add(Dense(18))
-model.add(Dense(9))
-model.add(Dense(1))
+# #2. 모델구성
+# model = Sequential()
+# model.add(Dense(18, input_dim=9))
+# model.add(Dense(27))
+# model.add(Dense(36))
+# model.add(Dense(45))
+# model.add(Dense(36))
+# model.add(Dense(27))
+# model.add(Dense(18))
+# model.add(Dense(9))
+# model.add(Dense(1))
 
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train,
-          epochs= 10,
-          batch_size=5,
-          verbose=1)
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam')
+# model.fit(x_train, y_train,
+#           epochs= 10,
+#           batch_size=5,
+#           verbose=1)
 
-#4. 평가, 예측
+# #4. 평가, 예측
 
-loss= model.evaluate(x_test, y_test)
-print('loss :', loss)
+# loss= model.evaluate(x_test, y_test)
+# print('loss :', loss)
 
-# y_predict= model.predict(x_test)
-# loss가 nan으로 뜨는 이유 = 결측치가 너무 많다.
+# # y_predict= model.predict(x_test)
+# # loss가 nan으로 뜨는 이유 = 결측치가 너무 많다.
 
-#loss : 3015.99658203125   랜덤 777  에포 100 배치 사이즈 5
+# #loss : 3015.99658203125   랜덤 777  에포 100 배치 사이즈 5
 
-#loss : 2920.375732421875 랜덤221   에포 100 배치 5
+# #loss : 2920.375732421875 랜덤221   에포 100 배치 5
 
 
-print(y_test)
+# print(y_test)
+
+
+
+models = [RandomForestRegressor(),DecisionTreeRegressor()]
+
+for j, model in enumerate(models):
+    model.fit(x,y)
+    score = model.score(x,y)
+    print(f" model {j+1}: {score:.3f}")
+    

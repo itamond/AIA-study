@@ -80,27 +80,39 @@ print(y_train.shape, y_test.shape)
 
 
 #2. 모델구성
-model = Sequential()
-model.add(Dense(18, input_dim=10))
-model.add(Dense(27))
-model.add(Dense(36))
-model.add(Dense(45))
-model.add(Dense(36))
-model.add(Dense(27))
-model.add(Dense(18))
-model.add(Dense(9))
-model.add(Dense(1))
+# model = Sequential()
+# model.add(Dense(18, input_dim=10))
+# model.add(Dense(27))
+# model.add(Dense(36))
+# model.add(Dense(45))
+# model.add(Dense(36))
+# model.add(Dense(27))
+# model.add(Dense(18))
+# model.add(Dense(9))
+# model.add(Dense(1))
 
-#3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train,
-          epochs= 10,
-          batch_size=5,
-          verbose=100)
+# #3. 컴파일, 훈련
+# model.compile(loss='mse', optimizer='adam')
+# model.fit(x_train, y_train,
+#           epochs= 10,
+#           batch_size=5,
+#           verbose=100)
 
-#4. 평가, 예측
+# #4. 평가, 예측
 
-loss= model.evaluate(x_test, y_test)
-print('loss :', loss)
+# loss= model.evaluate(x_test, y_test)
+# print('loss :', loss)
 
 # y_predict= model.predict(x_test)
+
+
+from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
+from sklearn.ensemble import RandomForestRegressor
+
+
+models = [RandomForestRegressor(),DecisionTreeRegressor()]
+
+for j, model in enumerate(models):
+    model.fit(x,y)
+    score = model.score(x,y)
+    print(f" model {j+1}: {score:.3f}")

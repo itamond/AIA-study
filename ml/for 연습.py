@@ -36,15 +36,13 @@ model_name_list = ['LinearSVC :',
 
 for i, value in enumerate(data_list):
     x, y = value
-    print('########################')
+    print('==============================')
     print(data_name_list[i])
     for j, value2 in enumerate(model_list):
         model = value2
         model.fit(x,y)
         result = model.score(x,y)
-        y_predict = model.predict(x)
-        acc = accuracy_score(y, y_predict)
-        print(model_name_list[j], result)
+        y_pred=model.predict(x)
+        acc=accuracy_score(y, y_pred)
+        print('결과 :', result)
         print('acc :', acc)
-        
-        

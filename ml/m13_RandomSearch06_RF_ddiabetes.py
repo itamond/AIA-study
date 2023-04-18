@@ -23,25 +23,24 @@ parameters =[
 
 
 
-
-import numpy as np
-from sklearn.datasets import load_diabetes, fetch_california_housing
-from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
-from sklearn.metrics import r2_score
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris, load_breast_cancer, load_wine, load_digits, fetch_covtype
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, RandomizedSearchCV
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import time
-path='./_data/kaggle_bike/'
-path_save='./_save/kaggle_bike/'    
 
-train_csv = pd.read_csv(path + 'train.csv',
-                        index_col=0)                 
+path = './_data/dacon_diabetes/'
+path_save = './_save/dacon_diabetes/'
 
-train_csv = train_csv.dropna()   
+train_set = pd.read_csv(path + 'train.csv',index_col=0)
+test_set = pd.read_csv(path + 'test.csv',index_col=0)
 
-x = train_csv.drop(['count'], axis=1)   
-y = train_csv['count']
+x=train_set.drop(['Outcome'], axis=1)
+y=train_set['Outcome']
+
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     train_size=0.8,
                                                     random_state=337,
@@ -52,9 +51,9 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
 n_splits = 5
-kfold = KFold(n_splits=n_splits, shuffle=True, random_state=337)
+kfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=337)
 
-model = GridSearchCV(RandomForestRegressor(), parameters,
+model = RandomizedSearchCV(RandomForestClassifier(), parameters,
                      cv=kfold, 
                      verbose=1, 
                      refit=True, 
@@ -80,20 +79,28 @@ y_predict = model.predict(x_test)
 
 y_pred_best = model.best_estimator_.predict(x_test) 
 
-print('r2_score :', r2_score(y_test, y_predict))
+print('accuracy_score :', accuracy_score(y_test, y_predict))
 
 
-print('최적 튠 r2:', r2_score(y_test, y_pred_best))
+print('최적 튠 ACC:', accuracy_score(y_test, y_pred_best))
 
 print('걸린 시간 :', round(ett-stt,2),'초')
 
 
 
-# Fitting 5 folds for each of 48 candidates, totalling 240 fits
-# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
-# 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
-# best_score_ : 0.999544120165168
-# model.score : 0.9996658944506976
-# r2_score : 0.9996658944506976
-# 최적 튠 r2: 0.9996658944506976
-# 걸린 시간 : 110.44 초
+# 최적의 매개변수 : RandomForestClassifier(max_depth=10, min_samples_leaf=3)
+# 최적의 파라미터 : {'max_depth': 10, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 100}
+# best_score_ : 0.7677838827838828
+# model.score : 0.7709923664122137
+# accuracy_score : 0.7709923664122137
+# 최적 튠 ACC: 0.7709923664122137
+# 걸린 시간 : 13.97 초
+
+
+# 최적의 매개변수 : RandomForestClassifier(max_depth=12, min_samples_leaf=3, min_samples_split=10)
+# 최적의 파라미터 : {'n_estimators': 100, 'min_samples_split': 10, 'min_samples_leaf': 3, 'max_depth': 12}
+# best_score_ : 0.763919413919414
+# model.score : 0.7557251908396947
+# accuracy_score : 0.7557251908396947
+# 최적 튠 ACC: 0.7557251908396947
+# 걸린 시간 : 6.18 초

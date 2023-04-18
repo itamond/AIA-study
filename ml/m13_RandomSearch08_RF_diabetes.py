@@ -26,22 +26,14 @@ parameters =[
 
 import numpy as np
 from sklearn.datasets import load_diabetes, fetch_california_housing
-from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold, RandomizedSearchCV
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
 from sklearn.metrics import r2_score
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-import pandas as pd
 import time
-path='./_data/kaggle_bike/'
-path_save='./_save/kaggle_bike/'    
 
-train_csv = pd.read_csv(path + 'train.csv',
-                        index_col=0)                 
+x, y = load_diabetes(return_X_y=True)
 
-train_csv = train_csv.dropna()   
-
-x = train_csv.drop(['count'], axis=1)   
-y = train_csv['count']
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     train_size=0.8,
                                                     random_state=337,
@@ -54,7 +46,7 @@ x_test = scaler.transform(x_test)
 n_splits = 5
 kfold = KFold(n_splits=n_splits, shuffle=True, random_state=337)
 
-model = GridSearchCV(RandomForestRegressor(), parameters,
+model = RandomizedSearchCV(RandomForestRegressor(), parameters,
                      cv=kfold, 
                      verbose=1, 
                      refit=True, 
@@ -89,11 +81,19 @@ print('걸린 시간 :', round(ett-stt,2),'초')
 
 
 
-# Fitting 5 folds for each of 48 candidates, totalling 240 fits
-# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
-# 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
-# best_score_ : 0.999544120165168
-# model.score : 0.9996658944506976
-# r2_score : 0.9996658944506976
-# 최적 튠 r2: 0.9996658944506976
-# 걸린 시간 : 110.44 초
+# 최적의 매개변수 : RandomForestRegressor(max_depth=8, min_samples_leaf=10, min_samples_split=10)
+# 최적의 파라미터 : {'max_depth': 8, 'min_samples_leaf': 10, 'min_samples_split': 10, 'n_estimators': 100}
+# best_score_ : 0.44900864341774127
+# model.score : 0.4809467451965985
+# r2_score : 0.4809467451965985
+# 최적 튠 r2: 0.4809467451965985
+# 걸린 시간 : 14.0 초
+
+
+# 최적의 매개변수 : RandomForestRegressor(max_depth=6, min_samples_leaf=10, min_samples_split=10)
+# 최적의 파라미터 : {'n_estimators': 100, 'min_samples_split': 10, 'min_samples_leaf': 10, 'max_depth': 6}
+# best_score_ : 0.4589966384948346
+# model.score : 0.45676358251464233
+# r2_score : 0.45676358251464233
+# 최적 튠 r2: 0.45676358251464233
+# 걸린 시간 : 6.26 초

@@ -26,22 +26,15 @@ parameters =[
 
 import numpy as np
 from sklearn.datasets import load_diabetes, fetch_california_housing
-from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold, RandomizedSearchCV, HalvingGridSearchCV
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
 from sklearn.metrics import r2_score
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-import pandas as pd
 import time
-path='./_data/kaggle_bike/'
-path_save='./_save/kaggle_bike/'    
 
-train_csv = pd.read_csv(path + 'train.csv',
-                        index_col=0)                 
+x, y = fetch_california_housing(return_X_y=True)
 
-train_csv = train_csv.dropna()   
-
-x = train_csv.drop(['count'], axis=1)   
-y = train_csv['count']
 x_train, x_test, y_train, y_test = train_test_split(x,y,
                                                     train_size=0.8,
                                                     random_state=337,
@@ -54,7 +47,7 @@ x_test = scaler.transform(x_test)
 n_splits = 5
 kfold = KFold(n_splits=n_splits, shuffle=True, random_state=337)
 
-model = GridSearchCV(RandomForestRegressor(), parameters,
+model = HalvingGridSearchCV(RandomForestRegressor(), parameters,
                      cv=kfold, 
                      verbose=1, 
                      refit=True, 
@@ -88,12 +81,29 @@ print('최적 튠 r2:', r2_score(y_test, y_pred_best))
 print('걸린 시간 :', round(ett-stt,2),'초')
 
 
-
-# Fitting 5 folds for each of 48 candidates, totalling 240 fits
+# GridSearch
 # 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
 # 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
-# best_score_ : 0.999544120165168
-# model.score : 0.9996658944506976
-# r2_score : 0.9996658944506976
-# 최적 튠 r2: 0.9996658944506976
-# 걸린 시간 : 110.44 초
+# best_score_ : 0.7978010761834697
+# model.score : 0.789386791924185
+# r2_score : 0.789386791924185
+# 최적 튠 r2: 0.789386791924185
+# 걸린 시간 : 351.48 초
+
+# RandomSearch
+# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
+# 최적의 파라미터 : {'n_estimators': 200, 'min_samples_split': 2, 'min_samples_leaf': 3, 'max_depth': 12}
+# best_score_ : 0.7981070958304245
+# model.score : 0.7889837281580206
+# r2_score : 0.7889837281580206
+# 최적 튠 r2: 0.7889837281580206
+# 걸린 시간 : 82.56 초
+
+# HalvingGridSearch
+# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
+# 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
+# best_score_ : 0.7975235528248856
+# model.score : 0.789893574470963
+# r2_score : 0.789893574470963
+# 최적 튠 r2: 0.789893574470963
+# 걸린 시간 : 98.85 초

@@ -81,10 +81,10 @@ print('걸린 시간 :', round(ett-stt,2),'초')
 
 
 
-# 최적의 매개변수 : RandomForestRegressor(max_depth=8, min_samples_leaf=10, min_samples_split=10)
-# 최적의 파라미터 : {'max_depth': 8, 'min_samples_leaf': 10, 'min_samples_split': 10, 'n_estimators': 100}
-# best_score_ : 0.44900864341774127
-# model.score : 0.4809467451965985
-# r2_score : 0.4809467451965985
-# 최적 튠 r2: 0.4809467451965985
-# 걸린 시간 : 14.0 초
+# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
+# 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
+# best_score_ : 0.7978010761834697
+# model.score : 0.789386791924185
+# r2_score : 0.789386791924185
+# 최적 튠 r2: 0.789386791924185
+# 걸린 시간 : 351.48 초

@@ -26,7 +26,8 @@ parameters =[
 
 import numpy as np
 from sklearn.datasets import load_diabetes, fetch_california_housing
-from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV, KFold, RandomizedSearchCV, HalvingGridSearchCV
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler, MaxAbsScaler
 from sklearn.metrics import r2_score
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
@@ -54,7 +55,7 @@ x_test = scaler.transform(x_test)
 n_splits = 5
 kfold = KFold(n_splits=n_splits, shuffle=True, random_state=337)
 
-model = GridSearchCV(RandomForestRegressor(), parameters,
+model = HalvingGridSearchCV(RandomForestRegressor(), parameters,
                      cv=kfold, 
                      verbose=1, 
                      refit=True, 
@@ -88,7 +89,7 @@ print('최적 튠 r2:', r2_score(y_test, y_pred_best))
 print('걸린 시간 :', round(ett-stt,2),'초')
 
 
-
+# GridSearch
 # Fitting 5 folds for each of 48 candidates, totalling 240 fits
 # 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, n_estimators=200)
 # 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 2, 'n_estimators': 200}
@@ -97,3 +98,25 @@ print('걸린 시간 :', round(ett-stt,2),'초')
 # r2_score : 0.9996658944506976
 # 최적 튠 r2: 0.9996658944506976
 # 걸린 시간 : 110.44 초
+
+
+
+# RandomSearch
+# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=5, min_samples_split=3,
+#                       n_estimators=200)
+# 최적의 파라미터 : {'n_estimators': 200, 'min_samples_split': 3, 'min_samples_leaf': 5, 'max_depth': 12}
+# best_score_ : 0.9993764283728241
+# model.score : 0.9995105853080822
+# r2_score : 0.9995105853080822
+# 최적 튠 r2: 0.9995105853080822
+# 걸린 시간 : 25.99 초
+
+# HalvingGridSearch
+# 최적의 매개변수 : RandomForestRegressor(max_depth=12, min_samples_leaf=3, min_samples_split=3,
+#                       n_estimators=200)
+# 최적의 파라미터 : {'max_depth': 12, 'min_samples_leaf': 3, 'min_samples_split': 3, 'n_estimators': 200}
+# best_score_ : 0.9995449085947385
+# model.score : 0.999663909540499
+# r2_score : 0.999663909540499
+# 최적 튠 r2: 0.999663909540499
+# 걸린 시간 : 40.2 초

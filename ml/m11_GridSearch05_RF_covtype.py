@@ -74,16 +74,7 @@ y_pred_best = model.best_estimator_.predict(x_test)
 
 print('accuracy_score :', accuracy_score(y_test, y_predict))
 
-
 print('최적 튠 ACC:', accuracy_score(y_test, y_pred_best))
 
 print('걸린 시간 :', round(ett-stt,2),'초')
 
-
-# 최적의 매개변수 : RandomForestClassifier(max_depth=6, min_samples_leaf=5, min_samples_split=5)
-# 최적의 파라미터 : {'max_depth': 6, 'min_samples_leaf': 5, 'min_samples_split': 5, 'n_estimators': 100}
-# best_score_ : 0.9666666666666668
-# model.score : 0.9666666666666667
-# accuracy_score : 0.9666666666666667
-# 최적 튠 ACC: 0.9666666666666667
-# 걸린 시간 : 10.01 초

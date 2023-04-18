@@ -30,7 +30,8 @@ X_train = scaler.fit_transform(train_data.iloc[:, :-1])
 X_test = scaler.transform(test_data.iloc[:, :-1])
 
 # Model Definition
-model = LocalOutlierFactor(contamination= 0.04808, n_neighbors=37,)
+model = LocalOutlierFactor(contamination= 0.04808, n_neighbors=37,
+                           metric='minkowski')
 # Model Training
 model.fit(X_train)
 

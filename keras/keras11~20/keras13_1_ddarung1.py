@@ -138,11 +138,3 @@ print(y_train.shape, y_test.shape)  #(1021,) (438,)               ->(929,) (399,
 # print(y_test)
 
 
-
-models = [RandomForestRegressor(),DecisionTreeRegressor()]
-
-for j, model in enumerate(models):
-    model.fit(x,y)
-    score = model.score(x,y)
-    print(f" model {j+1}: {score:.3f}")
-    

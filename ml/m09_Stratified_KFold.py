@@ -2,7 +2,7 @@
 #문제점 1. train, test/ test로 predict 한 것이므로 과적합만큼 결과의 acc가 안나올 수 있음
 #문제점 2. stratify kfold 과정중에 y값이 편향될 수 있다.
 #StratifiedKFold = 비율대로 잘라주는 kfold. 위 문제점을 해결할 수 있다.
-#
+#분류 문제에서만 사용함.
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.model_selection import cross_val_score, cross_val_predict

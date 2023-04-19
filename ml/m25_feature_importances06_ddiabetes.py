@@ -5,8 +5,8 @@
 
 
 import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.datasets import load_diabetes
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -15,19 +15,19 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 #1. 데이터
 
-# x, y = load_iris(return_X_y=True)
-x,y = load_iris(return_X_y=True)
-x = pd.DataFrame(x).drop([0,1], axis = 1)
-# x = pd.DataFrame(x).drop(0, axis=1)
-# print(x.shape) #(150, 2)
+path = './_data/dacon_diabetes/'
+path_save = './_save/dacon_diabetes/'
+
+train_set = pd.read_csv(path + 'train.csv',index_col=0)
+test_set = pd.read_csv(path + 'test.csv',index_col=0)
+
+x=train_set.drop(['Outcome'], axis=1)
+# x=pd.DataFrame(x).drop(2,axis=1)
+y=train_set['Outcome']
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,y, train_size=0.8, shuffle=True, random_state=337
 )
-
-scaler = MinMaxScaler()
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.transform(x_test)
 
 #2. 모델
 model = RandomForestClassifier()
@@ -41,15 +41,14 @@ model.fit(x_train, y_train)
 result = model.score(x_test, y_test)
 print('model.score :', result)
 y_predict = model.predict(x_test)
+print('ACC :', accuracy_score(y_test, y_predict))
+
 print('====================================')
 print(model, ":", model.feature_importances_)
 
-# RandomForestClassifier() : [0.12056223 0.02742518 0.44482851 0.40718408]
 
-
-
-# model.score : 0.9666666666666667
+# model.score : 0.7557251908396947
+# ACC : 0.7557251908396947
 # ====================================
-# RandomForestClassifier() : [0.52541144 0.47458856]
-
-
+# RandomForestClassifier() : [0.08704187 0.25209156 0.08999601 0.07207146 0.06035363 0.16287952
+#  0.12183104 0.15373491]

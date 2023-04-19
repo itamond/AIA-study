@@ -5,8 +5,8 @@
 
 
 import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.datasets import load_wine
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -15,19 +15,12 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 #1. 데이터
 
-# x, y = load_iris(return_X_y=True)
-x,y = load_iris(return_X_y=True)
-x = pd.DataFrame(x).drop([0,1], axis = 1)
-# x = pd.DataFrame(x).drop(0, axis=1)
-# print(x.shape) #(150, 2)
+x, y = load_wine(return_X_y=True)
+x = pd.DataFrame(x).drop([0,1,2,3,4,5,7,8],axis=1)
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,y, train_size=0.8, shuffle=True, random_state=337
 )
-
-scaler = MinMaxScaler()
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.transform(x_test)
 
 #2. 모델
 model = RandomForestClassifier()
@@ -41,15 +34,20 @@ model.fit(x_train, y_train)
 result = model.score(x_test, y_test)
 print('model.score :', result)
 y_predict = model.predict(x_test)
+print('ACC :', accuracy_score(y_test, y_predict))
+
 print('====================================')
 print(model, ":", model.feature_importances_)
 
-# RandomForestClassifier() : [0.12056223 0.02742518 0.44482851 0.40718408]
-
-
-
-# model.score : 0.9666666666666667
+# model.score : 0.9722222222222222
+# ACC : 0.9722222222222222
 # ====================================
-# RandomForestClassifier() : [0.52541144 0.47458856]
+# RandomForestClassifier() : [0.13638039 0.02621701 0.01677744 0.02190832 0.02984788 0.0617986
+#  0.18357367 0.01359297 0.01827413 0.12909698 0.09773254 0.09222022
+#  0.17257985]
 
 
+# model.score : 0.9444444444444444
+# ACC : 0.9444444444444444
+# ====================================
+# RandomForestClassifier() : [0.22034805 0.23881794 0.10285975 0.13938836 0.29858591]

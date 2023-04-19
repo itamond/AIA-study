@@ -3,27 +3,27 @@
 #ex)PCA
 
 import numpy as np
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_diabetes
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from xgboost import XGBClassifier
+from xgboost import XGBClassifier, XGBRegressor
 from sklearn.metrics import accuracy_score
 
 #1. 데이터
 
-x, y = load_iris(return_X_y=True)
+x, y = load_diabetes(return_X_y=True)
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,y, train_size=0.8, shuffle=True, random_state=337
 )
 
 #2. 모델
-model = DecisionTreeRegressor()
+# model = DecisionTreeRegressor()
 # model = RandomForestRegressor()
 # model = GradientBoostingRegressor()
-# model = XGBClassifier()
+model = XGBRegressor()
 #트리 계열 모델들이다.
 
 
@@ -34,8 +34,6 @@ model.fit(x_train, y_train)
 result = model.score(x_test, y_test)
 print('model.score :', result)
 y_predict = model.predict(x_test)
-print('ACC :', accuracy_score(y_test, y_predict))
-
 print('====================================')
 print(model, ":", model.feature_importances_)
 
@@ -46,17 +44,11 @@ print(model, ":", model.feature_importances_)
 
 # iris : 컬럼4개 이에 대한 중요도를 출력한다. 최종 결과값을 도출하는데에 영향을 끼친 정도이다.
 
-# ACC : 0.9666666666666667
-# DecisionTreeClassifier() : [0.         0.01671193 0.40658454 0.57670353]
-
-# ACC : 0.9666666666666667
-# RandomForestClassifier() : [0.11696715 0.02794533 0.51764537 0.33744216]
-
-# ACC : 0.9666666666666667
-# GradientBoostingClassifier() : [0.00172841 0.01747272 0.71377823 0.26702064]
-
-# ACC : 0.9666666666666667
-# XGBClassifier() :[0.01794496 0.01218657 0.8486943  0.12117416]
-
-# 1번 2번 컬런의 중요도가 낮아 삭제할 수 있다.
-# 이럴경우 오히려 점수가 오르는 경우가 있다.
+# DecisionTreeRegressor() : [0.06662522 0.00167182 0.26110973 0.07622547 0.0557328  0.05771134
+#  0.03058018 0.01270558 0.35441937 0.08321849]
+# RandomForestRegressor() : [0.072765   0.00856924 0.28496008 0.07702124 0.05138937 0.05237631
+#  0.04682154 0.01751792 0.32099232 0.06758698]
+# GradientBoostingRegressor() : [0.06480998 0.00881152 0.24778406 0.08409326 0.04055535 0.0390411
+#  0.03921319 0.00817009 0.40481181 0.06270965]
+# XGBRegressor() : [0.0330486  0.05173958 0.1607633  0.0750218  0.05887739 0.04195798
+#  0.05592556 0.03102507 0.43406495 0.05757575]

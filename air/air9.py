@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler,RobustScaler, MinMaxScaler, MaxAbsScaler
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 # Load training data
 path='./_data/air/'
 save_path= './_save/air/'
@@ -30,6 +31,11 @@ X_train = scaler.fit_transform(train_data.iloc[:, :-1])
 X_test = scaler.transform(test_data.iloc[:, :-1])
 
 # Model Definition
+
+pca = PCA(n_components=3)
+X_test = pca.fit_transform(X_test)
+X_train = pca.transform(X_train)
+
 model = LocalOutlierFactor(contamination= 0.04808, n_neighbors=37,
                            metric='minkowski')
 # Model Training
@@ -45,7 +51,6 @@ import datetime
 date = datetime.datetime.now()  
 date = date.strftime("%m%d_%H%M")  
 submission.to_csv(save_path+'submit_air'+date+ '_0.048.csv', index=False)
-
 
 #neighbors 250 cont 0.04   0.8852102274
 #neighbors 25 cont 0.052   0.858864335

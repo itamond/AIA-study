@@ -11,6 +11,8 @@ import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from xgboost import XGBClassifier
+
 
 # Load train and test data
 path='./_data/air/'
@@ -73,8 +75,8 @@ train_data_normalized = scaler.fit_transform(train_data.iloc[:, :-1])
 test_data_normalized = scaler.transform(test_data.iloc[:, :-1])
 
 # 
-n_neighbors = 42
-contamination = 0.0459999
+n_neighbors = 46
+contamination = 0.046111
 lof = LocalOutlierFactor(n_neighbors=n_neighbors,
                          contamination=contamination,
                          leaf_size=99,
@@ -105,51 +107,75 @@ data = pd.concat([train_data,test_data], axis=0)
 
 
 print(data.shape)
-features2 = ['out_pressure', 'motor_current', 'motor_temp', 'motor_vibe']
+features2 = ['air_inflow', 'air_end_temp', 'out_pressure', 'motor_current', 'motor_rpm', 'motor_temp', 'motor_vibe']
+# features2 = ['out_pressure', 'motor_current', 'motor_temp', 'motor_vibe']
 x = data[features2]
 y = data['label']
 test_data = test_data[features2]
-print(x.shape, y.shape)
+# print(x.shape, y.shape)
 
-x2_train,x2_test,y2_train,y2_test = train_test_split(x, y, 
-                                                     train_size=0.8, 
-                                                     random_state=338, 
-                                                     shuffle=True,
-                                                     stratify=y)
+model = XGBClassifier(n_estimators=400,
+                      max_depth=10,
+                      learning_rate=0.01,
+                      subsample=0.99,
+                      colsample_bytree=0.99,
+                      objective='binary:logistic',
+                      reg_lambda=5,
+                      gamma=3)
+
+model.fit(x, y)
+result = model.score(x,y)
+y_predict = model.predict(test_data)
+
+# x2_train,x2_test,y2_train,y2_test = train_test_split(x, y, 
+#                                                      train_size=0.8, 
+#                                                      random_state=338, 
+#                                                      shuffle=True,
+#                                                      stratify=y)
 
 
-#2-2 모델구성
+# #2-2 모델구성
 
-model = Sequential()
-model.add(Dense(64, input_dim=4))
-model.add(Dense(32, activation='selu'))
-model.add(Dense(64, activation='selu'))
-model.add(Dense(128, activation='selu'))
-model.add(Dense(64, activation='selu'))
-model.add(Dense(32, activation='selu'))
-model.add(Dense(1))
+# model = Sequential()
+# model.add(Dense(64, input_dim=4))
+# model.add(Dense(32, activation='selu'))
+# model.add(Dense(64, activation='selu'))
+# model.add(Dense(128, activation='selu'))
+# model.add(Dense(64, activation='selu'))
+# model.add(Dense(32, activation='selu'))
+# model.add(Dense(1))
 
-model.compile(loss = 'mse', optimizer = 'adam')
+# model.compile(loss = 'mse', optimizer = 'adam')
 
-vl = ReduceLROnPlateau(monitor='val_loss' ,
-                       factor = 0.2,
-                       patience = 5)
-es = EarlyStopping(monitor='val_loss', 
-                   patience=30, 
-                   restore_best_weights=True,
-                   )
+# vl = ReduceLROnPlateau(monitor='val_loss' ,
+#                        factor = 0.2,
+#                        patience = 5)
+# es = EarlyStopping(monitor='val_loss', 
+#                    patience=30, 
+#                    restore_best_weights=True,
+#                    )
 
-model.fit(x2_train, y2_train, epochs=300, verbose=1, validation_split=0.2,
-          callbacks=[vl,es])
+# model.fit(x2_train, y2_train, epochs=300, verbose=1, validation_split=0.2,
+#           batch_size=16,
+#           callbacks=[vl,es])
 
-# test_data= test_data.drop(['label'],axis=1)
+# # test_data= test_data.drop(['label'],axis=1)
 
-test_preds = model.predict(test_data)
+# test_preds = model.predict(test_data)
 
-errors = np.mean(np.power(test_data - test_preds, 2), axis=1)
-y_pred = np.where(errors >=np.percentile(errors, 95), 1, 0)
+# errors = np.mean(np.power(test_data - test_preds, 2), axis=1)
+# y_pred = np.where(errors >=np.percentile(errors, 95), 1, 0)
 
-submission['label'] = y_pred
-submission.to_csv(save_path  + '_submission.csv', index=False)
+import xgboost as xgb
+import matplotlib.pyplot as plt
+xgb.plot_importance(model)
+xgb.plot_tree(model, num_trees=1, rankdir='LR')
+# xgb.plot_tree(model, num_trees=1, rankdir='LR', ax=2)
+fig = plt.gcf()
+fig.set_size_inches(150, 100)
+plt.show()
+
+submission['label'] = y_predict
+submission.to_csv(save_path  + '_XGB_Lambda5.csv', index=False)
 
 

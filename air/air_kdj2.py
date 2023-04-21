@@ -114,14 +114,15 @@ y = data['label']
 test_data = test_data[features2]
 # print(x.shape, y.shape)
 
-model = XGBClassifier(n_estimators=400,
-                      max_depth=10,
-                      learning_rate=0.01,
+model = XGBClassifier(n_estimators=1000,
+                      max_depth=35,
+                      learning_rate=0.001,
                       subsample=0.99,
                       colsample_bytree=0.99,
                       objective='binary:logistic',
-                      reg_lambda=5,
-                      gamma=3)
+                      reg_lambda=1,
+                    #   gamma=2,
+                      )
 
 model.fit(x, y)
 result = model.score(x,y)
@@ -168,12 +169,12 @@ y_predict = model.predict(test_data)
 
 import xgboost as xgb
 import matplotlib.pyplot as plt
-xgb.plot_importance(model)
-xgb.plot_tree(model, num_trees=1, rankdir='LR')
-# xgb.plot_tree(model, num_trees=1, rankdir='LR', ax=2)
-fig = plt.gcf()
-fig.set_size_inches(150, 100)
-plt.show()
+# xgb.plot_importance(model)
+# xgb.plot_tree(model, num_trees=1, rankdir='LR')
+# # xgb.plot_tree(model, num_trees=1, rankdir='LR', ax=2)
+# fig = plt.gcf()
+# fig.set_size_inches(150, 100)
+# plt.show()
 
 submission['label'] = y_predict
 submission.to_csv(save_path  + '_XGB_Lambda5.csv', index=False)

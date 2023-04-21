@@ -102,7 +102,7 @@ x = for_train[:,:-1]
 y = for_train[:,-1]
 
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.9,stratify=y)
+x_train,x_test,y_train,y_test=train_test_split(x,y,train_size=0.8,random_state=337)
 x_train=scaler.fit_transform(x_train)
 x_test=scaler.transform(x_test)
 for_test=scaler.transform(for_test)
@@ -134,7 +134,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 vl = ReduceLROnPlateau(monitor='val_loss' ,
                        factor = 0.2,
-                       patience = 5)
+                       patience = 2)
 
 
 es = EarlyStopping(monitor='val_loss',
@@ -145,7 +145,7 @@ es = EarlyStopping(monitor='val_loss',
 
 
 model.compile(loss='binary_crossentropy',optimizer='adam',metrics='acc')
-model.fit(x_train,y_train,validation_data=(x_test,y_test),epochs=10000,batch_size=len(x_train)//99
+model.fit(x_train,y_train,validation_data=(x_test,y_test),epochs=10,batch_size=len(x_train)//99
           ,callbacks=[vl, es])
 
 # 4. predict,save

@@ -79,22 +79,22 @@ filename='{epoch:04d}-{val_acc:.4f}.hdf5'
 # model.summary()
 
 input1 = Input(shape=(32, 32, 3))
-conv1 = Conv2D(64, (3,3),
+conv1 = Conv2D(4, (3,3),
                padding='same', 
                activation='relu')(input1)
-conv2 = Conv2D(64, (3,3),
+conv2 = Conv2D(6, (3,3),
                padding='same', 
                activation='relu')(conv1)
 mp1 = MaxPooling2D()
 pooling1 = mp1(conv2)
-conv3 = Conv2D(64, (3,3),
+conv3 = Conv2D(2, (3,3),
                padding='same', 
                activation='relu')(conv2)
 pooling2 = mp1(conv3)
 flat1 = Flatten()(pooling2)
-dense1 = Dense(256,activation='relu')(flat1)
-dense2 = Dense(256,activation='relu')(dense1)
-dense3 = Dense(128,activation='relu')(dense2)
+dense1 = Dense(10,activation='relu')(flat1)
+dense2 = Dense(10,activation='relu')(dense1)
+dense3 = Dense(10,activation='relu')(dense2)
 output1 = Dense(100,activation='softmax')(dense3)
 model = Model(inputs=input1, outputs=output1)
 model.summary()

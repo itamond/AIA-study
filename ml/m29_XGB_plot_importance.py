@@ -38,7 +38,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 #     print(model_name[i], ":", model.feature_importances_)
 #     print('====================================')
 
-model = RandomForestClassifier()
+model = XGBClassifier()
 
 model.fit(x_train, y_train)
 result = model.score(x_test,y_test)
@@ -50,18 +50,24 @@ print('XGBClassifier()', model.feature_importances_)
 
 import matplotlib.pyplot as plt
 
-def plot_feature_importances(model):
-    n_features = datasets.data.shape[1]
-    plt.barh(np.arange(n_features), model.feature_importances_, align='center')
-    plt.yticks(np.arange(n_features), datasets.feature_names)
-    plt.xlabel('Feature Importances')
-    plt.ylabel('Features')
-    plt.ylim(-1, n_features)
-    plt.title(model)
+# def plot_feature_importances(model):
+#     n_features = datasets.data.shape[1]
+#     plt.barh(np.arange(n_features), model.feature_importances_, align='center')
+#     plt.yticks(np.arange(n_features), datasets.feature_names)
+#     plt.xlabel('Feature Importances')
+#     plt.ylabel('Features')
+#     plt.ylim(-1, n_features)
+#     plt.title(model)
     
-plot_feature_importances(model)
+# plot_feature_importances(model)
+# plt.show()
+
+from xgboost.plotting import plot_importance
+plot_importance(model)
 plt.show()
 
+# 정확한 비교를 위해서는 각 모델이 최적의 파라미터로 튜닝 되었을때 수행 되어야 정확하다.
+# 상관관계가 높은 컬런은 제거하여야 과적합이 줄어들 수 있다.
 
 
 

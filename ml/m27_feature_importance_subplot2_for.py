@@ -38,17 +38,19 @@ x_train, x_test, y_train, y_test = train_test_split(
 #     print(model_name[i], ":", model.feature_importances_)
 #     print('====================================')
 
-model = RandomForestClassifier()
 
-model.fit(x_train, y_train)
-result = model.score(x_test,y_test)
-y_predict = model.predict(x_test)
-acc = accuracy_score(y_test, y_predict)
 
-print('XGBClassifier()', model.feature_importances_)
+# result = model.score(x_test,y_test)
+# y_predict = model.predict(x_test)
+# acc = accuracy_score(y_test, y_predict)
+# print('XGBClassifier()', model.feature_importances_)
     
 
 import matplotlib.pyplot as plt
+
+model_list = [DecisionTreeClassifier(),RandomForestClassifier(), GradientBoostingClassifier(), XGBClassifier()]
+model_name_list = ['디시젼트리', '랜덤포레스트', '그라디언트부스팅', 'XGB']
+
 
 def plot_feature_importances(model):
     n_features = datasets.data.shape[1]
@@ -58,9 +60,19 @@ def plot_feature_importances(model):
     plt.ylabel('Features')
     plt.ylim(-1, n_features)
     plt.title(model)
-    
-plot_feature_importances(model)
+
+
+
+for i in range(4):
+    globals()['model'+str(i)] = model_list[i]
+    globals()['model'+str(i)].fit(x_train, y_train)
+    plt.subplot(2, 2, i+1)
+    # print(globals()['model'+str(i)].feature_importance_)
+    plot_feature_importances(globals()['model'+str(i)])
+    if i == 3:
+        plt.title('XGBClassifier()')
 plt.show()
+
 
 
 
@@ -82,3 +94,5 @@ plt.show()
 # XGB클래지파이어 : [0.01794496 0.01218657 0.8486943  0.12117416]
 # ====================================
 
+
+                

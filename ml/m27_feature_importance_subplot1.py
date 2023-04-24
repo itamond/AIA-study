@@ -38,14 +38,19 @@ x_train, x_test, y_train, y_test = train_test_split(
 #     print(model_name[i], ":", model.feature_importances_)
 #     print('====================================')
 
-model = RandomForestClassifier()
+model1 = DecisionTreeClassifier()
+model2 = RandomForestClassifier()
+model3 = GradientBoostingClassifier()
+model4 = XGBClassifier()
 
-model.fit(x_train, y_train)
-result = model.score(x_test,y_test)
-y_predict = model.predict(x_test)
-acc = accuracy_score(y_test, y_predict)
-
-print('XGBClassifier()', model.feature_importances_)
+model1.fit(x_train, y_train)
+model2.fit(x_train, y_train)
+model3.fit(x_train, y_train)
+model4.fit(x_train, y_train)
+# result = model.score(x_test,y_test)
+# y_predict = model.predict(x_test)
+# acc = accuracy_score(y_test, y_predict)
+# print('XGBClassifier()', model.feature_importances_)
     
 
 import matplotlib.pyplot as plt
@@ -59,7 +64,14 @@ def plot_feature_importances(model):
     plt.ylim(-1, n_features)
     plt.title(model)
     
-plot_feature_importances(model)
+plt.subplot(2, 2, 1) #2바이 2의 그림의 1번째 그림
+plot_feature_importances(model1)
+plt.subplot(2,2,2)
+plot_feature_importances(model2)
+plt.subplot(2,2,3)
+plot_feature_importances(model3)
+plt.subplot(2,2,4)
+plot_feature_importances(model4)
 plt.show()
 
 

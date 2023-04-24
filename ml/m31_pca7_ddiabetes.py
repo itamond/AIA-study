@@ -13,14 +13,21 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 # 1. 데이터
-datasets = load_breast_cancer()
 
-x = datasets['data']
-y = datasets.target
+path = './_data/dacon_diabetes/'
+path_save = './_save/dacon_diabetes/'
 
+train_set = pd.read_csv(path + 'train.csv',index_col=0)
+test_set = pd.read_csv(path + 'test.csv',index_col=0)
 
-for i in range(9):
-    pca = PCA(n_components=30-i*3)
+x=train_set.drop(['Outcome'], axis=1)
+# x=pd.DataFrame(x).drop(2,axis=1)
+y=train_set['Outcome']
+
+print(x.shape)
+
+for i in range(6):
+    pca = PCA(n_components=8-i)
     x =pca.fit_transform(x)
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=123,shuffle=True,)
     # 2. 모델구성
@@ -29,19 +36,19 @@ for i in range(9):
     # 3. 훈련
     model.fit(x_train, y_train)
     results = model.score(x_test, y_test)
-    print('차원', i*3,'개축소', '결과 :',results)
+    print('차원', i,'개축소', '결과 :',results)
+    
+    
+# 차원 0 개축소 결과 : 0.7404580152671756
+# 차원 1 개축소 결과 : 0.7480916030534351
+# 차원 2 개축소 결과 : 0.7480916030534351
+# 차원 3 개축소 결과 : 0.6946564885496184
+# 차원 4 개축소 결과 : 0.6946564885496184
+# 차원 5 개축소 결과 : 0.7175572519083969
     
 
 
-# 차원 0 개축소 결과 : 0.9736842105263158
-# 차원 3 개축소 결과 : 0.9736842105263158
-# 차원 6 개축소 결과 : 0.9824561403508771
-# 차원 9 개축소 결과 : 0.9824561403508771
-# 차원 12 개축소 결과 : 0.9824561403508771
-# 차원 15 개축소 결과 : 0.9912280701754386
-# 차원 18 개축소 결과 : 0.9824561403508771
-# 차원 21 개축소 결과 : 0.9912280701754386
-# 차원 24 개축소 결과 : 0.9912280701754386
+
 
 
 

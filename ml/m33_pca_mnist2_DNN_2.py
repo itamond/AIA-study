@@ -1,5 +1,6 @@
 from tensorflow.keras.datasets import mnist
 import numpy as np
+from tensorflow.keras.layers import Dropout
 from sklearn.decomposition import PCA
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -21,10 +22,12 @@ for i in range(len(n_c_list)):
     x_p = pca.fit_transform(x.astype('float32'))
     x_train, x_test, y_train, y_test = train_test_split(x_p, y, train_size=0.8, shuffle=True, random_state=123)
 
-    model = Sequential()
-    model.add(Dense(4, input_shape=(n_c_list[i],)))
-    model.add(Dense(4, activation='relu'))
-    model.add(Dense(10, activation='softmax'))
+    model =Sequential()
+    model.add(Dense(64, input_shape=(28*28,)))
+    model.add(Dropout(0.5))
+    model.add(Dense(32,activation='relu'))
+    model.add(Dense(16,activation='relu'))
+    model.add(Dense(10,activation='softmax'))
     
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics='acc')
     model.fit(x_train, y_train, epochs=20, batch_size=16, validation_split=0.2, verbose=0)

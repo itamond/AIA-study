@@ -7,6 +7,7 @@ from tensorflow.python.keras.callbacks import EarlyStopping
 from sklearn.experimental import enable_iterative_imputer 
 from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer, KNNImputer, IterativeImputer #결측치에 대한 책임을 돌린다
 from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
@@ -32,8 +33,9 @@ x = train_csv.drop(['SalePrice','LotFrontage'], axis=1)
 y = train_csv['SalePrice']
 test_csv = test_csv.drop(['LotFrontage'], axis=1)
 
-imputer = IterativeImputer(estimator=XGBRegressor())
-# imputer = IterativeImputer(estimator=DecisionTreeRegressor())
+# imputer = IterativeImputer(estimator=XGBRegressor())
+imputer = IterativeImputer(estimator=DecisionTreeRegressor())
+# imputer = SimpleImputer()
 x = imputer.fit_transform(x)
 test_csv = imputer.transform(test_csv)
 
@@ -57,38 +59,27 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 test_csv = scaler.transform(test_csv)
 
-
-input1 = Input(shape=(78,))
-dense1 = Dense(128, activation='relu')(input1) 
-drop1 = Dropout(0.4)(dense1)
-dense2 = Dense(256, activation='relu')(drop1)  
-drop2 = Dropout(0.5)(dense2)                                                          
-dense3 = Dense(128,activation='relu')(drop2)     
-drop3 = Dropout(0.3)(dense3)                                                          
-output1 = Dense(1)(drop3)
-model = Model(inputs=input1, outputs=output1) 
+model = RandomForestRegressor(random_state=123)
 
 # 3. 컴파일, 훈련
-model.compile(loss='mse', optimizer='adam')
-es = EarlyStopping(monitor='val_loss', patience=100, verbose=1, mode='min',
-                   restore_best_weights=True)
-hist = model.fit(x_train, y_train, epochs=5000, 
-                 batch_size=32, verbose=1, validation_split=0.1, callbacks=[es])
+# model.compile(loss='mse', optimizer='adam')
+
+hist = model.fit(x_train, y_train)
 
 # 4. 평가, 예측
-loss = model.evaluate(x_test, y_test)
-print('loss : ', loss)
+# loss = model.evaluate(x_test, y_test)
+# print('loss : ', loss)
 
-y_predict = model.predict(x_test)
+y_predict = model.score(x_test, y_test)
 
-r2 = r2_score(y_test, y_predict)
-print('r2 : ', r2)
+# r2 = r2_score(y_test, y_predict)
+print('r2 : ', y_predict)
 
-#'mse'->rmse로 변경
-def RMSE(y_test, y_predict): 
-    return np.sqrt(mean_squared_error(y_test, y_predict))
-rmse = RMSE(y_test,y_predict)
-print("RMSE : ", rmse)
+# #'mse'->rmse로 변경
+# def RMSE(y_test, y_predict): 
+#     return np.sqrt(mean_squared_error(y_test, y_predict))
+# rmse = RMSE(y_test,y_predict)
+# print("RMSE : ", rmse)
 
 
 
@@ -100,6 +91,4 @@ print("RMSE : ", rmse)
 # r2 :  0.8696091007958218
 # RMSE :  28206.51739039371
 
-# loss :  581419264.0
-# r2 :  0.9047120984097845
-# RMSE :  24112.637060986628
+# r2 :  0.9022013847334674

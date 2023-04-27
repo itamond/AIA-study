@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
 import numpy as np
 import pandas as pd
 from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 # 경사하강법
@@ -19,7 +20,17 @@ warnings.filterwarnings('ignore')
 
 #1. 데이터
 
-x, y = load_diabetes(return_X_y=True)
+# 1. 데이터
+path='./_data/kaggle_bike/'
+path_save='./_save/kaggle_bike/'    
+
+train_csv = pd.read_csv(path + 'train.csv',
+                        index_col=0)                 
+
+train_csv = train_csv.dropna()   
+
+x = train_csv.drop(['count'], axis=1)   
+y = train_csv['count']
 
 parameter ={'n_estimators' : 1000,
             'learning_rate' : 0.3, #일반적으로 가장 성능에 영향을 많이 끼침. 경사하강법에서 얼만큼씩 하강할것이냐를 뜻함. 웨이트를 찾을때 적절한 러닝레이트 필요
@@ -88,7 +99,8 @@ for i in thresholds :
     
     selection_model.fit(select_x_train,y_train,
                         eval_set=[(select_x_train,y_train), (select_x_test, y_test)],
-                        verbose=0, )
+                        verbose=0,
+                        )
     
     select_y_predict = selection_model.predict(select_x_test)
     score = r2_score(y_test, select_y_predict)
@@ -96,27 +108,24 @@ for i in thresholds :
     #%.3f는 float 소수 셋째짜리까지의 숫자를 넣으라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 첫번째.
     #%d는 정수형으로 값을 빼라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 두번째.
     #%.2f%% 는 float 소수 둘째자리까지의 숫자를 넣으라는 의미. %%는 글자 %를 입력하고 싶을때 쓰는 문법. 출력되는 숫자는 %뒤로 정의한 내용중 세번째
-    
-# 변형된 x_train : (353, 10) 변형된 x_test : (89, 10)
-# Tresh=0.072, n=8, R2: 40.08%
-# 변형된 x_train : (353, 7) 변형된 x_test : (89, 7)
-# Tresh=0.078, n=7, R2: 37.00%
-# 변형된 x_train : (353, 6) 변형된 x_test : (89, 6)
-# Tresh=0.087, n=6, R2: 44.07%
-# 변형된 x_train : (353, 5) 변형된 x_test : (89, 5)
-# Tresh=0.105, n=5, R2: 40.59%
-# 변형된 x_train : (353, 4) 변형된 x_test : (89, 4)
-# Tresh=0.120, n=4, R2: 31.31%
-# 변형된 x_train : (353, 3) 변형된 x_test : (89, 3)
-# Tresh=0.138, n=3, R2: 31.43%
-# 변형된 x_train : (353, 2) 변형된 x_test : (89, 2)
-# Tresh=0.147, n=2, R2: 11.42%
-# 변형된 x_train : (353, 1) 변형된 x_test : (89, 1)
-# Tresh=0.155, n=1, R2: 6.71%
 
-
-# for i in range(x.shape[1]-1) :
-#     a = model.feature_importances_
-#     b = np.argmin(a, axis=0)
-#     x = pd.DataFrame(pd.DataFrame(x).drop(b,axis=1).values)
-#     Runmodel(f'{9-i}개의 column 삭제', x, y)
+# 변형된 x_train : (8708, 10) 변형된 x_test : (2178, 10)
+# Tresh=0.000, 남은 컬런 갯수=10, R2: 98.11%
+# 변형된 x_train : (8708, 9) 변형된 x_test : (2178, 9)
+# Tresh=0.002, 남은 컬런 갯수=9, R2: 99.59%
+# 변형된 x_train : (8708, 8) 변형된 x_test : (2178, 8)
+# Tresh=0.004, 남은 컬런 갯수=8, R2: 99.24%
+# 변형된 x_train : (8708, 7) 변형된 x_test : (2178, 7)
+# Tresh=0.006, 남은 컬런 갯수=7, R2: 99.73%
+# 변형된 x_train : (8708, 6) 변형된 x_test : (2178, 6)
+# Tresh=0.007, 남은 컬런 갯수=6, R2: 99.45%
+# 변형된 x_train : (8708, 5) 변형된 x_test : (2178, 5)
+# Tresh=0.032, 남은 컬런 갯수=5, R2: 99.53%
+# 변형된 x_train : (8708, 4) 변형된 x_test : (2178, 4)
+# Tresh=0.042, 남은 컬런 갯수=4, R2: 99.83%
+# 변형된 x_train : (8708, 3) 변형된 x_test : (2178, 3)
+# Tresh=0.065, 남은 컬런 갯수=3, R2: 99.98%
+# 변형된 x_train : (8708, 2) 변형된 x_test : (2178, 2)
+# Tresh=0.074, 남은 컬런 갯수=2, R2: 99.99%
+# 변형된 x_train : (8708, 1) 변형된 x_test : (2178, 1)
+# Tresh=0.768, 남은 컬런 갯수=1, R2: 94.82%

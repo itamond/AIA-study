@@ -1,6 +1,6 @@
 #가중치 역시 데이터이다.
 #데이터(가중치)를 저장하는 방법에 대하여import numpy as np
-from sklearn.datasets import load_breast_cancer, load_diabetes
+from sklearn.datasets import load_breast_cancer, load_diabetes, fetch_california_housing
 from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
 import numpy as np
 import pandas as pd
 from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 # 경사하강법
@@ -19,7 +20,7 @@ warnings.filterwarnings('ignore')
 
 #1. 데이터
 
-x, y = load_diabetes(return_X_y=True)
+x, y = fetch_california_housing(return_X_y=True)
 
 parameter ={'n_estimators' : 1000,
             'learning_rate' : 0.3, #일반적으로 가장 성능에 영향을 많이 끼침. 경사하강법에서 얼만큼씩 하강할것이냐를 뜻함. 웨이트를 찾을때 적절한 러닝레이트 필요
@@ -82,13 +83,14 @@ for i in thresholds :
     select_x_test = selection.transform(x_test)
     print('변형된 x_train :', select_x_train.shape, '변형된 x_test :', select_x_test.shape)
     
-    selection_model = XGBRegressor()
+    selection_model = LinearRegression()
     
-    selection_model.set_params(early_stopping_rounds=10, **parameter, eval_metric='rmse',)
+    # selection_model.set_params(early_stopping_rounds=10, **parameter, eval_metric='rmse',)
     
     selection_model.fit(select_x_train,y_train,
-                        eval_set=[(select_x_train,y_train), (select_x_test, y_test)],
-                        verbose=0, )
+                        # eval_set=[(select_x_train,y_train), (select_x_test, y_test)],
+                        # verbose=0,
+                        )
     
     select_y_predict = selection_model.predict(select_x_test)
     score = r2_score(y_test, select_y_predict)
@@ -96,27 +98,22 @@ for i in thresholds :
     #%.3f는 float 소수 셋째짜리까지의 숫자를 넣으라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 첫번째.
     #%d는 정수형으로 값을 빼라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 두번째.
     #%.2f%% 는 float 소수 둘째자리까지의 숫자를 넣으라는 의미. %%는 글자 %를 입력하고 싶을때 쓰는 문법. 출력되는 숫자는 %뒤로 정의한 내용중 세번째
-    
-# 변형된 x_train : (353, 10) 변형된 x_test : (89, 10)
-# Tresh=0.072, n=8, R2: 40.08%
-# 변형된 x_train : (353, 7) 변형된 x_test : (89, 7)
-# Tresh=0.078, n=7, R2: 37.00%
-# 변형된 x_train : (353, 6) 변형된 x_test : (89, 6)
-# Tresh=0.087, n=6, R2: 44.07%
-# 변형된 x_train : (353, 5) 변형된 x_test : (89, 5)
-# Tresh=0.105, n=5, R2: 40.59%
-# 변형된 x_train : (353, 4) 변형된 x_test : (89, 4)
-# Tresh=0.120, n=4, R2: 31.31%
-# 변형된 x_train : (353, 3) 변형된 x_test : (89, 3)
-# Tresh=0.138, n=3, R2: 31.43%
-# 변형된 x_train : (353, 2) 변형된 x_test : (89, 2)
-# Tresh=0.147, n=2, R2: 11.42%
-# 변형된 x_train : (353, 1) 변형된 x_test : (89, 1)
-# Tresh=0.155, n=1, R2: 6.71%
 
 
-# for i in range(x.shape[1]-1) :
-#     a = model.feature_importances_
-#     b = np.argmin(a, axis=0)
-#     x = pd.DataFrame(pd.DataFrame(x).drop(b,axis=1).values)
-#     Runmodel(f'{9-i}개의 column 삭제', x, y)
+
+# 변형된 x_train : (16512, 8) 변형된 x_test : (4128, 8)
+# Tresh=0.034, 남은 컬런 갯수=8, R2: 59.43%
+# 변형된 x_train : (16512, 7) 변형된 x_test : (4128, 7)
+# Tresh=0.040, 남은 컬런 갯수=7, R2: 59.43%
+# 변형된 x_train : (16512, 6) 변형된 x_test : (4128, 6)
+# Tresh=0.059, 남은 컬런 갯수=6, R2: 58.41%
+# 변형된 x_train : (16512, 5) 변형된 x_test : (4128, 5)
+# Tresh=0.136, 남은 컬런 갯수=5, R2: 57.14%
+# 변형된 x_train : (16512, 4) 변형된 x_test : (4128, 4)
+# Tresh=0.144, 남은 컬런 갯수=4, R2: 47.71%
+# 변형된 x_train : (16512, 3) 변형된 x_test : (4128, 3)
+# Tresh=0.153, 남은 컬런 갯수=3, R2: 47.21%
+# 변형된 x_train : (16512, 2) 변형된 x_test : (4128, 2)
+# Tresh=0.163, 남은 컬런 갯수=2, R2: 47.08%
+# 변형된 x_train : (16512, 1) 변형된 x_test : (4128, 1)
+# Tresh=0.270, 남은 컬런 갯수=1, R2: 46.31%

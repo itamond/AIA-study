@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
 import numpy as np
 import pandas as pd
 from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
 # 경사하강법
@@ -82,13 +83,14 @@ for i in thresholds :
     select_x_test = selection.transform(x_test)
     print('변형된 x_train :', select_x_train.shape, '변형된 x_test :', select_x_test.shape)
     
-    selection_model = XGBRegressor()
+    selection_model = LinearRegression()
     
-    selection_model.set_params(early_stopping_rounds=10, **parameter, eval_metric='rmse',)
+    # selection_model.set_params(early_stopping_rounds=10, **parameter, eval_metric='rmse',)
     
     selection_model.fit(select_x_train,y_train,
-                        eval_set=[(select_x_train,y_train), (select_x_test, y_test)],
-                        verbose=0, )
+                        # eval_set=[(select_x_train,y_train), (select_x_test, y_test)],
+                        # verbose=0,
+                        )
     
     select_y_predict = selection_model.predict(select_x_test)
     score = r2_score(y_test, select_y_predict)
@@ -113,6 +115,22 @@ for i in thresholds :
 # Tresh=0.147, n=2, R2: 11.42%
 # 변형된 x_train : (353, 1) 변형된 x_test : (89, 1)
 # Tresh=0.155, n=1, R2: 6.71%
+
+
+
+#LinearRegressor
+# 변형된 x_train : (353, 10) 변형된 x_test : (89, 10)
+# 변형된 x_train : (353, 6) 변형된 x_test : (89, 6)
+# Tresh=0.087, 남은 컬런 갯수=6, R2: 35.64%
+# 변형된 x_train : (353, 5) 변형된 x_test : (89, 5)
+# Tresh=0.105, 남은 컬런 갯수=5, R2: 39.16%변형된 x_train : (353, 4) 변형된 x_test : (89, 4)
+# Tresh=0.120, 남은 컬런 갯수=4, R2: 30.39%
+# 변형된 x_train : (353, 3) 변형된 x_test : (89, 3)
+# Tresh=0.138, 남은 컬런 갯수=3, R2: 30.35%
+# 변형된 x_train : (353, 2) 변형된 x_test : (89, 2)
+# Tresh=0.147, 남은 컬런 갯수=2, R2: 16.25%
+# 변형된 x_train : (353, 1) 변형된 x_test : (89, 1)
+# Tresh=0.155, 남은 컬런 갯수=1, R2: 4.85%
 
 
 # for i in range(x.shape[1]-1) :

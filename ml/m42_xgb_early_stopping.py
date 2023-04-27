@@ -45,31 +45,40 @@ n_splits = 5
 
 kfold = KFold(n_splits=n_splits)
 
-parameter ={'n_estimators' : [100],
-            'learning_rate' : [0.3], #일반적으로 가장 성능에 영향을 많이 끼침. 경사하강법에서 얼만큼씩 하강할것이냐를 뜻함. 웨이트를 찾을때 적절한 러닝레이트 필요
-            'max_depth' : [2], #트리형 모델의 깊이.
-            'gamma' : [0],
-            'min_child_weight' : [0], 
-            'subsample' : [0.2], # 드랍아웃의 개념. 0.2만큼 덜어낸다는 의미
-            'colsample_bytree' : [0.5],
-            'colsample_bylevel': [0.2],
-            'colsample_bynode': [1],
-            'reg_alpha': [1], #알파와 람다 l1, l2 규제
-            'reg_lambda': [1],
+parameter ={'n_estimators' : 1000,
+            'learning_rate' : 0.3, #일반적으로 가장 성능에 영향을 많이 끼침. 경사하강법에서 얼만큼씩 하강할것이냐를 뜻함. 웨이트를 찾을때 적절한 러닝레이트 필요
+            'max_depth' : 2, #트리형 모델의 깊이.
+            'gamma' : 0,
+            'min_child_weight' : 0, 
+            'subsample' : 0.2, # 드랍아웃의 개념. 0.2만큼 덜어낸다는 의미
+            'colsample_bytree' : 0.5,
+            'colsample_bylevel': 0,
+            'colsample_bynode': 1,
+            'reg_alpha': 1, #알파와 람다 l1, l2 규제
+            'reg_lambda': 1,
+            'random_state': 337,
+            'eval_metric' : 'rmse'
             }
 
+#값을 리스트 형태로 넣으면 에러. 파라미터는 항상 한개의 값만을 받을 수 있기 때문이다.
 
 #2. 모델
 
-xgb = XGBClassifier(random_state=337)
-model = GridSearchCV(xgb, parameter, cv=kfold, n_jobs=-1)
+model = XGBClassifier(**parameter
+                      )
 
 #3. 훈련
-model.fit(x_train, y_train)
+model.set_params(early_stopping_rounds=10)
+model.fit(x_train, y_train,
+          eval_set =[(x_train, y_train),(x_test, y_test)],    #각 튜플 항목에 대한 로스가 나오기 때문에 train 항목을 넣으면 케라스의 loss와 같다.
+          #발리데이션 데이터다.
+        #   early_stopping_rounds=10,  #더 이상 지표가 감소하지 않는 최대 반복횟수
+        #   verbose=False,   #verbose=true of false
+          )
 
 #4. 평가, 예측
-print("최상의 매개변수 :", model.best_params_)
-print('최상의 점수 :', model.best_score_)
+# print("최상의 매개변수 :", model.best_params_)
+print('최상의 점수 :', model.score(x_test,y_test))
 
 results = model.score(x_test, y_test)
 print("최종점수 : ", results)
@@ -77,3 +86,10 @@ print("최종점수 : ", results)
 
 # 최상의 점수 : 0.9714285714285715
 # 최종점수 :  0.956140350877193
+
+
+
+
+#*args  인자의 갯수에 대해서 제한이 없다.
+#**params  키 밸류 형태. 딕셔너리 형태. 이전 소스에서 정리한 parameter 딕셔너리를 한번에 받을 수 있다.
+

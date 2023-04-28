@@ -71,7 +71,7 @@ for i in thresholds :
     
     select_y_predict = selection_model.predict(select_x_test)
     score = r2_score(y_test, select_y_predict)
-    print("Tresh=%.3f, 남은 컬런 갯수=%d, R2: %.2f%%"%(i, select_x_train.shape[1], score*100))
+    print("Tresh=%.3f, 남은 컬런 갯수=%d, ACC: %.2f%%"%(i, select_x_train.shape[1], score*100))
     #%.3f는 float 소수 셋째짜리까지의 숫자를 넣으라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 첫번째.
     #%d는 정수형으로 값을 빼라는 의미, 그 숫자는 뒤 % 뒤로 정의한 내용중 두번째.
     #%.2f%% 는 float 소수 둘째자리까지의 숫자를 넣으라는 의미. %%는 글자 %를 입력하고 싶을때 쓰는 문법. 출력되는 숫자는 %뒤로 정의한 내용중 세번째

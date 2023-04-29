@@ -107,9 +107,10 @@ model = XGBClassifier(random_state=424,tree_method='gpu_hist', gpu_id=0, predict
 
 
 
-param_grid = {'n_estimators' : [300],
-    'learning_rate': [0.01, 0.1, 0.005],
-    'max_depth': [8, 10],
+param_grid = {'n_estimators' : [5,100],
+    'learning_rate': [0.00001,0.000001],
+    'max_depth': [5],
+    
 }
 
 grid = GridSearchCV(model,
@@ -138,8 +139,9 @@ print(f'Recall: {recall}')
 # 하이퍼파라미터 튜닝 결과를 바탕으로 최적의 모델을 선택하고 테스트 세트의 목표 변수를 예측하는 데 사용합니다.
 # Model prediction
 y_pred = best_model.predict_proba(test_x)
-y_pred = np.round(y_pred, 4)
+y_pred = np.round(y_pred, 5)
+
 submission = pd.DataFrame(data=y_pred, columns=sample_submission.columns, index=sample_submission.index)
-submission.to_csv('./_data/dacon_air/submission3.csv', index=True)
+submission.to_csv('./_data/dacon_air/SB4.csv', index=True)
 
 print(best_model)

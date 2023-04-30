@@ -11,9 +11,14 @@ from xgboost import XGBClassifier
 from catboost import CatBoostClassifier
 import datetime
 import optuna
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-
-scaler_list = [MinMaxScaler(), MaxAbsScaler(), StandardScaler(), RobustScaler()]
+scaler_list = [
+            #    MinMaxScaler(),
+            #    MaxAbsScaler(), 
+            #    StandardScaler(), 
+               RobustScaler(),
+               ]
 model_list = [CatBoostClassifier()]
 
 
@@ -108,14 +113,14 @@ for k in range(10):
 
         def objective(trial, x_train, y_train, x_test, y_test, min_rmse):
             param = {
-                'iterations': trial.suggest_int('iterations', 800, 2000),
-                'depth': trial.suggest_int('max_depth', 3, 10),
-                'learning_rate': trial.suggest_float('learning_rate',  0.001,0.1),
+                'iterations': trial.suggest_int('iterations', 2000, 3000),
+                'depth': trial.suggest_int('max_depth', 8, 10),
+                'learning_rate': trial.suggest_float('learning_rate',  0.0001,0.01),
                 'l2_leaf_reg': trial.suggest_int('l2_leaf_reg', 0, 15),
                 'colsample_bylevel': trial.suggest_float('colsample_bylevel', 0.01, 1),
                 'bagging_temperature': trial.suggest_int('bagging_temperature', 0, 10),
                 'random_strength': trial.suggest_int('random_strength', 0, 10),
-                'border_count': trial.suggest_int('border_count', 64, 256),
+                'border_count': trial.suggest_int('border_count', 64, 128),
                     }
             model = CatBoostClassifier(**param, verbose=0)
             valid_cv = KFold(n_splits = 5,
@@ -146,11 +151,11 @@ for k in range(10):
             print(f'Precision: {precision}')
             print(f'Recall: {recall}')
             
-            y_pred = model.predict_proba(test)
+            y_pred = np.round(model.predict_proba(test),2)
             # y_pred = np.round(y_pred, 5)
 
             submission = pd.DataFrame(data=y_pred, columns=sample_submission.columns, index=sample_submission.index)
-            submission.to_csv('./_data/dacon_air/SB4.csv', index=True)
+            submission.to_csv('./_data/dacon_air/SBSUN3.csv', index=True)
             # if rmse < 0.3:
             #     submit_csv['Calories_Burned'] = model.predict(test_csv)
             #     date = datetime.datetime.now()

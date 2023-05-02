@@ -188,7 +188,7 @@ model2.compile(loss='mae', optimizer='adam')
 
 es = EarlyStopping(monitor='val_loss',
                    restore_best_weights=True,
-                   patience=20
+                   patience=10
                    )
 rl = ReduceLROnPlateau(monitor='val_loss',
                        patience=4,
@@ -230,7 +230,7 @@ for j in range(17):
             if np.isnan(test_pm[j, 120*k+i, 1]) and i<84:
                 test_pm[j, 120*k+i, 1] = model1.predict(np.concatenate([test_pm[j, 120*k+i-11:120*k+i-1, :], test_pm_aws[j, 120*k+i-11:120*k+i-1, :]], axis=1).reshape(-1,timesteps,7).astype(np.float32))
             elif i>=84:
-                test_pm[j, 120*k+204-i, 1] = model2.predict(np.flip(np.concatenate([test_pm[j, 120*k+204-i:120*k+204-i+10, :], test_pm_aws[j, 120*k+204-i:120*k+204-i+10, :]], axis=1), axis=0).reshape(-1,timesteps,7).astype(np.float32))
+                test_pm[j, 120*k+204-i-1, 1] = model2.predict(np.flip(np.concatenate([test_pm[j, 120*k+204-i:120*k+204-i+10, :], test_pm_aws[j, 120*k+204-i:120*k+204-i+10, :]], axis=1), axis=0).reshape(-1,timesteps,7).astype(np.float32))
             print(f'model1 변환 진행중{j}의 {k}의 {i}번')
         l.append(test_pm[j, 120*k+48:120*k+120, 1])
 
@@ -245,19 +245,3 @@ ett = time.time()
 print('걸린시간 :', np.round((ett-stt),2),'초')
 model1.save("./_save/Airu_Submit.h5")
 
-
-
-# Traceback (most recent call last):
-#   File "C:\AIA\AIA-study\finedust\pm2.5_code\pm8.py", line 247, in <module>
-#     submission['PM2.5']=np.round(l,3)
-#   File "<__array_function__ internals>", line 5, in round_
-#   File "C:\Users\Administrator\anaconda3\envs\tf274gpu\lib\site-packages\numpy\core\fromnumeric.py", line 3739, in round_
-#     return around(a, decimals=decimals, out=out)
-#   File "<__array_function__ internals>", line 5, in around
-#   File "C:\Users\Administrator\anaconda3\envs\tf274gpu\lib\site-packages\numpy\core\fromnumeric.py", line 3314, in around
-#     return _wrapfunc(a, 'round', decimals=decimals, out=out)
-#   File "C:\Users\Administrator\anaconda3\envs\tf274gpu\lib\site-packages\numpy\core\fromnumeric.py", line 66, in _wrapfunc
-#     return _wrapit(obj, method, *args, **kwds)
-#   File "C:\Users\Administrator\anaconda3\envs\tf274gpu\lib\site-packages\numpy\core\fromnumeric.py", line 43, in _wrapit
-#     result = getattr(asarray(obj), method)(*args, **kwds)
-# TypeError: loop of ufunc does not support argument 0 of type numpy.ndarray which has no callable rint method

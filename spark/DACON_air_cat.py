@@ -15,9 +15,9 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 scaler_list = [
             #    MinMaxScaler(),
-            #    MaxAbsScaler(), 
+               MaxAbsScaler(), 
             #    StandardScaler(), 
-               RobustScaler(),
+            #    RobustScaler(),
                ]
 model_list = [CatBoostClassifier()]
 
@@ -32,7 +32,7 @@ def seed_everything(seed):
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
 
-seed_everything(42) # Fixed Seed
+seed_everything(44) # Fixed Seed
 
 def csv_to_parquet(csv_path, save_name):
     df = pd.read_csv(csv_path)
@@ -48,8 +48,7 @@ train = pd.read_parquet('./train.parquet')
 test = pd.read_parquet('./test.parquet')
 sample_submission = pd.read_csv('./_data/dacon_air/sample_submission.csv', index_col = 0)
 
-# Replace variables with missing values except for the label (Delay) with the most frequent values of the training data
-# 컬럼의 누락된 값은 훈련 데이터에서 해당 컬럼의 최빈값으로 대체됩니다.
+
 NaN_col = ['Origin_State','Destination_State','Airline','Estimated_Departure_Time', 'Estimated_Arrival_Time','Carrier_Code(IATA)','Carrier_ID(DOT)']
 
 for col in NaN_col:
@@ -60,8 +59,7 @@ for col in NaN_col:
         test[col] = test[col].fillna(mode)
 print('Done.')
 
-# Quantify qualitative variables
-# 정성적 변수는 LabelEncoder를 사용하여 숫자로 인코딩됩니다.
+
 qual_col = ['Origin_Airport', 'Origin_State', 'Destination_Airport', 'Destination_State', 'Airline', 'Carrier_Code(IATA)', 'Tail_Number']
 
 for i in qual_col:
@@ -75,8 +73,7 @@ for i in qual_col:
     test[i] = le.transform(test[i])
 print('Done.')
 
-# Remove unlabeled data
-# 훈련 세트에서 레이블이 지정되지 않은 데이터가 제거되고 숫자 레이블 열이 추가됩니다.
+
 train = train.dropna()
 
 column_number = {}
@@ -94,15 +91,13 @@ train_y = train['Delay_num']
 test = test.drop(columns=['ID'])
 
 
-# Cross-validation with StratifiedKFold
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=337)
 
-# Model and hyperparameter tuning using GridSearchCV
 
 min_rmse=1
 
 for k in range(10):
-    x_train, x_test, y_train, y_test = train_test_split(train_x, train_y, test_size=0.2, random_state=337, stratify=train_y)
+    x_train, x_test, y_train, y_test = train_test_split(train_x, train_y, test_size=0.3, random_state=105321, stratify=train_y)
 
 
     for i in scaler_list:
@@ -113,30 +108,19 @@ for k in range(10):
 
         def objective(trial, x_train, y_train, x_test, y_test, min_rmse):
             param = {
-                'iterations': trial.suggest_int('iterations', 2000, 3000),
-                'depth': trial.suggest_int('max_depth', 8, 10),
-                'learning_rate': trial.suggest_float('learning_rate',  0.0001,0.01),
-                'l2_leaf_reg': trial.suggest_int('l2_leaf_reg', 0, 15),
-                'colsample_bylevel': trial.suggest_float('colsample_bylevel', 0.01, 1),
+                'iterations': trial.suggest_int('iterations', 1000, 5000),
+                'depth': trial.suggest_int('max_depth', 2, 12),
+                'learning_rate': trial.suggest_float('learning_rate',  0.0000001,0.001),
+                # 'l2_leaf_reg': trial.suggest_int('l2_leaf_reg', 0, 10),
+                # 'colsample_bylevel': trial.suggest_float('colsample_bylevel', 0, 1),
                 'bagging_temperature': trial.suggest_int('bagging_temperature', 0, 10),
                 'random_strength': trial.suggest_int('random_strength', 0, 10),
-                'border_count': trial.suggest_int('border_count', 64, 128),
+                # 'border_count': trial.suggest_int('border_count', 64, 128),
                     }
             model = CatBoostClassifier(**param, verbose=0)
             valid_cv = KFold(n_splits = 5,
                 shuffle = True)
-            # for train_idx, valid_idx in valid_cv.split(x_train):
-            
-            #     train_x , test_x = x_train.iloc[train_idx], y_train.iloc[train_idx]
-            #     valid_x , valid_y = x_train.iloc[valid_idx], y_train.iloc[valid_idx]
-            
-            # 모델 학습
-            grid = GridSearchCV(model,
-                param,
-                cv=cv,
-                scoring='accuracy',
-                n_jobs=-1,
-                verbose=1)
+
             
             model.fit(x_train, y_train)
             # best_model = grid.best_estimator_
@@ -146,16 +130,11 @@ for k in range(10):
             precision = precision_score(y_test, val_y_pred, average='weighted')
             recall = recall_score(y_test, val_y_pred, average='weighted')
             
-            print(f'Accuracy: {accuracy}')
-            print(f'F1 Score: {f1}')
-            print(f'Precision: {precision}')
-            print(f'Recall: {recall}')
-            
-            y_pred = np.round(model.predict_proba(test),2)
-            # y_pred = np.round(y_pred, 5)
+            y_pred = model.predict_proba(test)
+            y_pred = np.round(y_pred, 4)
 
             submission = pd.DataFrame(data=y_pred, columns=sample_submission.columns, index=sample_submission.index)
-            submission.to_csv('./_data/dacon_air/SBSUN3.csv', index=True)
+            submission.to_csv('./_data/dacon_air/Monday1.csv', index=True)
             # if rmse < 0.3:
             #     submit_csv['Calories_Burned'] = model.predict(test_csv)
             #     date = datetime.datetime.now()

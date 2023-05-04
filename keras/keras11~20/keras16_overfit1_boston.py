@@ -56,20 +56,20 @@ print("================================================================")
 
 
 
-# #plt.rc('font', family=Malgun Gothinc')           #폰트 변환하는 두가지 방법
-# plt.rcParams['font.family'] = 'Malgun Gothic'     #맑은 고딕으로 폰트 변환   or  matplotlib.rcParams['font.family'] = 'Malgun Gothinc'
+#plt.rc('font', family=Malgun Gothinc')           #폰트 변환하는 두가지 방법
+plt.rcParams['font.family'] = 'Malgun Gothic'     #맑은 고딕으로 폰트 변환   or  matplotlib.rcParams['font.family'] = 'Malgun Gothinc'
 # 가급적이면 폰트는 나눔체 써라. 저작권 문제
 
-# plt.figure(figsize=(9, 6))     #figsize = 피규어의 사이즈
-# plt.plot(hist.history['loss'], marker='.', c= 'red', label='로스')   #x가 순서대로 갈 경우 명시하지 않아도 된다.    
-# #marker= 선의 형태(.......),   c= 색상    , label = 라벨
-# plt.plot(hist.history['val_loss'], marker='.', c='blue', label='발_로스')
-# plt.title('보스턴')     # 그래프의 타이틀 
-# plt.xlabel('epochs')    #x축의 라벨을 지정한 스트링으로 표시
-# plt.ylabel('loss, val_loss') # y축의 라벨을 지정한 스트링으로 표시
-# plt.legend() # 선에대한 라벨명을 표시하는 함수
-# plt.grid() #격자 넣기 
-# plt.show()
+plt.figure(figsize=(9, 6))     #figsize = 피규어의 사이즈
+plt.plot(hist.history['loss'], marker='.', c= 'red', label='로스')   #x가 순서대로 갈 경우 명시하지 않아도 된다.    
+#marker= 선의 형태(.......),   c= 색상    , label = 라벨
+plt.plot(hist.history['val_loss'], marker='.', c='blue', label='발_로스')
+plt.title('보스턴')     # 그래프의 타이틀 
+plt.xlabel('epochs')    #x축의 라벨을 지정한 스트링으로 표시
+plt.ylabel('loss, val_loss') # y축의 라벨을 지정한 스트링으로 표시
+plt.legend() # 선에대한 라벨명을 표시하는 함수
+plt.grid() #격자 넣기 
+plt.show()
 
 #  =epochs 순서대로 하나씩 저장된다
 

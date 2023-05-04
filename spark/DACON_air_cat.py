@@ -96,6 +96,7 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=337)
 
 min_rmse=1
 
+
 for k in range(10):
     x_train, x_test, y_train, y_test = train_test_split(train_x, train_y, test_size=0.3, random_state=105321, stratify=train_y)
 
@@ -106,44 +107,41 @@ for k in range(10):
         x_test = scaler.transform(x_test)
         test = scaler.transform(test)
 
-        def objective(trial, x_train, y_train, x_test, y_test, min_rmse):
+        def objective(trial, x_train, y_train, x_test, y_test, acc):
             param = {
-                'iterations': trial.suggest_int('iterations', 1000, 5000),
-                'depth': trial.suggest_int('max_depth', 2, 12),
-                'learning_rate': trial.suggest_float('learning_rate',  0.0000001,0.001),
-                # 'l2_leaf_reg': trial.suggest_int('l2_leaf_reg', 0, 10),
+                'iterations': trial.suggest_int('iterations', 300, 5000),
+                'depth': trial.suggest_int('max_depth', 4, 12),
+                'learning_rate': trial.suggest_float('learning_rate',  0.0001,0.1),
+                'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 0.001, 10),
+                'one_hot_max_size' : trial.suggest_int('one_hot_max_size',24, 64),
                 # 'colsample_bylevel': trial.suggest_float('colsample_bylevel', 0, 1),
-                'bagging_temperature': trial.suggest_int('bagging_temperature', 0, 10),
-                'random_strength': trial.suggest_int('random_strength', 0, 10),
+                'bagging_temperature': trial.suggest_int('bagging_temperature', 0.5, 1),
+                'random_strength': trial.suggest_float('random_strength', 0.5, 1),
                 # 'border_count': trial.suggest_int('border_count', 64, 128),
                     }
-            model = CatBoostClassifier(**param, verbose=0)
-            valid_cv = KFold(n_splits = 5,
-                shuffle = True)
-
+            model = CatBoostClassifier(**param, verbose=0,)
             
+
+
             model.fit(x_train, y_train)
             # best_model = grid.best_estimator_
             val_y_pred = model.predict(x_test)
-            accuracy = accuracy_score(y_test, val_y_pred)
-            f1 = f1_score(y_test, val_y_pred, average='weighted')
-            precision = precision_score(y_test, val_y_pred, average='weighted')
-            recall = recall_score(y_test, val_y_pred, average='weighted')
-            
+            accuracy = -(accuracy_score(y_test, val_y_pred))
+            print(accuracy)
             y_pred = model.predict_proba(test)
-            y_pred = np.round(y_pred, 4)
+            y_pred = np.round(y_pred, 3)
+            
+            best_accuracy = float('-inf')
 
             submission = pd.DataFrame(data=y_pred, columns=sample_submission.columns, index=sample_submission.index)
-            submission.to_csv('./_data/dacon_air/Monday1.csv', index=True)
-            # if rmse < 0.3:
-            #     submit_csv['Calories_Burned'] = model.predict(test_csv)
-            #     date = datetime.datetime.now()
-            #     date = date.strftime('%m%d_%H%M%S')
-            #     submit_csv.to_csv(path_save + date + str(round(rmse, 5)) + '.csv')
-            #     # if rmse < min_rmse:
-            #     #     min_rmse = rmse
-            #     #     submit_csv.to_csv(path_save_min + date + str(round(rmse, 5)) + '.csv')
-            # return rmse
+            # submission.to_csv('./_data/dacon_air/Monday2.csv', index=True)
+           
+            if -(accuracy) > best_accuracy:
+                # Update the best accuracy and save the model to disk
+                best_accuracy = -(accuracy)
+                submission.to_csv('./_data/dacon_air/Monday2.csv', index=True)
+                # Save the predictions to a CSV file
+            return accuracy
         opt = optuna.create_study(direction='minimize')
         opt.optimize(lambda trial: objective(trial, x_train, y_train, x_test, y_test, min_rmse), n_trials=10000)
         print('best param : ', opt.best_params, 'best rmse : ', opt.best_value)

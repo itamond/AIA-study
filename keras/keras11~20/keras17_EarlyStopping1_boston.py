@@ -38,7 +38,7 @@ model.compile(loss = 'mse', optimizer='adam')
 
 from tensorflow.python.keras.callbacks import EarlyStopping
 #땡겨온 얼리스토핑에 대한 정의
-es = EarlyStopping(monitor='loss', patience=100, mode='min',   # monitor = 나는 val_loss를 기준으로 할 것이다.(일반적으로 val_loss가 loss보다 나음) , patience=참을성. 5번 참겠다는 의미
+es = EarlyStopping(monitor='loss', patience=1, mode='min',   # monitor = 나는 val_loss를 기준으로 할 것이다.(일반적으로 val_loss가 loss보다 나음) , patience=참을성. 5번 참겠다는 의미
               verbose=1,                                            # verbose=1을 쳐주면 어디서 stop 했는지 출력->Epoch 00011: early stopping
               restore_best_weights=True,                                # 최소의 loss 지점, 얼리 스톱된 지점의 w값을 저장하는 명령어
               )

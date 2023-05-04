@@ -53,7 +53,7 @@ es = EarlyStopping(monitor='val_loss',     #발로스를 주시할거다
                    )
 
 
-hist = model.fit(x_train, y_train, epochs=1000, batch_size= 100,
+hist = model.fit(x_train, y_train, epochs=5, batch_size= 100,
           validation_split=0.2, callbacks=[es])
 
 #4. 평가, 예측
@@ -79,14 +79,14 @@ print("r2 스코어 :", r2)
 
 #plt 이용한 시각화
 
-# plt.rcParams['font.family'] = 'Malgun Gothic'
-# plt.title='캘리포니아'
-# plt.grid()
-# plt.figure(figsize=(9,6))
-# plt.plot(hist.history['loss'], c='red', label='로쓰', marker='.')
-# plt.plot(hist.history['val_loss'], c='blue', label='발_로쓰', marker='.')
-# plt.legend()
-# plt.show()
+plt.rcParams['font.family'] = 'Malgun Gothic'
+plt.title='캘리포니아'
+plt.grid()
+plt.figure(figsize=(9,6))
+plt.plot(hist.history['loss'], c='red', label='로쓰', marker='.')
+plt.plot(hist.history['val_loss'], c='blue', label='발_로쓰', marker='.')
+plt.legend()
+plt.show()
 
 
 # loss : 0.4312790036201477

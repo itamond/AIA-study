@@ -16,8 +16,8 @@ print(df)
 # df.plot.box()
 # plt.show()
 
-# df.info()
-# print(df.describe())
+df.info()
+print(df.describe())
 
 # df['Population'].boxplot() 안먹힌다
 # df['Population'].plot.box()

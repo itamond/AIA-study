@@ -68,36 +68,24 @@ train_x, val_x, train_y, val_y = train_test_split(train_x, train_y, test_size=0.
 cv1 = StratifiedKFold(n_splits=5, shuffle=True, random_state=337)
 
 # Model and hyperparameter tuning using GridSearchCV
-xgb = XGBClassifier(learning_rate= 0.02,
+xgb = XGBClassifier(learning_rate= 0.002,
                       max_depth = 6,
-                      n_estimators= 650,
-                      random_state=42,
+                      n_estimators= 1000,
+                      random_state=337,
                       tree_method='gpu_hist', 
                       gpu_id=0,
                       predictor = 'gpu_predictor',
                       )
 
-catb = CatBoostClassifier(learning_rate=0.01,
-                          depth = 8,
+catb = CatBoostClassifier(learning_rate=0.002,
+                          depth = 6,
                           l2_leaf_reg=2,
+                          iterations=1000,                          
                           )
 
 
 model = StackingClassifier(
     estimators=[('XGB',xgb),('CAT', catb)], cv = cv1)
-
-# param_grid = {
-#     'learning_rate': [0.001, 0.01, 0.0001],
-#     'max_depth': [6, 8, 12],
-#     'n_estimators': [1000],
-# }
-
-# grid = GridSearchCV(model,
-#                     param_grid,
-#                     cv=cv,
-#                     scoring='accuracy',
-#                     n_jobs=-1,
-#                     verbose=1)
 
 model.fit(train_x, train_y)
 

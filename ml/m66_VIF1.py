@@ -25,7 +25,7 @@ df = pd.DataFrame(data)
 
 x = df[['size', 'rooms','window', 'year']]
 y = df['price']
-scaler = StandardScaler()
+scaler = StandardScaler()# 다중공선성은 통상 스탠다드 스케일러 사용한다
 x_scaled = scaler.fit_transform(x)
 print(x_scaled)
 

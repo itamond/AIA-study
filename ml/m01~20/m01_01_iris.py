@@ -79,8 +79,8 @@ for i, dataset in enumerate(datasets):
 # model3 = LinearSVC()
 
 # #LinearSVC의 파라미터 C 는 작으면 작을수록 직선을 긋는다.
-# #분류문제에서 딥러닝은 layer를 거쳐 선을 수정하지만, 머신러닝은 단층 레이어로 선을 그어 클래스를 분류한다.
-# #때문에 고도화된 문제는 완벽한 분류를 위해 개발자가 파라미터 조정을 해야한다.
+#분류문제에서 딥러닝은 layer를 거쳐 선을 수정하지만, 머신러닝은 단층 레이어로 선을 그어 클래스를 분류한다.
+#때문에 고도화된 문제는 완벽한 분류를 위해 개발자가 파라미터 조정을 해야한다.
 
 # #3. 컴파일, 훈련
 # # model.compile(loss='sparse_categorical_crossentropy',

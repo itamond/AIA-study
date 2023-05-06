@@ -1,0 +1,69 @@
+분류문제에서 딥러닝은 layer를 거쳐 선을 수정하지만, 머신러닝은 단층 레이어로 선을 그어 클래스를 분류한다.
+때문에 고도화된 문제는 완벽한 분류를 위해 개발자가 파라미터 조정을 해야한다.
+or, and, xor 문제 에서
+or, and는 하나의 선으로 해결 가능하지만,
+xor 문제는 하나의 선으로 해결 불가능.
+때문에 단층 퍼셉트론을 사용하던 기존과 달리 다층 퍼셉트론이 등장하기 시작
+###############################################################
+
+
+###############################################################
+all_estimators
+from sklearn.utils import all_estimators
+모든 모델에 대한 평가
+allAlgorithms = all_estimators(type_filter='regressor')
+allAlgorithms = all_estimators(type_filter='classifier')
+max_r2 = 0
+max_name = '바보'
+for (name, algorithm) in allAlgorithms:
+    try: #에러 예외처리
+        model = algorithm()
+        #3. 훈련
+        model.fit(x_train, y_train)
+        
+        #4. 평가, 예측
+        results = model.score(x_test, y_test)
+        print(name,'의 정답률 :', results)
+        if max_r2 < results :
+            max_r2 = results
+            max_name = name
+        # y_predict = model.predict(x_test)
+        # # print(y_test.dtype)  #데이터 타입 확인
+        # # print(y_predict.dtype) #데이터 타입 확인    데이터 타입 변경은 astype 사용함.
+        # r2 = r2_score(y_test, y_predict)
+        # print('r2_score :', r2)
+    except:
+        #에러가 뜨면 except로 바로 넘어간다. 에러가 안뜨면 정상적으로 for문이 돌아감.
+        print(name, '은(는) 에러뜬 놈!!!')
+        #에러가 뜨는 모델들은 기본적으로 파라미터 수정이 필요한 모델들이다.
+print('===================================')
+print('최고모델 :', max_name, max_r2)
+print('===================================')
+###############################################################
+
+
+
+
+###############################################################
+k폴드
+from sklearn.model_selection import KFold, cross_val_score
+kfold = KFold(n_splits = n_splits, shuffle=True, random_state=123)
+for i, datasets in enumerate(datasets):
+    x,y = datasets
+    print(f"\n데이터셋 {i+1}:")
+    scores = cross_val_score(model, x, y, cv=kfold, n_jobs=-1)   # n_jobs= 사용할 코어 갯수
+    print('ACC :', scores, '\ncross_val_score 평균 : ', round(np.mean(scores), 4))
+
+kfold = KFold() 디폴트가 5. 데이터를 훈련시키는 위치에 따라서 성능차이 엄청남
+기존에는 test 데이터를, train데이터와 다른 데이터로 구분함으로써 평가 용도로 사용하였는데 이를 구분없이 사용하면 이 또한 과적합이라 볼 수 있다.
+따라서 테스트 데이터를 분리한 후, cross_val 시켜주는 방법도 있다.
+
+일반적인 kfold의 문제점
+문제점 1. train, test/ test로 predict 한 것이므로 과적합만큼 결과의 acc가 안나올 수 있음
+문제점 2. stratify kfold 과정중에 y값이 편향될 수 있다.
+StratifiedKFold = 비율대로 잘라주는 kfold. 위 문제점을 해결할 수 있다.
+분류 문제에서만 사용함.
+###############################################################
+
+
+

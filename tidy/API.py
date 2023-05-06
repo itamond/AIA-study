@@ -13,13 +13,21 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 # nltk.download('punkt')
 # nltk.download('stopwords')
+
+#스케일러
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.preprocessing import MaxAbsScaler, RobustScaler
 from sklearn.preprocessing import PowerTransformer
 from sklearn.preprocessing import QuantileTransformer    #standard+MinMaxScaler
+
+#인코딩
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
+
+#컬런 증폭
+from sklearn.preprocessing import PolynomialFeatures
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator #이미지 전처리
 from keras.preprocessing.text import Tokenizer                      #자연어(텍스트) 전처리
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -59,6 +67,8 @@ from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from xgboost import XGBClassifier
 from sklearn.ensemble import BaggingClassifier, VotingClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
 
 # DL model
 from tensorflow.python.keras.models import Sequential, Model, load_model

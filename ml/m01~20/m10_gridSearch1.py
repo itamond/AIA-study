@@ -1,6 +1,6 @@
 #파라미터 전체 조사
 #대부분의 파라미터는 모델과 fit에서 정의함
-#gridSerch는 모든 파라미터를 돌려본다
+#gridSearch는 모든 파라미터를 돌려본다
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split

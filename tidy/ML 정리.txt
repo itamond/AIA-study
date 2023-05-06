@@ -66,4 +66,127 @@ StratifiedKFold = 비율대로 잘라주는 kfold. 위 문제점을 해결할 �
 ###############################################################
 
 
+###############################################################
+from sklearn.model_selection import KFold, cross_val_score, GridSearchCV, StratifiedKFold 
+
+GridSearch
+파라미터 전체 조사
+대부분의 파라미터는 모델과 fit에서 정의함
+gridSearch는 모든 파라미터를 돌려본다
+
+gridsearch 포문 구현
+for i in gamma:
+    for j in C:
+        #2. 모델
+        model = SVC(gamma=i, C=j)
+        
+        #3. 컴파일, 훈련
+        model.fit(x_train, y_train)
+        
+        #4. 평가, 예측
+        #텐서플로의 evaluate
+        #사이킷런의 score
+        score = model.score(x_test, y_test)
+                
+        if max_score < score :
+            max_score = score
+            best_parameters = {'gamma' : i, 'C' : j} # if문은 if문끼리 묶여있다. 점수가 갱신될때만 best_parameters도 갱신된다.
+gridSearch는 crossval 기능도 있다
+
+
+랜덤서치
+from sklearn.model_selection import RandomizedSearchCV
+RandomSearch는 fold 하나당 x개씩만 랜덤하게 뽑아서 훈련
+
+할빙그리드서치 
+정해진 알고리즘대로 뽑아서 훈련함
+from sklearn.model_selection import HalvingGridSearchCV
+
+###############################################################
+
+from sklearn.pipeline import make_pipeline
+
+전처리와 모델을 한번에 사용하는 법
+model = make_pipeline(StandardScaler(), SVC())
+
+for i in range(len(data_list)):
+    x, y = data_list[i](return_X_y=True)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state= 337, stratify=y)
+    max_score = 0
+    
+    for j, value2 in enumerate(scaler_list):
+        
+        for k, value3 in enumerate(model_list):
+            
+            model = make_pipeline(value2, value3)
+            model.fit(x_train, y_train)
+            score = model.score(x_test, y_test)
+            y_pred=model.predict(x_test)
+            acc=accuracy_score(y_test, y_pred)
+            
+            if max_score < score:
+                max_score = score
+                max_s_name = scaler_name[j]
+                max_model_name = model_name_list[k]
+
+포문에 넣을수도 있음
+
+PCA사용 예
+model = make_pipeline(PCA(n_components=8),StandardScaler(), SVC())
+
+일반 파이프라인
+from sklearn.pipeline import Pipeline
+model = Pipeline([("std",StandardScaler()), ('svc',SVC())])   
+파이프라인은 리스트 형태로 입력해야함
+파이프라인은 튜플 형식, 이름 지정까지 함께 입력해야한다.
+
+3중 포문 파이프라인
+for i in range(len(data_list)):
+    x, y = data_list[i](return_X_y=True)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state= 337, stratify=y)
+    max_score = 0
+    
+    for j, value2 in enumerate(scaler_list):
+        
+        for k, value3 in enumerate(model_list):
+            
+            model = Pipeline([('scaler',value2), ('model',value3)])
+            model.fit(x_train, y_train)
+            score = model.score(x_test, y_test)
+            y_pred=model.predict(x_test)
+            acc=accuracy_score(y_test, y_pred)
+            
+            if max_score < score:
+                max_score = score
+                max_s_name = scaler_name[j]
+                max_model_name = model_name_list[k]
+
+파이프라인 그리드서치
+pipe = Pipeline([("std",StandardScaler()), ('rf',RandomForestClassifier())])
+model = GridSearchCV(pipe, parameters,
+                     cv = 5,
+                     verbose=1,
+                     n_jobs=-1
+                     )
+###############################################################
+
+
+피쳐 임포턴스
+feature_importances_
+컬런의 종류에 따라 훈련 결과에 악영향을 끼치는 불필요한 컬런이 있다.
+때문에 컬런을 걸러내는 작업을 함.
+ex)PCA
+for i,v in enumerate(models):
+    model = v
+    model.fit(x_train, y_train)
+    result = model.score(x_test,y_test)
+    y_predict = model.predict(x_test)
+    acc = accuracy_score(y_test, y_predict)
+    print(model_name[i], ':', "acc", acc)
+    if i !=3:
+        print(model, ':', '컬럼별 중요도',model.feature_importances_)
+    else :
+        print('XGBClassifier()', model.feature_importances_)
+    print('----------------------------------------------')
+
 

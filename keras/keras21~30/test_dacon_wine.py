@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, RobustScaler, StandardScaler
 from sklearn.preprocessing import OneHotEncoder
-from keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 from tensorflow.python.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
@@ -31,19 +31,19 @@ test_csv['type'] = enc.transform(test_csv['type'])
 
 numerical_columns = train_csv.select_dtypes(exclude='object').columns.tolist()
 numerical_columns.remove('quality')
-# def show_dist_plot(df, columns):
-#     for column in columns:
-#         f, ax = plt.subplots(1,2,figsize=(16,4))
-#         sns.stripplot(x=df['quality'],y=df[column], ax=ax[0],hue=df['quality'])
-#         sns.violinplot(data=df, x='quality', y=column, ax=ax[1])
+def show_dist_plot(df, columns):
+    for column in columns:
+        f, ax = plt.subplots(1,2,figsize=(16,4))
+        sns.stripplot(x=df['quality'],y=df[column], ax=ax[0],hue=df['quality'])
+        sns.violinplot(data=df, x='quality', y=column, ax=ax[1])
         
-# show_dist_plot(train_csv, numerical_columns)
+show_dist_plot(train_csv, numerical_columns)
 
 
-# plt.figure(figsize=(18,8))
-# corr= train_csv.corr()
-# sns.heatmap(corr, annot=True, square=False, vmin=-.6, vmax=1.0);
-# plt.show()
+plt.figure(figsize=(18,8))
+corr= train_csv.corr()
+sns.heatmap(corr, annot=True, square=False, vmin=-.6, vmax=1.0);
+plt.show()
 
 
 #Library

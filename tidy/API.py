@@ -8,7 +8,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 # For processing 
-import nltk
 from nltk.corpus import stopwords 
 from nltk.tokenize import word_tokenize
 # nltk.download('punkt')

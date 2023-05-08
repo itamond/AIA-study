@@ -190,3 +190,143 @@ for i,v in enumerate(models):
     print('----------------------------------------------')
 
 
+컬런 중요도에 대한 그래프 그리는법
+def plot_feature_importances(model):
+    n_features = datasets.data.shape[1]
+    plt.barh(np.arange(n_features), model.feature_importances_, align='center')
+    plt.yticks(np.arange(n_features), datasets.feature_names)
+    plt.xlabel('Feature Importances')
+    plt.ylabel('Features')
+    plt.ylim(-1, n_features)
+    plt.title(model)
+
+
+컬런 중요도 그림으로 확인/ 컬런 삭제하는 for문
+for i in range(4):
+    globals()['model'+str(i)] = model_list[i]
+    globals()['model'+str(i)].fit(x_train, y_train)
+    plt.subplot(2, 2, i+1)
+    # print(globals()['model'+str(i)].feature_importance_)
+    plot_feature_importances(globals()['model'+str(i)])
+    if i == 3:
+        plt.title('XGBClassifier()')
+# plt.show()
+for i, v in enumerate(model_list):
+    model = v
+    model.fit(x_train,y_train)
+    y_pred = model.predict(x_test)
+    acc = accuracy_score(y_pred, y_test)
+    print(i+1,'.', model_name_list[i])
+    print('기존 acc :', acc)
+    
+    a = model.feature_importances_
+    a = a.argmin(axis=0)
+    
+    x_d = pd.DataFrame(x).drop([a], axis=1)
+    
+    x_train_d, x_test_d, y_train_d, y_test_d = train_test_split(
+        x_d, y, train_size=0.8, shuffle=True, random_state=337)
+    
+    x_train_d = scaler.fit_transform(x_train_d)
+    x_test_d = scaler.transform(x_test_d)
+    
+    model.fit(x_train_d, y_train_d)
+    result = model.score(x_test_d, y_test_d)
+    print(f'{a}컬럼삭제 후 acc', result)
+
+#######################################################
+상관계수
+시본으로 상관계수 히트맵 그리는법
+
+print(df.corr())
+import matplotlib.pyplot as plt
+import seaborn as sns
+# sns.set(font_scale=1.2)
+sns.heatmap(data=df.corr(), square=True, annot=True, cbar=True)
+
+plt.show()
+
+
+상관계수를 확인하고 PCA 적용.
+PCA = 주성분분석, 차원축소, 컬런 압축,
+일반적으로 x만 적용
+x에 사용하여 새로운 컬런을 만들기 때문에 비지도 학습으로 분류
+스케일링 개념
+
+PCA 포문
+for i in range(9):
+    pca = PCA(n_components=10-i)
+    x =pca.fit_transform(x)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=123,shuffle=True,)
+    # 2. 모델구성
+    model = RandomForestRegressor(random_state=123)
+
+    # 3. 훈련
+    model.fit(x_train, y_train)
+    results = model.score(x_test, y_test)
+    print('차원', i,'개축소', '결과 :',results)
+
+
+PCA EVR 확인법. 원본 일치율이라고 보면 된다.
+x번의 PCA까지 얼마나 원본과 일치한지 확인하는 방법
+
+pca_EVR = pca.explained_variance_ratio_
+# print(pca_EVR)
+
+
+# print(np.cumsum(pca_EVR))
+pca_cumsum = np.cumsum(pca_EVR)
+import matplotlib.pyplot as plt
+plt.plot(pca_cumsum)
+plt.grid()
+plt.show()
+
+
+LDA 선형 판별 분석
+LDA는 각 데이터의 클래스별로 매치를 시킨다.
+LDA는 지도학습이다.
+LDA EVR
+for i, v in enumerate(datasets):
+    x, y = v(return_X_y=True)
+    x_lda = lda.fit_transform(x, y)
+    print(dataname[i], ':', x.shape, '->', x_lda.shape)
+    lda_EVR=lda.explained_variance_ratio_
+    cumsum = np.cumsum(lda_EVR)
+    print(cumsum)
+    print('========================================')
+
+
+
+###################################################
+결측치 처리에 관한 내용
+임퓨터
+from sklearn.experimental import enable_iterative_imputer 
+from sklearn.impute import SimpleImputer, KNNImputer, IterativeImputer #결측치에 대한 책임을 돌린다
+
+
+결측치 확인법
+def outliers(data_out):
+    quartile_1, q2, quartile_3 =np.percentile(data_out, [25, 50, 75])
+    print("1사분위 : ", quartile_1) # 4
+    print("q2 : ", q2) # 7
+    print("3사분위 : ", quartile_3) # 10
+    iqr = quartile_3 - quartile_1  #6
+    print("iqr : ", iqr)
+    lower_bound = quartile_1 - (iqr * 1.5) # -5
+    upper_bound = quartile_3 + (iqr * 1.5) # 19
+    
+    return np.where((data_out>upper_bound) | (data_out<lower_bound)) #where = if와 비슷한 개념. 입력한 값을 배출한다
+
+# IQR 의 1.5배수를 하는 이유는 중위 범위의 50% 안팍의 데이터는 정상 값으로 본다는 의미이다.
+# 따라서 데이터마다 다른 배수값을 지정할수도 있다.
+
+    
+outliers_loc = outliers(aaa)
+print("이상치의 위치 : ", outliers_loc)
+
+import matplotlib.pyplot as plt
+plt.boxplot(aaa)
+plt.show()
+
+
+

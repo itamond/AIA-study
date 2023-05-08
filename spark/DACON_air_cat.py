@@ -15,9 +15,9 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 scaler_list = [
             #    MinMaxScaler(),
-               MaxAbsScaler(), 
+            #    MaxAbsScaler(), 
             #    StandardScaler(), 
-            #    RobustScaler(),
+               RobustScaler(),
                ]
 model_list = [CatBoostClassifier()]
 
@@ -109,8 +109,8 @@ for k in range(10):
 
         def objective(trial, x_train, y_train, x_test, y_test, acc):
             param = {
-                'iterations': trial.suggest_int('iterations', 300, 5000),
-                'depth': trial.suggest_int('max_depth', 4, 12),
+                'iterations': trial.suggest_int('iterations', 300, 2000),
+                'depth': trial.suggest_int('max_depth', 1, 10),
                 'learning_rate': trial.suggest_float('learning_rate',  0.0001,0.1),
                 'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 0.001, 10),
                 'one_hot_max_size' : trial.suggest_int('one_hot_max_size',24, 64),
@@ -119,7 +119,7 @@ for k in range(10):
                 'random_strength': trial.suggest_float('random_strength', 0.5, 1),
                 # 'border_count': trial.suggest_int('border_count', 64, 128),
                     }
-            model = CatBoostClassifier(**param, verbose=0,)
+            model = CatBoostClassifier(**param, verbose=0,task_type="GPU")
             
 
 

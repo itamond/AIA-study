@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # 다중공선성
-# 컬런의 상관관계에 관한 이야기
+# 컬런의 상관관계에 관한 내용
 # 상관관계가 너무 높으면 제거하거나 차원 축소하는것이 나을지도 모른다
 # 코릴레이션(corr)과 비슷한것
 # 다중공선성 확인을 위해서는 스케일링을 먼저 해준다.(컬런이 다르면 값들의 차이가 크기 때문에)

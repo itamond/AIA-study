@@ -328,5 +328,102 @@ import matplotlib.pyplot as plt
 plt.boxplot(aaa)
 plt.show()
 
+EllipticEnvelope로 결측치 확인하는법
+outliers = EllipticEnvelope(contamination=.3) #contamination = 이상치 범위 지정 파라미터
+outliers.fit(aaa)
+results = outliers.predict(aaa)
+print(results)
+
+
+############################################################
+
+지정 파라미터 범위내 최대값 찾는 알고리즘
+
+m61참조.
+optimizer = BayesianOptimization(f = lgb_hamsu,
+                                 pbounds=bayesian_params, #사용할 파라미터 범위
+                                 random_state=337,
+                                 )
+n_iter = 100
+stt = time.time()
+optimizer.maximize(init_points=5, n_iter = 100)  #init_points 초기 시작점 갯수
+ett = time.time()
+print(optimizer.max)
+print(n_iter, '번 걸린 시간 :',round(ett-stt,2))
+
+
+f에는 반드시 모델을 함수화 하여 입력해야함
+
+
+최소값을 찾는 알고리즘
+
+import hyperopt
+from hyperopt import hp, fmin, tpe, Trials, STATUS_OK #fmin은 최소값을 찾는 함수
+
+m62 참조
+
+
+
+#############################################################
+새로운 스케일러 종류
+QuantileTransformer
+QuantileTransformer(n_quantiles=10)
+
+각 스케일러 포문으로 사용하고 결정계수 뽑는 포문
+for d in data_list:
+    max_ACC = -1
+    max_scaler = None
+    if d == 'd_wine' or d == 'ddiabete':
+        x, y = data_list[d]
+        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.7, shuffle = True, random_state = 1234)
+    elif d == 'iris' or d == 'cancer' or d == 'wine' or d == 'digits' :
+        x, y = data_list[d](return_X_y = True)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.7, shuffle = True, random_state = 1234)
+    
+    for s in scaler_list:
+        scaler = scaler_list[s]
+        x_train = scaler.fit_transform(x_train)
+        x_test = scaler.transform(x_test)
+        model = RandomForestClassifier()
+        model.fit(x_train, y_train)
+        y_predict = model.predict(x_test)
+        acc = np.round(accuracy_score(y_test, y_predict),2)
+        if acc > max_ACC:
+            max_ACC = acc
+            max_scaler = s
+        print(f'데이터 : {d}, 스케일러 : {s}, 정확도 : {acc}')
+    print(f'데이터 : {d}, 가장 높은 결정 계수 : {max_ACC}, 가장 높은 결정 계수 스케일러 : {max_scaler}')
+
+
+############################################################
+
+대형 데이터에 대한 log 변환
+
+describe와 히스토그램(hist)확인 후
+log 변환하고, 값을 비교해본다.
+
+log는 0을 계산할 수 없으므로 np.log1p (1더하기)를 사용한다.
+분류형은 로그변환 불가능
+
+r2 = r2_score(np.expm1(y_test), np.expm1(model.predict(x_test))) 
+#로그변환된 값을 다시 지수변환 하고 비교해야한다
+
+############################################################
+
+다중공선성
+
+# 컬런의 상관관계에 관한 내용
+# 상관관계가 너무 높으면 제거하거나 차원 축소하는것이 나을지도 모른다
+# 코릴레이션(corr)과 비슷한것
+# 다중공선성 확인을 위해서는 스케일링을 먼저 해준다.(컬런이 다르면 값들의 차이가 크기 때문에)
+
+scaler = StandardScaler()
+# 다중공선성은 통상 스탠다드 스케일러 사용한다
+
+vif = pd.DataFrame()
+vif['variables']=x.columns #컬런 이름 넣기. 3개
+
+        # aaa for i in range(x_scaled.shape[1])  #포문의 내용이 aaa에 들어간다
+vif['VIF'] = [variance_inflation_factor(x_scaled, i) for i in range(x_scaled.shape[1])] #vif의 VIF에는 포문의 반환값 세개가 들어가있다.
 
 

@@ -425,5 +425,5 @@ vif['variables']=x.columns #컬런 이름 넣기. 3개
 
         # aaa for i in range(x_scaled.shape[1])  #포문의 내용이 aaa에 들어간다
 vif['VIF'] = [variance_inflation_factor(x_scaled, i) for i in range(x_scaled.shape[1])] #vif의 VIF에는 포문의 반환값 세개가 들어가있다.
-ㅇ
+
 

@@ -14,7 +14,7 @@ b = tf.Variable(0, dtype=tf.float32)
 # y = x*w + b  둘은 차이가 있다. 행렬 연산이면 달라짐.
 # 실직적으로는 y = x*w + b 가 맞다.
 
-hypothesis = x * w + b  #hypothesis = 가설
+hypothesis = x * w + b  #hypothesis = 가설, 예측한 값
 #hypothesis와 y의 차가 loss.
 
 #3-1 컴파일
@@ -23,6 +23,7 @@ loss = tf.reduce_mean(tf.square(hypothesis- y)) #mse
 optimizer = tf.train.GradientDescentOptimizer(learning_rate = 0.01)
 train = optimizer.minimize(loss)  #경사 하강법 방식으로 옵티마이져를 최적화하여 loss의 최소값을 뽑는다
 # model.compile(loss='mse',optimizer='sgd') 이것과 같다. Stochastic Gradient Descent
+
 
 #3-2 훈련
 sess = tf.compat.v1.Session()

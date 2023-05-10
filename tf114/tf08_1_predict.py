@@ -39,5 +39,28 @@ with tf.compat.v1.Session() as sess :
             # print(step, 'loss :', sess.run(loss), 'w :', sess.run(w), 'b :', sess.run(b))            
             print(step, 'loss :', loss_val, 'w :', w_val, 'b :', b_val)
 
-    # sess.close() 
-    #with문은 자동으로 close() 해줌.
+    
+    x_data= tf.placeholder(tf.float32, shape=[None])
+    # x_data = [6,7,8]
+    y_pred = x_data*w_val+b_val
+    y_predict = sess.run([y_pred], feed_dict={x_data:[6,7,8]})
+    
+    print('y_predict :', y_predict[0][0], y_predict[0][1], y_predict[0][2])
+    
+    
+    # 쌤 코드
+    # x_data = [6,7,8]
+    # x_test = tf.compat.v1.placeholder(tf.float32, shape=[None])
+    # y_predict = x_test * w_val + b_val
+    # print(sess.run(y_predict,feed_dict={x_test:x_data}))
+    
+    
+
+
+
+
+
+#실습
+
+
+

@@ -5,7 +5,7 @@ x = tf.Variable([2], dtype=tf.float32)
 y = tf.Variable([3], dtype=tf.float32)#디폴트가 행렬 연산이기때문에 리스트 형태로 들어감.
 
 #전역 변수 초기화
-init = tf.compat.v1.global_variables_initializer()#기본문법
+init = tf.compat.v1.global_variables_initializer()#기본문법 변수 초기화
 sess.run(init)
 
 print(sess.run(x + y))  # [5.]

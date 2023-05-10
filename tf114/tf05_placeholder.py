@@ -16,6 +16,8 @@ sess = tf.compat.v1.Session()
 
 
 # placeholder = 빈 공간에 값을 받을 준비를 하는 함수. 빈 방을 만듬
+# 인풋에만 사용할 수 있음.
+# feed dict가 따라다님
 a = tf.compat.v1.placeholder(tf.float32)
 b = tf.compat.v1.placeholder(tf.float32)
 

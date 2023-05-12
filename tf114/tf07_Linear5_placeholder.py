@@ -19,7 +19,7 @@ hypothesis = x * w + b
 loss = tf.reduce_mean(tf.square(hypothesis-y))
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
-#w = w - 러닝레이트*(로스를 w로 편미분한 값)
+# w = w - 러닝레이트*(로스를 w로 편미분한 값)      <- epoch마다 이 값 만큼 갱신 시킨다.           미분 = 그 지점의 변화량을 구하는 것 로스의 기울기
 #
 train = optimizer.minimize(loss)
 

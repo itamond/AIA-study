@@ -19,7 +19,7 @@ for i in range(len(data_list)):
     x = df.drop(['target'], axis=1)
     scaler = StandardScaler()
     x_scaled = scaler.fit_transform(x)
-
+ 
     # 다중공선성
     vif = pd.DataFrame()
     vif['variables'] = np.arange(x.shape[1])

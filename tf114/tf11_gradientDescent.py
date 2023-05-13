@@ -18,12 +18,12 @@ loss = tf.reduce_mean(tf.square(hypothesis - y))   #mse
 ####################optimizer#####################
 lr = 0.1
 
-gradient = tf.reduce_mean((x * w - y) * x)     # -> 
+gradient = tf.reduce_mean((x * w - y) * x)     # -> 로스의 미분값이다.
 
 # y = x*w + b
 # w_f = W_i - lr * (delta e / delta w)
 
-descent = w - lr * gradient
+descent = w - lr * gradient   # descent 갱신된 웨이트
 # w = descent
 update = w.assign(descent)   # w = w - lr * gradient
 
@@ -36,7 +36,7 @@ loss_history = []
 sess = tf.compat.v1.Session()
 sess.run(tf.compat.v1.global_variables_initializer())
 
-for step in range(101):
+for step in range(21):
     
     _, loss_v, w_v =sess.run([update, loss, w], feed_dict={x : x_train, y : y_train})
     print(step, '\t', loss_v, '\t', w_v)
@@ -50,6 +50,9 @@ print("==============================w history================================="
 print(w_history)
 print("==============================loss history=================================")
 print(loss_history)
+
+#체인룰 = 미분에 미분은 미분미분이다
+
 
 # 시행수   로스             웨이트
 # 0        378.0           [5.7999997]

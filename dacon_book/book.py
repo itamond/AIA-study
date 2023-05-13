@@ -6,38 +6,50 @@ from surprise import Dataset
 from surprise import KNNWithZScore
 from surprise.model_selection import GridSearchCV, RandomizedSearchCV
 import tensorflow as tf
+import h2o
+
+h2o.init()
 
 
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    try:
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
-        logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    except RuntimeError as e:
-        print(e)        
+train_data = h2o.import_file('./dacon_book/open/train.csv', index_col=0)
+test_data = h2o.import_file('./dacon_book/open/test.csv', index_col=0)
+submission = pd.read_csv('./dacon_book/open/sample_submission.csv', index_col=0)
+x = train_data.columns
+y = "Book-Rating"
+x.remove(y)
+
+from h2o.automl import H2OAutoML
+
+aml = H2OAutoML(
+    max_models=10,
+    seed=44,
+    max_runtime_secs=360,
+    sort_metric='RMSE',
+    stopping_rounds = 4
+
+)
+
+aml.train(
+    x=x,
+    y=y,
+    training_frame=train_data
+)
+
+leaderboard = aml.leaderboard
+print(leaderboard.head())
 
 
+test = h2o.import_file('./dacon_book/open/test.csv')
 
-train_data = pd.read_csv('./open/train.csv')
-test_data = pd.read_csv('./open/test.csv')
+model = aml.leader
 
-reader = Reader(rating_scale=(0, 10))
-train = Dataset.load_from_df(train_data[['User-ID', 'Book-ID', 'Book-Rating']], reader = reader)
+pred = model.predict(test)
 
-# 비교할 파라미터 입력 
-param_grid = {'k': [30, 50],
-              'sim_options': {'name': ['pearson_baseline', 'cosine'],
-                              'min_support': [1,2],
-                              'user_based': [True, False]}
-              }
-              
-gs = GridSearchCV(KNNWithZScore, param_grid, measures=['rmse'], cv=3)
-gs.fit(train)
+pred_df = pd.DataFrame(pred.as_data_frame())
 
-print(gs.best_score['rmse'])
-print(gs.best_params['rmse'])
+print(pred_df)
 
-submit = pd.read_csv('./open/sample_submission.csv')
-submit['Book-Rating'] = test_data.apply(lambda row: gs.predict(row['User-ID'], row['Book-ID']).est, axis=1)
-submit.to_csv('./1_submit.csv', index=False)
+
+submission['Book-Rating'] = pred_df['predict']
+
+submission.to_csv('./dacon_book/subsub.csv',index=False)

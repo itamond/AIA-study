@@ -23,6 +23,8 @@ hypothesis = x * w + b
 # #3-1 컴파일
 loss = tf.reduce_mean(tf.square(hypothesis-y))
 
+
+
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001355)
 # optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.08)
 #w = w - 러닝레이트*(로스를 w로 편미분한 값)

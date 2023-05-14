@@ -12,8 +12,8 @@ path = './dacon_book/open/'
 train_csv = pd.read_csv(path + 'train.csv', index_col = 0)
 test_csv = pd.read_csv(path + 'test.csv', index_col = 0)
 
-x = train_csv.drop(['Book-Rating'], axis = 1)
-
+x = train_csv.drop(['Book-Rating','Age'], axis = 1)
+test_csv = test_csv.drop(['Age'], axis = 1)
 y = train_csv['Book-Rating']
 
 
@@ -26,7 +26,8 @@ sample_submission = pd.read_csv(path + 'sample_submission.csv')
 
 
 
-cvK = KFold(n_splits=5, shuffle=True, random_state=53)
+kf = KFold(n_splits=5, shuffle=True, random_state=53)
+
 import datetime
 date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M")
@@ -35,6 +36,7 @@ min_rmse = np.inf
 
 for k in range(10):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+    
 
     def objective(trial, x_train, y_train, x_test, y_test, min_rmse):
         param = {
@@ -48,13 +50,21 @@ for k in range(10):
             'random_strength': trial.suggest_float('random_strength', 0.5, 1),
             # 'border_count': trial.suggest_int('border_count', 64, 128),
         }
-        model = CatBoostRegressor(cat_features = cat_features, **param, verbose=0, task_type="GPU")
-        model.fit(x_train, y_train)
+        model = CatBoostRegressor(cat_features = cat_features,
+                                  **param,
+                                  verbose=0,
+                                  task_type="GPU",
+                                  loss_function='RMSE')
+        model.fit(x_train, y_train,
+                  eval_set=(x_test, y_test),
+                  early_stopping_rounds=200,
+                  verbose=False
+                  )
         val_y_pred = model.predict(x_test)
         rmse = np.sqrt(mean_squared_error(y_test, val_y_pred))
         print('rmse :',rmse)
         y_pred = model.predict(test_csv)
-        y_pred = np.round(y_pred, 3)
+        y_pred = np.round(y_pred)
         
         if min_rmse is None:
             min_rmse = np.inf

@@ -6,26 +6,19 @@ import keras
 import numpy as np
 from keras.utils.np_utils import to_categorical #옛날 원핫
 from sklearn.metrics import accuracy_score
-
+import time
 print(keras.__version__)
 tv = tf.compat.v1
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-# print(x_train.shape, y_train.shape)
-# print(x_test.shape, y_test.shape)
-# (60000, 28, 28) (60000,)
-# (10000, 28, 28) (10000,)
 
 x_train = x_train.reshape(60000, 28*28)
 x_test = x_test.reshape(x_test.shape[0], x_test.shape[1]*x_test.shape[2])
 
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
-# print(x_train.shape, y_train.shape)
-# print(x_test.shape, y_test.shape)
-# (60000, 784) (60000, 10)
-# (10000, 784) (10000, 10)
 
 #2. 모델 구성
+
 x = tv.placeholder(tf.float32, [None, 784])
 y = tv.placeholder(tf.float32, [None, 10])
 
@@ -55,16 +48,32 @@ train = tv.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
 
 epochs = 500
 
+batch_size = 100
+total_batch = int(len(x_train)/batch_size) # 60000/100 = 600
+
 sess = tv.Session()
 sess.run(tv.global_variables_initializer())
 
-
+stt = time.time()
 for step in range(epochs) :
+    
+    avg_cost = 0
+    for i in range(total_batch):
+        start = i * batch_size
+        end = start + batch_size
+        
+        x_train[:100], y_train[:100]
+        cost_val, _, w_val, b_val = sess.run([loss, train, w4, b4],feed_dict={x:x_train[start:end], y:y_train[start:end]})
+        
+        avg_cost += cost_val / total_batch
+    print('epoch :', step + 1, 'loss : {:.9f}'.format(avg_cost))
+        
     # _, loss_val = sess.run([train, loss], feed_dict = {x:x_train, y:y_train})
-    cost_val, _, w_val, b_val = sess.run([loss, train, w4, b4], feed_dict={x:x_train, y:y_train})
-    y_pred = sess.run(hypothesis, feed_dict={x:x_test})
-    print(f'epoch : {step+1}\t\t{(step+1)*100/epochs}%_complete\t\tloss : {cost_val}')
+    
+ett = time.time()
 
-
+y_pred = sess.run(hypothesis, feed_dict={x:x_test})
 print('acc :', accuracy_score(np.argmax(y_test,axis=1), np.argmax(y_pred,axis=1)))
+print("걸린시간 :", ett - stt)
 
+sess.close()

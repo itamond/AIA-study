@@ -2,100 +2,135 @@ import pandas as pd
 import numpy as np
 import random
 import os
-from sklearn.preprocessing import LabelEncoder
-from lightgbm import LGBMClassifier
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, RobustScaler
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.metrics import f1_score, accuracy_score
-from catboost import CatBoostClassifier
 import optuna
 
-#0. fix seed
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+from imblearn.over_sampling import SMOTE
+
 def seed_everything(seed):
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)
 
-seed_everything(42)
+seed_everything(91345)  # Fix seed
 
-
-scaler_list = [
-            #    MinMaxScaler(),
-            #    MaxAbsScaler(), 
-               StandardScaler(), 
-            #    RobustScaler(),
-               ]
-#1. 데이터
 path = './dacon_crime/'
-train_csv = pd.read_csv(path + 'train.csv', index_col = 0)
-test_csv = pd.read_csv(path + 'test.csv', index_col = 0)
 save_path = './dacon_crime/'
-sample_submission_csv = pd.read_csv(path + 'sample_submission.csv')
-x = train_csv.drop(['TARGET'], axis = 1)
-y = train_csv['TARGET']
 
-# 범주형 변수 리스트
-qual_col = ['요일', '범죄발생지']
+train = pd.read_csv(path + 'train.csv')
+test = pd.read_csv(path + 'test.csv')
 
-# 원-핫 인코딩
-x = pd.get_dummies(x, columns=qual_col)
-test = pd.get_dummies(test_csv, columns=qual_col)
+# Feature Engineering
+train['날씨'] = train['강수량(mm)'] + train['강설량(mm)'] + train['적설량(cm)']
+test['날씨'] = test['강수량(mm)'] + test['강설량(mm)'] + test['적설량(cm)']
 
-# train, test 분리
+x_train = train.drop(['ID', 'TARGET'], axis=1)  # Removed '강수량(mm)', '적설량(cm)'
+y_train = train['TARGET']
+x_test = test.drop('ID', axis=1)
 
-print(x.shape, test.shape)
+le = LabelEncoder()
 
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=91345)
+# Label Encoding for '요일' and '범죄발생지' features
+for feature in ['요일', '범죄발생지']:
+    x_train[feature] = le.fit_transform(x_train[feature])
+    x_test[feature] = le.transform(x_test[feature])
+
+ordinal_features = ['요일', '범죄발생지']
+
+# One-hot encoding for categorical features
+ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
+x_train_ohe = ohe.fit_transform(x_train[ordinal_features])
+x_test_ohe = ohe.transform(x_test[ordinal_features])
+
+x_train = pd.concat([x_train, pd.DataFrame(x_train_ohe, columns=ohe.get_feature_names_out(ordinal_features))], axis=1)
+x_test = pd.concat([x_test, pd.DataFrame(x_test_ohe, columns=ohe.get_feature_names_out(ordinal_features))], axis=1)
+
+# Scaling the data
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+# Handling imbalanced data
+smote = SMOTE(random_state=10, k_neighbors=10)
+x_train, y_train = smote.fit_resample(x_train, y_train)
+
+# Define the objective function for Optuna
+def objective(trial):
+    params_xgb = {
+        'max_depth': trial.suggest_categorical('max_depth', [6, 12]),
+        'learning_rate': trial.suggest_categorical('learning_rate', [0.25, 0.5]),
+        'n_estimators': trial.suggest_categorical('n_estimators', [5, 11]),
+        'min_child_weight': trial.suggest_categorical('min_child_weight', [1, 3]),
+        'subsample': trial.suggest_categorical('subsample', [0.6, 0.9]),
+        'colsample_bytree': trial.suggest_categorical('colsample_bytree', [0.6, 0.8]),
+        'max_bin': trial.suggest_categorical('max_bin', [10, 20]),
+        'reg_lambda': trial.suggest_categorical('reg_lambda', [1, 5]),
+        'reg_alpha': trial.suggest_categorical('reg_alpha', [0.01, 0.1]),
+    }
+
+    xgb_model = XGBClassifier(
+        random_state=10,
+        use_label_encoder=False,
+        tree_method='gpu_hist',
+        gpu_id=0,
+        objective='binary:logistic',
+        **params_xgb
+    )
+
+    # Split the data into train and validation sets for early stopping
+    x_train_split, x_val, y_train_split, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=10)
+
+    # Fit the model and track evaluation metric
+    xgb_model.fit(
+        x_train_split,
+        y_train_split,
+        early_stopping_rounds=10,
+        eval_set=[(x_val, y_val)],
+        eval_metric='logloss',
+        verbose=False
+    )
+
+    # Retrieve the best evaluation metric score
+    best_score = xgb_model.best_score
+
+    return best_score
 
 
-min_rmse=1
+# Run Optuna optimization
+study = optuna.create_study(direction='maximize')
+study.optimize(objective, n_trials=100)
 
+# Get the best parameters and score
+best_params = study.best_params
+best_score = study.best_value
 
-for k in range(100):
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=91345, stratify=y)
+# Print the best parameters and score
+print('XGBoost Best Parameters:', best_params)
+print('XGBoost Best Score:', best_score)
 
+# Get the best model
+best_model = XGBClassifier(
+    random_state=10,
+    use_label_encoder=False,
+    tree_method='gpu_hist',
+    gpu_id=0,
+    objective='binary:logistic',
+    **best_params
+)
 
-    for i in scaler_list:
-        scaler = i
-        x_train = scaler.fit_transform(x_train)
-        x_test = scaler.transform(x_test)
-        test = scaler.transform(test)
+# Fit the model with the full dataset
+best_model.fit(x_train, y_train)
 
-        def objective(trial, x_train, y_train, x_test, y_test, acc):
-            param = {
-                'iterations': trial.suggest_int('iterations', 5000, 13000),
-                'depth': trial.suggest_int('max_depth', 4, 8),
-                'learning_rate': trial.suggest_float('learning_rate',  0.0001,0.1),
-                'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 0.001, 10),
-                'one_hot_max_size' : trial.suggest_int('one_hot_max_size',24, 64),
-                # 'colsample_bylevel': trial.suggest_float('colsample_bylevel', 0, 1),
-                'bagging_temperature': trial.suggest_int('bagging_temperature', 0.5, 1),
-                'random_strength': trial.suggest_float('random_strength', 0.5, 1),
-                # 'border_count': trial.suggest_int('border_count', 64, 128),
-                    }
-            model = CatBoostClassifier(**param, verbose=0)
-            
-            model.fit(x_train, y_train)
-            val_y_pred = model.predict(x_test)
-            accuracy = -(accuracy_score(y_test, val_y_pred))
-            # print(accuracy)
-            y_pred = model.predict(test)
-            y_pred = np.round(y_pred, 3)
-            # print(y_pred)
-            
-            best_accuracy = float('-inf')
-            sample_submission_csv['TARGET'] = y_pred
-            # submission.to_csv('./_data/dacon_air/Monday2.csv', index=True)           
-            if -accuracy > best_accuracy:
-                # Update the best accuracy and save the model to disk
-                best_accuracy = -accuracy
-                pacc = np.round(best_accuracy*10000)
-                print(best_accuracy)
-                print(type(best_accuracy))
-                print(pacc)
-                sample_submission_csv.to_csv(save_path+ f'{pacc}' + 'monday1.csv', index=False)
-                # Save the predictions to a CSV file
-            return accuracy
-        opt = optuna.create_study(direction='minimize')
-        opt.optimize(lambda trial: objective(trial, x_train, y_train, x_test, y_test, min_rmse), n_trials=10000)
-        print('best param : ', opt.best_params, 'best rmse : ', opt.best_value)
+# Predict
+pred = best_model.predict(x_test)
+
+# Read the submission file
+submit = pd.read_csv(path + 'sample_submission.csv')
+
+# Assign the predicted values to the TARGET column
+submit['TARGET'] = pred
+
+# Save the predicted results to a file
+submit.to_csv(save_path + 'submit.csv', index=False)

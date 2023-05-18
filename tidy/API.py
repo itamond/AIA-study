@@ -1,6 +1,10 @@
 # import warnings
 # warnings.filterwarnings('ignore')
 
+
+#쿠다 버전 확인 nvcc -V
+
+
 # Handling Data
 import numpy as np
 import pandas as pd

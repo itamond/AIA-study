@@ -1,13 +1,13 @@
 import autokeras as ak
 import time
 from sklearn.model_selection import train_test_split as tts
-from keras.datasets import mnist
+from keras.datasets import mnist, cifar10, cifar100
 import tensorflow as tf
 
 
 #1. 데이터
 (x_train, y_train), (x_test, y_test) = \
-    tf.keras.datasets.mnist.load_data()
+    tf.keras.datasets.cifar10.load_data()
 
 
 #2. 모델

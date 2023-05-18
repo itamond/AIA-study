@@ -54,21 +54,26 @@ scaler = StandardScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
+
+# smote = SMOTE(random_state=11, k_neighbors = 15)
+# x_train, y_train = smote.fit_resample(x_train, y_train)
+
+
 # Handle Imbalanced Data
 # smote = SMOTE(random_state=11, k_neighbors = 15)
 # x_train, y_train = smote.fit_resample(x_train, y_train)
 # PCA, 랜덤오버샘플링
 
 model = ak.StructuredDataClassifier(
-    overwrite=False,
-    max_trials=2
+    overwrite=True,
+    max_trials=3
 )
 
 
 #3. 컴파일, 훈련
 
 start = time.time()
-model.fit(x_train,y_train, epochs=10, validation_split=0.15)
+model.fit(x_train,y_train, epochs=100, validation_split=0.15)
 end = time.time()
 
 

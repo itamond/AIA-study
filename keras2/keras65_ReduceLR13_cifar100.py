@@ -76,7 +76,7 @@ rlr = ReduceLROnPlateau(monitor = 'val_loss',
 
 model.fit(x_train, y_train,
           epochs = 50, 
-          batch_size = 1024, 
+          batch_size = 1024,  
           validation_split=0.2,  
           verbose=1, 
           callbacks=[es, rlr])

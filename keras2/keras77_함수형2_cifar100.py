@@ -21,20 +21,21 @@ x = base_model.output #base_model의 최종 레이어
 x = GlobalAveragePooling2D()(x)
 x = Dense(100)(x)
 x = Dense(100)(x)
+x = Dense(100)(x)
 output1 = Dense(100, activation = 'softmax')(x)
 model = Model(inputs = base_model.input, outputs = output1)
 
 # model.summary()
 
 es = EarlyStopping(monitor = 'val_loss',
-                   patience = 15, mode = 'min',
+                   patience = 30, mode = 'min',
                    verbose = 1)
 
 rlr = ReduceLROnPlateau(monitor = 'val_loss',
-                        patience = 3,
+                        patience = 20,
                         mode='auto',
                         verbose = 1,
-                        factor=0.5)
+                        factor=0.1)
 
 model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['accuracy'])
 model.fit(x_train, y_train, epochs = 512, validation_split=0.2, batch_size = 512, callbacks=[es, rlr])
@@ -45,3 +46,5 @@ y_test = np.argmax(y_test, axis = 1)
 acc = accuracy_score(y_test, y_pred)
 
 print('acc: ', acc)
+
+# acc:  0.3858

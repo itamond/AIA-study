@@ -19,7 +19,10 @@ base_model = VGG16(weights = 'imagenet', include_top = False, input_shape=(32, 3
 # print(base_model.output)
 # KerasTensor(type_spec=TensorSpec(shape=(None, None, None, 512), dtype=tf.float32, name=None), name='block5_pool/MaxPool:0', description="created by layer 'block5_pool'")
 x = base_model.output #base_model의 최종 레이어 
-x = GlobalAveragePooling2D()(x)
+# x = GlobalAveragePooling2D()(x)
+x = Flatten()(x)
+x = Dense(100)(x)
+x = Dense(100)(x)
 output1 = Dense(10, activation = 'softmax')(x)
 model = Model(inputs = base_model.input, outputs = output1)
 
@@ -43,3 +46,6 @@ y_test = np.argmax(y_test, axis = 1)
 
 acc = accuracy_score(y_test, y_pred)
 print('acc: ', acc)
+
+
+# acc:  0.7575

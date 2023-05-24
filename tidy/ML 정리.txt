@@ -427,3 +427,18 @@ vif['variables']=x.columns #컬런 이름 넣기. 3개
 vif['VIF'] = [variance_inflation_factor(x_scaled, i) for i in range(x_scaled.shape[1])] #vif의 VIF에는 포문의 반환값 세개가 들어가있다.
 
 
+
+
+
+
+
+
+
+혼자 공부하는 머신러닝
+
+zip 함수.
+51p 
+fish_data = [[l,w] for l, w in zip(length, weight)]
+length와 weight 에서 값을 하나씩 꺼내어 l과 w에 할당. 이는 fish_data 라는 하나의 2차원 리스트로 생성됨.
+fish_target = [1] * 35 + [0] * 14
+타겟값 리스트 만드는 예시. [1] 35개, [0] 14개가 있는 리스트 생성

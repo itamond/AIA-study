@@ -9,8 +9,8 @@ from tensorflow.keras.optimizers import Adam, RMSprop, Adadelta
 # 1. 데이터
 x, y = load_breast_cancer(return_X_y=True)
 x_train, x_test, y_train, y_test = train_test_split(x,y, train_size=0.8)
-print(x_train.shape)
-print(np.unique(y_train, return_counts=True))
+# print(x_train.shape)
+# print(np.unique(y_train, return_counts=True))
 
 # 2. 모델
 def build_model(drop=0.2, optimizer='adam', activation='relu', node1=64, node2=64, node3=64, node4=64, lr = 0.001):

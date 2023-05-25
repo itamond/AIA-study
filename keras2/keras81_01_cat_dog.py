@@ -8,7 +8,7 @@ import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing import image
 from keras.models import Sequential
-from tensorflow.keras.applications import ResNet101V2
+from tensorflow.keras.applications import ResNet101V2, Xception
 from keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPool2D, GlobalAvgPool2D
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.optimizers import Adam
@@ -26,7 +26,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 
 xy = train_datagen.flow_from_directory(
     'C:/AIA/PetImages',
-    target_size = (50, 50),
+    target_size = (100, 100),
     batch_size = 25000,
     class_mode = 'binary',
     shuffle = True)
@@ -37,8 +37,8 @@ y = xy[0][1]
 x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, shuffle= True, random_state= 337)
 
 #2. 모델
-res101 = ResNet101V2(weights='imagenet', include_top=False,
-              input_shape=(50, 50, 3))
+res101 = Xception(weights='imagenet', include_top=False,
+              input_shape=(100, 100, 3))
 res101.trainable = True
 
 model = Sequential()
@@ -70,7 +70,7 @@ print("acc : ", acc)
 
 path = 'C:/Users/Administrator/Desktop/나4.jpg'
 
-img = image.load_img(path, target_size=(50, 50))
+img = image.load_img(path, target_size=(100, 100))
 
 x = image.img_to_array(img)/255.
 
@@ -87,7 +87,8 @@ if x_pred > 0.5 :
 else :
     print('당신은 고양이 입니다')
     
-# acc :  0.924
+
+
 # (1, 1)
-# [[0.]]
-# 당신은 고양이 입니다
+# [[0.9987632]]
+# 당신은 개 입니다

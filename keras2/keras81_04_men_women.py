@@ -81,7 +81,7 @@ x = x.reshape(1, *x.shape)
 
 x_pred = model.predict(x)
 print(x_pred.shape)
-print(np.round(x_pred))
+print(x_pred)
 
 if x_pred > 0.5 :
     print('당신은 여자 입니다')

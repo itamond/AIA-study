@@ -22,7 +22,7 @@ target_x = 100
 target_y = 100
 
 img = image.load_img(v, target_size=(target_x, target_y))
-img = image.img_to_array(img)/255.
+img = image.img_to_array(img)/255.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 img = np.expand_dims(img, axis=0)
 
 datagen = ImageDataGenerator(rescale=1./255)

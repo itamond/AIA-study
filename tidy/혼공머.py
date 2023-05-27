@@ -42,9 +42,9 @@ fish_target = [1] * 35 + [0] * 14
 
 from sklearn.neighbors import KNeighborsClassifier
 
-kn = KNeighborsClassifier()
+kn = KNeighborsClassifier()  
 
-kn.fit(fish_data, fish_target)
+kn.fit(fish_data, fish_target)    
 
 kn.score(fish_data, fish_target)
 

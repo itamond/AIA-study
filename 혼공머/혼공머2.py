@@ -43,4 +43,4 @@ plt.show()
 
 
 # https://matplotlib.org/stable/api/markers_api.html 
-# 자연어처리, 갠, 디퓨전
+# 자연어처리, 갠, 디퓨전  

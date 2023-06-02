@@ -8,7 +8,7 @@ import tensorflow as tf
 from sklearn.metrics import r2_score, accuracy_score
 from sklearn.model_selection import train_test_split
 from keras.datasets import mnist, cifar100 , fashion_mnist
-
+  
 train_datagen = ImageDataGenerator(              # 이미지를 수치화. 증폭도 가능. 
     rescale=1./255,                             # 다른 처리 전에 데이터를 곱할 값입니다. 원본 이미지는 0-255의 RGB 계수로 구성되지만 이러한 값은 모델이 처리하기에는 너무 높기 때문에(주어진 일반적인 학습률) 
                                                 # 1/255로 스케일링하여 대신 0과 1 사이의 값을 목표로 합니다.

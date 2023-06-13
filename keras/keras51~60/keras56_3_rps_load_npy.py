@@ -11,7 +11,7 @@ import time
 #1. 데이터
 
 path = 'd:/study_data/_save/rps/'
-
+  
 stt = time.time()
 x = np.load(path+'keras56_5_x_train.npy')
 # x_test = np.load(path+'keras55_1_x_test.npy')

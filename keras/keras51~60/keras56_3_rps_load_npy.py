@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 import time
 
 #1. 데이터
-
+  
 path = 'd:/study_data/_save/rps/'
   
 stt = time.time()
